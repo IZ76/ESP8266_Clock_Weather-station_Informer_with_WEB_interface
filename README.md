@@ -2,4 +2,4 @@
 Прежде всего это часы. И большую часть рабочего времени они отображают на индикаторе MAX7219 именно текщее время.
 Часы не содержат модуля точного времени, по этому получение и синхронизация текующего времени происходит через сервер точного времени.
 Настройки подключения к сети WiFi и к серверу точного времени выполняются через веб интерфейс.
-[URL=http://piccy.info/view3/12360430/fb3cc6102f720c05569be838b0d9a627/][IMG]http://i.piccy.info/i9/8d1affd151b050e62ddd089252666a49/1527263197/15317/1246814/Bezymiannyi_240.jpg[/IMG][/URL][URL=http://i.piccy.info/a3c/2018-05-25-15-46/i9-12360430/198x240-r][IMG]http://i.piccy.info/a3/2018-05-25-15-46/i9-12360430/198x240-r/i.gif[/IMG][/URL]
+<a href="http://piccy.info/view3/12360430/fb3cc6102f720c05569be838b0d9a627/" target="_blank"><img src="http://i.piccy.info/i9/cf114ecbe6106c762d20b6d76fb8720a/1527263197/126534/1246814/Bezymiannyi.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-05-25-15-46/i9-12360430/488x590-r" target="_blank"><img src="http://i.piccy.info/a3/2018-05-25-15-46/i9-12360430/488x590-r/i.gif" alt="" border="0" /></a>
