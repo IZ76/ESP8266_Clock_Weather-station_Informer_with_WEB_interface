@@ -1,5 +1,5 @@
 # ESP8266_Clock_Weather-station_Informer_with_WEB_interface
-Прежде всего это часы. И большую часть рабочего времени они отображают на индикаторе MAX7219 именно текщее время.
+Прежде всего это часы. И большую часть рабочего времени они отображают на индикаторе MAX7219 именно текущее время.
 Но в схеме предусмотрена возможность подключения дополнительных модулей (датчиков).<br>
 <a href="http://piccy.info/view3/12360464/594acf6bf9a9d7ea4c14f5a5d28b6adc/" target="_blank"><img src="http://i.piccy.info/i9/f43215e4812b2f8cfb1658b43002ab1a/1527264109/40402/1246814/oy5jqpcv701fldb1lalsd6s31_500.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-05-25-16-01/i9-12360464/500x303-r" target="_blank"><img src="http://i.piccy.info/a3/2018-05-25-16-01/i9-12360464/500x303-r/i.gif" alt="" border="0" /></a>
 <hr>
