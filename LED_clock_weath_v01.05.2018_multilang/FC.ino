@@ -17,7 +17,7 @@ bool loadConfig() {                                                // Заван
   configFile.close();
   JsonObject& root = jsonBuffer.parseObject(jsonConfig);
   ssidAP = root["ssidAP"].as<String>();
-  passwordAP = root["asswordAP"].as<String>();                     // Так отримуємо рядок
+  passwordAP = root["passwordAP"].as<String>();                    // Так отримуємо рядок
   ssid = root["ssid"].as<String>();
   password = root["password"].as<String>();
   ntpServerName = root["ntpServerName"].as<String>();
