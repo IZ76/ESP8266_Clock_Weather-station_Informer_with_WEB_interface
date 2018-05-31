@@ -795,6 +795,7 @@ void timeUpdateNTP() {
   second=g_second;
   day=g_day;
   dayOfWeek=g_dayOfWeek;
+  month=g_month;
   year=g_year;  
   localMillisAtUpdate = millis();
   localEpoc = (hour * 60 * 60 + minute * 60 + second);
