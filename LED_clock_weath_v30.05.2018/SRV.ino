@@ -220,15 +220,17 @@ void handle_mqtt_ust() {
   snprintf(mqtt_user, 24, "%s", server.arg("mqtt_user").c_str());
   snprintf(mqtt_pass, 24, "%s", server.arg("mqtt_pass").c_str());
   snprintf(mqtt_name, 24, "%s", server.arg("mqtt_name").c_str());
+  snprintf(mqtt_sub, 24, "%s", server.arg("mqtt_sub").c_str());
+  snprintf(mqtt_sub_inform, 24, "%s", server.arg("mqtt_sub_inform").c_str());
   snprintf(mqtt_pub_temp, 24, "%s", server.arg("mqtt_pub_temp").c_str());
   snprintf(mqtt_pub_tempUl, 24, "%s", server.arg("mqtt_pub_tempUl").c_str());
   snprintf(mqtt_pub_hum, 24, "%s", server.arg("mqtt_pub_hum").c_str());
-  snprintf(mqtt_sub, 24, "%s", server.arg("mqtt_sub").c_str());
-  snprintf(mqtt_sub_inform, 24, "%s", server.arg("mqtt_sub_inform").c_str());
+  snprintf(mqtt_pub_press, 24, "%s", server.arg("mqtt_pub_press").c_str());
+  snprintf(mqtt_pub_alt, 24, "%s", server.arg("mqtt_pub_alt").c_str());
   if(printCom) {
     printTime();
-    Serial.println("Set mqtt_server: " + String(mqtt_server) + ",  mqtt_port: " + String(mqtt_port) + ",  mqtt_user: " + String(mqtt_user) + ",  mqtt_pass: " + String(mqtt_pass));
-    Serial.println("Set mqtt_name: " + String(mqtt_name) + ",  mqtt_sub: " + String(mqtt_sub) + ",  mqtt_sub_inform: " + String(mqtt_sub_inform) + ",  mqtt_pub_temp: " + String(mqtt_pub_temp) + ",  mqtt_pub_tempUl: " + String(mqtt_pub_tempUl) + ",  mqtt_pub_hum: " + String(mqtt_pub_hum));
+    Serial.println("Set mqtt_server: "+String(mqtt_server)+",  mqtt_port: "+String(mqtt_port)+",  mqtt_user: "+String(mqtt_user)+",  mqtt_pass: "+String(mqtt_pass));
+    Serial.println("Set mqtt_name: "+String(mqtt_name)+",  mqtt_sub: "+String(mqtt_sub)+",  mqtt_sub_inform: "+String(mqtt_sub_inform)+",  mqtt_pub_temp: "+String(mqtt_pub_temp)+",  mqtt_pub_tempUl: "+String(mqtt_pub_tempUl)+",  mqtt_pub_hum: "+String(mqtt_pub_hum)+",  mqtt_pub_press: "+String(mqtt_pub_press)+",  mqtt_pub_alt: "+String(mqtt_pub_alt));
   }
   reconnect();
   saveConfig(); 
