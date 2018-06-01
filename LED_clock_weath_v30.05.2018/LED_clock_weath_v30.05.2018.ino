@@ -83,10 +83,10 @@ byte lang = 1;             // 0-ukr, 1-rus, 2-pol,  3-czech, 4-de, 5-en
 //#define CLK_PIN   3                                                                   // D9/RX
 //#define buzzerPin 14                                                                  // TX/GPIO1 
 // ---------- для NodeMCU 1.0
-#define DIN_PIN   13                                                                    //GPIO 15 / D8
-#define CS_PIN    15                                                                    //GPIO 13 / D7
-#define CLK_PIN   14                                                                    //GPIO 12 / D6
-#define buzzerPin 12                                                                    //GPIO 14 / D5
+#define DIN_PIN   13                                                                    //GPIO 13 / D7
+#define CS_PIN    15                                                                    //GPIO 15 / D8
+#define CLK_PIN   14                                                                    //GPIO 14 / D5
+#define buzzerPin 12                                                                    //GPIO 12 / D6
 #define brightPin A0
 OneWire  ds(0);                                                                        // DS18B20 подключен к 10 пину (резистор на 4.7к обязателен)
 Adafruit_BMP280 bmp;
