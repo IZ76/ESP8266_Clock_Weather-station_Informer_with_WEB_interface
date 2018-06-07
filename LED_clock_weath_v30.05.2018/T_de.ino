@@ -56,6 +56,7 @@ void deText(){
   tOctober = "Oktober";
   tNovember = "November";
   tDecember = "Dezember";
+  
   tMonday = "Montag";
   tTuesday = "Dienstag";
   tWednesday = "Mittwoch";
@@ -63,26 +64,27 @@ void deText(){
   tFriday = "Freitag";
   tSaturday = "Samstag";
   tSunday = "Sonntag";
+  
   tClearSky = "wolkenlos";
   tSkyIsClear = "wolkenlos";
   tFewClouds = "teils bewölkt";
-  tScatteredClouds = "wolkig";
+  tScatteredClouds = "bewölkt";
   tBrokenClouds = "bewölkt";
   tOvercastClouds = "bedeckt";
-  tLightRain = "Regenschauer";  
+  tLightRain = "regenschauer";  
   tModerateRain = "leichter  Regen";
-  tLightIntensityShowerRain = "leichte Intensität der Regen";
-  tHeavyIntensityRain = "gewaltige Intensität der Regen"; 
-  tThunderstorm = "Gewitter";
-  tHaze = "Nebel";
-  tFog = "Nebel";
-  tMist = "Hochnebel";
-  tShowerSleet = "Schneeregen";
+  tLightIntensityShowerRain = "leichter Regen";
+  tHeavyIntensityRain = "starkregen"; 
+  tThunderstorm = "gewitter";
+  tHaze = "nebel";
+  tFog = "nebel";
+  tMist = "hochnebel";
+  tShowerSleet = "schneeregen";
   tLightSnow = "leichter Schneeschauer";
   tLightShowerSnow = "leichter Schneefall"; 
-  tSnow = "Schneefall";
-  tWeatrNot = "   Keine Wetteraktualisierungen für mehr als 6 Stunden!!!   ";
-  tWeatrTN = "keine Wetteraktualisierungen - ";
+  tSnow = "schneefall";
+  tWeatrNot = "   Keine Wetteraktualisierungen seit 6 Stunden!!!   ";
+  tWeatrTN = "Keine Wetteraktualisierungen - ";
   if(printCom) {
     printTime();
     Serial.println("Text DE.");
