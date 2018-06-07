@@ -80,8 +80,8 @@ byte lang = 1;             // 0-ukr, 1-rus, 2-pol,  3-czech, 4-de, 5-en
 // ---------- для ESP-01
 //#define DIN_PIN   2                                                                   // D4
 //#define CS_PIN    0                                                                   // D3
-//#define CLK_PIN   3                                                                   // D9/RX
-//#define buzzerPin 14                                                                  // TX/GPIO1 
+//#define CLK_PIN   3                                                                   // RX
+//#define buzzerPin 1                                                                   // TX
 // ---------- для NodeMCU 1.0
 #define DIN_PIN   13                                                                    //GPIO 13 / D7
 #define CS_PIN    15                                                                    //GPIO 15 / D8
@@ -274,8 +274,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
     Text += "        ";
     for(int i = 0; i < 4; i++) {
-      tone(buzzerPin, 2000, 100);
-      delay(200);
+      bip();
     }
     printStringWithShift(Text.c_str(), 30);
   }
@@ -354,16 +353,13 @@ void loop() {
     secFr = 0;
   } else secFr++;                                                                       // якщо секунда ще не скінчилась то нарощуємо лічильник циклів secFr
   if(minute == 0 && second == 0 && secFr == 0 && (hour >= kuOn && hour < kuOff))      { // сигнал кожду годину 
-    tone(buzzerPin, 2000, 40);
-    delay(200);
-    tone(buzzerPin, 2000, 40);
+    bip();
+    bip();
   }
   if(hour == 22 && minute == 55) {                                                      // якщо наш час - то іде повідомлення для коханої
-    tone(buzzerPin, 2000, 40);
-    delay(200);
-    tone(buzzerPin, 2000, 40);
-    delay(200);
-    tone(buzzerPin, 2000, 40);
+    bip();
+    bip();
+    bip();
     printStringWithShift(("       22:55 \200\200\200 " + tMes + " \200\200\200").c_str(), timeScrollSpeed);
     return;
   }
@@ -795,7 +791,6 @@ void timeUpdateNTP() {
   second=g_second;
   day=g_day;
   dayOfWeek=g_dayOfWeek;
-  month=g_month;
   year=g_year;  
   localMillisAtUpdate = millis();
   localEpoc = (hour * 60 * 60 + minute * 60 + second);
@@ -1025,17 +1020,19 @@ void getWeatherDataz() {
 void wifiConnect(){
   if(printCom) {
     printTime();
-    Serial.print("Connecting WiFi ");
+    Serial.print("Connecting WiFi (ssid="+String(ssid.c_str())+"  pass="+String(password.c_str())+") ");
   }
   WiFi.disconnect();
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid.c_str(), password.c_str());
-  for(int i = 0; i < 20; i++){
+  for(int i = 1; i < 6; i++){
+    WiFi.begin(ssid.c_str(), password.c_str());
+    delay (5000);
     if(WiFi.status() == WL_CONNECTED){
       WIFI_connected = true;
       if(printCom) Serial.print(" IP adress : ");
       if(printCom) Serial.println(WiFi.localIP());
       String aaa = WiFi.localIP().toString();
+      clr();
       printStringWithShift((tYour + " IP: ").c_str(), 15);
       printStringWithShift(aaa.c_str(), 25);
       timeUpdateNTP();
@@ -1048,8 +1045,8 @@ void wifiConnect(){
       j++;
       delay(1);
     }
-    clr();
-    refreshAll();
+    //clr();
+    //refreshAll();
   }
   if(printCom) Serial.println(" Not connected!!!");
   WiFi.disconnect();
@@ -1057,12 +1054,12 @@ void wifiConnect(){
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(ssidAP.c_str(), passwordAP.c_str());
   if(printCom) {
-    updateTime();
     printTime();
     Serial.println("Start AP mode!!!");
     Serial.print("          Wifi AP IP : ");
     Serial.println(WiFi.softAPIP());
   }
+  updateTime();
   printStringWithShift(tPoint.c_str(), 35);
 }
 
@@ -1278,4 +1275,3 @@ void bip(){
   tone(buzzerPin, 2000, 40);
   delay(200);
 }
-
