@@ -586,7 +586,7 @@ void showAnimWifi(byte probaWifi) {
   if(del == 0) {
     del = digHt;
     for(ii = 0; ii < num; ii++) digold[ii] = dig[ii];
-    dig[0] = probaWifi / 10 ? probaWifi / 10 : 10;
+    dig[0] = probaWifi / 10;
     dig[1] = probaWifi % 10;
     for(ii = 0; ii < num; ii++)  digtrans[ii] = (dig[ii] == digold[ii]) ? 0 : digHt;
   } else del--;
@@ -1022,6 +1022,7 @@ void wifiConnect(){
     printTime();
     Serial.print("Connecting WiFi (ssid="+String(ssid.c_str())+"  pass="+String(password.c_str())+") ");
   }
+  printStringWithShift("WiFi", 15);
   WiFi.disconnect();
   WiFi.mode(WIFI_STA);
   for(int i = 1; i < 6; i++){
