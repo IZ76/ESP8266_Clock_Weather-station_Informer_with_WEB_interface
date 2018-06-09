@@ -53,19 +53,19 @@
                 <table>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_server"></span></td>
-                        <td><input type="text" class="field" id="mqtt_server" value="{{mqtt_server}}" class="form-control" pattern="[- 0-9a-zA-Z._/]{1,20}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_server" value="{{mqtt_server}}" pattern="[- 0-9a-zA-Z._/]{1,20}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_port"></span></td>
-                        <td><input type="text" class="field" id="mqtt_port" value="{{mqtt_port}}" class="form-control" pattern="[\d]{5}"><br>
+                        <td><input type="text" class="field form-control" id="mqtt_port" value="{{mqtt_port}}" pattern="[\d]{5}"><br>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_user"></span></td>
-                        <td><input type="text" class="field" id="mqtt_user" value="{{mqtt_user}}" class="form-control" pattern="[-\w\s#@/]{0,20}"></td>
+                        <td><input class="field form-control" id="mqtt_user" value="{{mqtt_user}}" pattern="[-\w\s#@/]{0,20}" onfocus="this.type='text'" type="password"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_pass"></span></td>
-                        <td><input type="text" class="field" id="mqtt_pass" value="{{mqtt_pass}}" class="form-control" pattern="[-\w\s#@/]{0,20}"></td>
+                        <td><input class="field form-control" id="mqtt_pass" value="{{mqtt_pass}}" pattern="[-\w\s#@/]{0,20}" onfocus="this.type='text'" type="password"></td>
                     </tr>
                 </table>
                 </center>  
@@ -74,35 +74,35 @@
                 <table>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_name"></span></td>
-                        <td><input type="text" class="field" id="mqtt_name" value="{{mqtt_name}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_name" value="{{mqtt_name}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_sub"></span></td>
-                        <td><input type="text" class="field" id="mqtt_sub" value="{{mqtt_sub}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_sub" value="{{mqtt_sub}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_sub_inform"></span></td>
-                        <td><input type="text" class="field" id="mqtt_sub_inform" value="{{mqtt_sub_inform}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_sub_inform" value="{{mqtt_sub_inform}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_pub_temp"></span></td>
-                        <td><input type="text" class="field" id="mqtt_pub_temp" value="{{mqtt_pub_temp}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_pub_temp" value="{{mqtt_pub_temp}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_pub_tempUl"></span></td>
-                        <td><input type="text" class="field" id="mqtt_pub_tempUl" value="{{mqtt_pub_tempUl}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_pub_tempUl" value="{{mqtt_pub_tempUl}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_pub_hum"></span></td>
-                        <td><input type="text" class="field" id="mqtt_pub_hum" value="{{mqtt_pub_hum}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_pub_hum" value="{{mqtt_pub_hum}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_pub_press"></span></td>
-                        <td><input type="text" class="field" id="mqtt_pub_press" value="{{mqtt_pub_press}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_pub_press" value="{{mqtt_pub_press}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn" id="P_mqtt_pub_alt"></span></td>
-                        <td><input type="text" class="field" id="mqtt_pub_alt" value="{{mqtt_pub_alt}}" class="form-control" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td><input type="text" class="field form-control" id="mqtt_pub_alt" value="{{mqtt_pub_alt}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                 </table>
                 </center>
