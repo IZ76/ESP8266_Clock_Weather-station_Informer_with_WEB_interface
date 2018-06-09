@@ -62,7 +62,7 @@ var langEN = {
 	P_weather_update:"Update weather forecast",
     //-- led
     P_led_title:"Screen settings.",
-	P_led_informer:"he brightness level of the photoresistor (0-15): ",
+	P_led_informer:"Brightness level of photoresistor (0-15): ",
     P_led_tbd:"Day mode works with:",
 	P_led_vbd:"Brightness during the day:",
     P_led_vbn:"at night:",
