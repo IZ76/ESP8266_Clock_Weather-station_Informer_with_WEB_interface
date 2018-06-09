@@ -270,6 +270,14 @@ footer {
 .flags {
     cursor: pointer;
     margin: 0 5px;
-    
 }
-
+.flags:hover {
+    transition: all.2s ease;
+    border-radius: 7px;
+    box-shadow:  0 0 5px 2px rgba(0,0,0,0.4);
+}
+.flags:active {
+    transition: all.2s ease;
+    border-radius: 50%;
+    box-shadow:  0 0 5px 2px rgba(0,0,0,0.6);
+}
