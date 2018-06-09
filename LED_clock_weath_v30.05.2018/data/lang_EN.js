@@ -1,5 +1,5 @@
 var langEN = {
-	header:"CLOCK on ESP-12 ver: 30/05/2018 (by IvanZah)",
+    header:"CLOCK on ESP-12 ver: 30/05/2018 (by IvanZah)",
     save:"Save",
     setWiFi:"Setting wifi",
     setTime:"Setting time",
