@@ -791,6 +791,7 @@ void timeUpdateNTP() {
   second=g_second;
   day=g_day;
   dayOfWeek=g_dayOfWeek;
+  month=g_month;
   year=g_year;  
   localMillisAtUpdate = millis();
   localEpoc = (hour * 60 * 60 + minute * 60 + second);
@@ -923,7 +924,7 @@ void getWeatherData() {
   //weatherMain = root["weather"]["main"].as<String>();
   weatherDescription = root["weather"]["description"].as<String>();
   weatherDescription.toLowerCase();
-  convertWeatherDes();
+  if(lang!=5) convertWeatherDes();
   //country = root["sys"]["country"].as<String>();
   cityName = root ["name"] .as<String>();
   cityId = root ["id"]; convertCity();
@@ -1001,7 +1002,7 @@ void getWeatherDataz() {
   int wDeg=root ["deg"];
   weatherDescription=root ["weather"]["description"].as<String>();
   weatherDescription.toLowerCase();
-  convertWeatherDes();
+  if(lang!=5) convertWeatherDes();
   String wDegString;
   if(wDeg >= 345 || wDeg <= 22)  wDegString = "\211";    //"Північний";
   if(wDeg >= 23  && wDeg <= 68)  wDegString = "\234";    //"Північно-східний";
