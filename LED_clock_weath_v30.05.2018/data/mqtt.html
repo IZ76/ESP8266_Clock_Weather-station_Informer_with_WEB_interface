@@ -18,16 +18,9 @@
                 server += "&mqtt_name=" + val('mqtt_name') + "&mqtt_sub=" + val('mqtt_sub') + "&mqtt_sub_inform=" + val('mqtt_sub_inform') + "&mqtt_pub_temp=" + val('mqtt_pub_temp') + "&mqtt_pub_tempUl=" + val('mqtt_pub_tempUl') + "&mqtt_pub_hum=" + val('mqtt_pub_hum') + "&mqtt_pub_press=" + val('mqtt_pub_press') + "&mqtt_pub_alt=" + val('mqtt_pub_alt');
                 send_request(submit,server);
             }
-             function set_mqtt_on(submit) {
-                mqttOn = document.getElementById('mqttOn');
-                if (mqttOn.checked){
-                  server = "/mqttOn?mqttOn=1";
-                  send_request(submit, server);
-                }
-                if (!mqttOn.checked){
-                  server = "/mqttOn?mqttOn=0";
-                  send_request(submit, server);
-                }
+            function set_mqtt_on(submit) {
+                server = "/mqttOn?mqttOn=" + val_sw("mqttOn");
+                send_request(submit, server);
             }
         </script>
     </head>
@@ -43,8 +36,9 @@
             </div>            
             <div id="main_unit">
                 <hr>
-                <label class="switch"><span class="opt_cn" id="P_mqtt_mqttOn"></span>
-                    <input type="checkbox" id="mqttOn" onclick="set_mqtt_on(this);">
+                <label class="switch">
+                    <span class="opt_cn" id="P_mqtt_mqttOn"></span>
+                    <input type="checkbox" class="checkbox" id="mqttOn" name="switch-btn" onclick="set_mqtt_on(this);">
                     <span class="switch-btn"></span>
                 </label>
                 <hr>
