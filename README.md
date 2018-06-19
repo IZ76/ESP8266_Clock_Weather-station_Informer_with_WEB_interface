@@ -6,7 +6,7 @@
 Часы не содержат модуля точного времени, по этому получение и синхронизация текующего времени происходит через сервер точного времени.
 Настройки подключения к сети WiFi и к серверу точного времени выполняются через WEB интерфейс.
 <br>
-<a href="http://piccy.info/view3/12360430/fb3cc6102f720c05569be838b0d9a627/" target="_blank"><img src="http://i.piccy.info/i9/d9db5de949e4496b39e27fea1456440c/1527263197/56441/1246814/Bezymiannyi_500.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-05-25-15-46/i9-12360430/371x449-r" target="_blank"><img src="http://i.piccy.info/a3/2018-05-25-15-46/i9-12360430/371x449-r/i.gif" alt="" border="0" /></a><hr>
+<a href="http://piccy.info/view3/12426813/08bfcd44411ef9276079fcab12083123/" target="_blank"><img src="http://i.piccy.info/i9/c396339543532732b6d8dd1f1817873e/1529447965/103375/1248178/Bezymiannyi.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-06-19-22-52/i9-12426813/512x620-r" target="_blank"><img src="http://i.piccy.info/a3/2018-06-19-22-52/i9-12426813/512x620-r/i.gif" alt="" border="0" /></a><hr>
 Вывод даты на экран часов происходит поочередно с выводом прогноза погоды раз в минуту.
 В ночное время когда выключен вывод на экран прогноза погоды, выводится текущая дата статически на пару секунд раз в минуту.
 В будующем к часикам планируется несколько будильников и вывод на экран памятных дат.
