@@ -70,6 +70,7 @@ void polText(){
   tLightRain = "lekki deszcz";  
   tModerateRain = "umiarkowany deszcz";
   tLightIntensityShowerRain = "lekka intensywność deszczów";
+  tShowerRain="ulewa";
   tHeavyIntensityRain = "silna intensywność deszczów";
   tThunderstorm = "burza";
   tHaze = "mgła";
