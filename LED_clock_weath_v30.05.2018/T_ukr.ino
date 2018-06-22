@@ -70,6 +70,7 @@ void ukrText(){
   tLightRain = "невеликий дощ";  
   tModerateRain = "помірний дощ";
   tLightIntensityShowerRain = "легка інтесивність дощів";
+  tShowerRain="злива";
   tHeavyIntensityRain = "сильна інтенсивність дощів";
   tThunderstorm = "гроза";
   tHaze = "туман";
