@@ -70,6 +70,7 @@ void rusText(){
   tLightRain = "небольшой дождь";  
   tModerateRain = "умеренный дождь";
   tLightIntensityShowerRain = "легкая интенсивность дождей";
+  tShowerRain="ливень";
   tHeavyIntensityRain = "сильная интенсивность дождей";
   tThunderstorm = "гроза";
   tHaze = "туман";
