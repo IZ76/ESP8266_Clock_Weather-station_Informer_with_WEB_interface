@@ -183,7 +183,7 @@ String tWarsaw, tKrivoy, tKyiv, tOdessa, tDnepr, tCherkassy, tLviv, tKherson, tN
 String tRivne, tKropivnitsky, tUman, tVinnitsa, tKhmelnitsky, tTernopil, tLutsk, tKovel, tChernivtsi, tIvano, tStry, tMukachevo, tUzhgorod, tCzenstochowa, tKrakow, tLublinec;
 String tJanuary, tFebruary, tMarch, tApril, tMay, tJune, tJuly, tAugust, tSeptember, tOctober, tNovember, tDecember;
 String tMonday, tTuesday, tWednesday, tThursday, tFriday, tSaturday, tSunday;
-String tClearSky, tSkyIsClear, tFewClouds, tScatteredClouds, tBrokenClouds, tOvercastClouds, tLightRain, tModerateRain, tLightIntensityShowerRain, tHeavyIntensityRain, tThunderstorm, tHaze, tFog, tMist, tShowerSleet, tLightSnow, tLightShowerSnow, tSnow, tWeatrNot, tWeatrTN;
+String tClearSky, tSkyIsClear, tFewClouds, tScatteredClouds, tBrokenClouds, tOvercastClouds, tLightRain, tModerateRain, tLightIntensityShowerRain, tShowerRain, tHeavyIntensityRain, tThunderstorm, tHaze, tFog, tMist, tShowerSleet, tLightSnow, tLightShowerSnow, tSnow, tWeatrNot, tWeatrTN;
 
 //======================================================================================
 void setup() {
@@ -1157,6 +1157,7 @@ void convertWeatherDes(){
   else if(weatherDescription == "light rain") weatherDescription = tLightRain;  
   else if(weatherDescription == "moderate rain") weatherDescription = tModerateRain;
   else if(weatherDescription == "light intensity shower rain") weatherDescription = tLightIntensityShowerRain;
+  else if(weatherDescription == "shower rain") weatherDescription = tShowerRain;
   else if(weatherDescription == "heavy intensity rain") weatherDescription = tHeavyIntensityRain;
   else if(weatherDescription == "thunderstorm") weatherDescription = tThunderstorm;
   else if(weatherDescription == "haze") weatherDescription = tHaze;
