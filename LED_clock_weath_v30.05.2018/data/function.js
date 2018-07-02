@@ -92,10 +92,6 @@ function toggle(target) {
   var curVal = document.getElementById(target).className;
   document.getElementById(target).className = (curVal === 'hidden') ? 'show' : 'hidden';
 }
-function set_lang(submit) {
-  server = "/lang?mowa=" + val('mowa');
-  send_request(submit, server);
-}
 function set_lang_f(submit, texts) {
   server = "/lang?mowa=" + texts;
   send_request(submit, server);
