@@ -17,8 +17,8 @@ var langRU = {
 	P_wifi_setWiFi:"Подключение к WiFi роутеру",
     P_wifi_ssid:"Введите имя WiFi сети",
 	P_wifi_password:"Введите пароль WiFi сети",
-	P_wifi_setAP:"Параметры точки доступу (IP_192.168.4.1)",
-    P_wifi_ssidAP:"Введиет имя точки доступа",
+	P_wifi_setAP:"Параметры точки доступа (IP_192.168.4.1)",
+    P_wifi_ssidAP:"Введите имя точки доступа",
 	P_wifi_passwordAP:"Введите пароль точки доступа",
     //-- time
     P_time_title:"Настройка времени",
@@ -29,7 +29,7 @@ var langRU = {
 	P_time_daylight:"Переход на летнее время",
     P_time_dailySignal:"Ежечасный сигнал",
 	P_time_signalStart:'"Кукушка" работает с:',
-    P_time_save:"Автоопредиление часового пояса",
+    P_time_save:"Автоопределение часового пояса",
     //-- mqtt
     P_mqtt_title:"Настройка MQTT",
 	P_mqtt_informer:"Выполните настройку MQTT сервера. Вы можете использовать внешний сервер, например: ",
@@ -49,7 +49,7 @@ var langRU = {
 	P_mqtt_pub_press:"Топик публикации давления",
     P_mqtt_pub_alt:"Топик публикации высоты",
     //-- weather
-    P_weather_title:"Настройка погоди",
+    P_weather_title:"Настройка погоды",
 	P_weather_informer:"Для получения прогноза погоды,",
     P_weather_linkAPI:"здесь берём API ключ,",
     P_weather_linkID:"а здесь находим cityID своего города.",
@@ -70,7 +70,7 @@ var langRU = {
     P_led_sensorDom:"Датчик температуры в комнате",
 	P_led_sensorUl:"Датчик температуры на улице",
     P_led_sensorHumi:"Датчик влажности в комнате",
-	P_led_sensorPrAl:"Датчик давления та высоты",
+	P_led_sensorPrAl:"Датчик давления и высоты",
     P_led_rotate:"Угол поворота экрана",
     //-- help
     P_help_title:"Если что-то пошло не так...",
