@@ -9,7 +9,12 @@ ver.10.08.2018
 - В вебе можно выбрать тип используемого базера (активный/пассивный);
 - В ночное время можно включить отображение только часов;
 - К списку датчиков добавлен BME280.
+<br>
+<a href="http://piccy.info/view3/12540057/eef91597ac39401e5413c43be55b724c/" target="_blank"><img src="http://i.piccy.info/i9/b96eb1280f89069312300b191b95287d/1533837472/110634/1248178/Bezymiannyi.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-08-09-17-57/i9-12540057/407x768-r" target="_blank"><img src="http://i.piccy.info/a3/2018-08-09-17-57/i9-12540057/407x768-r/i.gif" alt="" border="0" /></a><br>
 
+<a href="http://piccy.info/view3/12540058/b7e2327cd9ccdebe2c4d99276ce9532a/" target="_blank"><img src="http://i.piccy.info/i9/c5b90c718bd5800babbec994eb2f5918/1533837636/102386/1248178/Bezymiannyi.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-08-09-18-00/i9-12540058/511x616-r" target="_blank"><img src="http://i.piccy.info/a3/2018-08-09-18-00/i9-12540058/511x616-r/i.gif" alt="" border="0" /></a><br>
+
+<br
 ver.30.05.2018
 Прежде всего это часы. И большую часть рабочего времени они отображают на индикаторе MAX7219 именно текущее время.
 Но в схеме предусмотрена возможность подключения дополнительных модулей (датчиков).<br>
