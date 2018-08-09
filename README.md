@@ -14,7 +14,8 @@
 <a href="http://piccy.info/view3/12540057/eef91597ac39401e5413c43be55b724c/" target="_blank"><img src="http://i.piccy.info/i9/b96eb1280f89069312300b191b95287d/1533837472/110634/1248178/Bezymiannyi.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-08-09-17-57/i9-12540057/407x768-r" target="_blank"><img src="http://i.piccy.info/a3/2018-08-09-17-57/i9-12540057/407x768-r/i.gif" alt="" border="0" /></a><br>
 
 <a href="http://piccy.info/view3/12540058/b7e2327cd9ccdebe2c4d99276ce9532a/" target="_blank"><img src="http://i.piccy.info/i9/c5b90c718bd5800babbec994eb2f5918/1533837636/102386/1248178/Bezymiannyi.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-08-09-18-00/i9-12540058/511x616-r" target="_blank"><img src="http://i.piccy.info/a3/2018-08-09-18-00/i9-12540058/511x616-r/i.gif" alt="" border="0" /></a><br>
-<a href="http://piccy.info/view3/12540081/2266b7724626d0a4c2d29d7662cbb533/" target="_blank"><img src="http://i.piccy.info/i9/4d15e9072a2a4b431bb470eb2fda35c4/1533838638/43348/1248178/Bezymiannyi_500.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-08-09-18-17/i9-12540081/488x342-r" target="_blank"><img src="http://i.piccy.info/a3/2018-08-09-18-17/i9-12540081/488x342-r/i.gif" alt="" border="0" /></a>
+
+<a href="http://piccy.info/view3/12540085/62620616d29bd7fac6a9bfea8b719403/" target="_blank"><img src="http://i.piccy.info/i9/3229c8211864dca22688a2256745bec3/1533838897/43970/1248178/Bezymiannyi_500.jpg" alt="Piccy.info - Free Image Hosting" border="0" /></a><a href="http://i.piccy.info/a3c/2018-08-09-18-21/i9-12540085/488x342-r" target="_blank"><img src="http://i.piccy.info/a3/2018-08-09-18-21/i9-12540085/488x342-r/i.gif" alt="" border="0" /></a>
 <br><hr>
 <b>ver.30.05.2018</b> <br>
 Прежде всего это часы. И большую часть рабочего времени они отображают на индикаторе MAX7219 именно текущее время.
