@@ -411,7 +411,7 @@ void loop() {
   }
   //------------- РОБОТА ЗІ СВЯТКОВИМИ ДАТАМИ ---------------------------------------------
   if(secFr==0) {
-    if(minute!=0) {
+    if(minute==0) {
       if(hour>=memory_hour_start && hour<=memory_hour_end && second<15 && second>2){
         for(byte i = 0; i < 9; i++) {
           if(memory_date[i][0]==day && memory_date[i][1]==month){
