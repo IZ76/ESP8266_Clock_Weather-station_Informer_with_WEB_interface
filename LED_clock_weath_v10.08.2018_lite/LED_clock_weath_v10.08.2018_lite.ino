@@ -407,14 +407,6 @@ void loop() {
       return;
     }
   }
-  //------------- НАШ ЧАС ----------------------------------------------------------------
-  if(hour == 22 && minute == 55) {                                                      // якщо наш час - то іде повідомлення для коханої
-    bip();
-    bip();
-    bip();
-    printStringWithShift(("       22:55 \200\200\200 " + tMes + " \200\200\200").c_str(), timeScrollSpeed);
-    return;
-  }
   // ---------- ВИВІД НА ЕКРАН ГОДИННИКА АБО ТЕМПЕРАТУРИ ЧИ ВОЛОГОСТІ------------------------
   if(!alarm_stat && millis() % 50 == 0){
     if((clockNight && hour>=timeDay && hour<timeNight) || !clockNight){
