@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--meta name = "viewport" content = "width=device-width, initial-scale=1.0"-->
+        <meta http-equiv = "Content-type" content = "text/html; charset=utf-8">
+        <title>Led_clock_weath на ESP-12 ver:10.08.2018 (By IvanUA)</title>
+        <link rel="shortcut icon" href="./img/Logo.png" type="images/x-ico">
+        <link rel = "stylesheet" type = "text/css" href = "/style.css">
+        <script type = "text/javascript" src = "/function.js"></script>
+        <script type = "text/javascript" src = "/lang_RU.js"></script>
+        <script type = "text/javascript" src = "/lang_UA.js"></script>
+        <script type = "text/javascript" src = "/lang_PL.js"></script>
+        <script type = "text/javascript" src = "/lang_CZ.js"></script>
+        <script type = "text/javascript" src = "/lang_DE.js"></script>
+        <script type = "text/javascript" src = "/lang_EN.js"></script>
+        <script type = "text/javascript">
+            function set_ssid(submit) {
+                server = "/ssid?ssid=" + val('ssid') + "&password=" + encodeURIComponent(val('password'))+"&ssidAP=" + val('ssidap') + "&passwordAP=" + encodeURIComponent(val('passwordAp'));
+                send_request(submit,server);
+                alert("Зміни вступлять в силу після перезагрузки. Будьласка перезагрузіть пристрій.");
+            }
+        </script>
+    </head>
+    <body onload = "load();">
+        <header>
+            <span class="opt_cn" id="header"></span><br>
+            <span class="opt_cn" id="P_time_informer"></span>
+            <span id="time">{{time}}</span>
+        </header>       
+        <central-unit>
+            <div class="menu_unit">
+                <a class="link__img" href="/index.html"><span class="ico__text">Wifi</span></a>
+                <a class="link__img" href="/time.html"><span class="ico__text">Time</span></a>
+                <a class="link__img" href="/mqtt.html"><span class="ico__text">Mqtt</span></a>
+                <a class="link__img" href="/weather.html"><span class="ico__text">Weather</span></a>
+                <a class="link__img" href="/led.html"><span class="ico__text">Setup</span></a>
+                <a class="link__img" href="/help.html"><span class="ico__text">Help</span></a>
+                <a class="link__img" href="#"><span class="ico__text" onclick="restart(this,'ResetESP?');">Restart</span></a>
+            </div>
+            <div class="body__center">
+                <titles>
+                    <span class="opt_cn" id="P_wifi_title"></span>
+                </titles>
+                <div class="informer">
+                    <span class="opt_cn" id="P_wifi_informer"></span>
+                </div>
+                <div id="main_unit">
+                    <paragraph>
+                        <span class="opt_cn" id="P_wifi_setWiFi"></span>
+                    </paragraph>
+                    <center>
+                        <table>
+                            <tr>
+                                <td align = "right"><span class="opt_cn" id="P_wifi_ssid"></span></td>
+                                <td><input type="text" class="field form-control" id="ssid" value="{{ssid}}" pattern="[-\w\s#@/]{1,15}" placeholder="name WiFi network"></td>
+                            </tr>
+                            <tr>  
+                                <td align = "right"><span class="opt_cn" id="P_wifi_password"></span></td>
+                                <td><input class="field form-control" id="password" value="{{password}}" pattern=".{8,15}" onfocus="this.type='text'" type="password"></td>
+                            </tr>
+                        </table>
+                    </center>
+                    <paragraph>
+                        <span class="opt_cn" id="P_wifi_setAP"></span>
+                    </paragraph>
+                    <center>
+                        <table>
+                            <tr>
+                                <td align = "right"><span class="opt_cn" id="P_wifi_ssidAP"></span></td>
+                                <td><input type="text" class="field" id="ssidap" value="{{ssidAP}}" class="form-control" pattern="[-\w\s#@/]{1,15}" placeholder="access point name"></td>
+                            </tr>
+                            <tr>
+                                <td align = "right"><span class="opt_cn" id="P_wifi_passwordAP"></span></td>  
+                                <td><input class="field" id="passwordAp" value="{{passwordAP}}" class="form-control" pattern=".{0,15}" onfocus="this.type='text'" type="password" class="form-control"></td>
+                            <tr>
+                        </table>
+                    </center>
+                    <span class="save_booton" id="save" onclick="set_ssid(this);"></span>
+                </div>
+            </div>
+            <div class="menu_unit" id="langs">
+                <a><span class="ico__text" onclick="set_lang_f(this, 'EN');">EN</span></a>
+                <a><span class="ico__text" onclick="set_lang_f(this, 'UA');">UA</span></a>
+                <a><span class="ico__text" onclick="set_lang_f(this, 'RU');">RU</span></a>
+                <a><span class="ico__text" onclick="set_lang_f(this, 'PL');">PL</span></a>
+                <a><span class="ico__text" onclick="set_lang_f(this, 'CZ');">CZ</span></a>
+                <a><span class="ico__text" onclick="set_lang_f(this, 'DE');">DE</span></a>
+            </div>
+        </central-unit>
+    </body>
+</html>
