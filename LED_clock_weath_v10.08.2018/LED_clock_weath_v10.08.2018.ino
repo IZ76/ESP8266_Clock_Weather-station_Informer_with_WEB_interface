@@ -216,6 +216,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("");
   pinMode(BUT_PIN, INPUT);
+  digitalWrite(BUT_PIN, HIGH);
   initMAX7219();
   sendCmdAll(CMD_SHUTDOWN, 1);
   sendCmdAll(CMD_INTENSITY, 1);
