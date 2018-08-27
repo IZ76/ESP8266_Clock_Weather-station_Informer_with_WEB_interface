@@ -7,7 +7,7 @@ bool loadConfig() {                                                // Заван
     return false;                                                  // Повернення з помилкою
   }
   size_t size = configFile.size();                                 // Перевіряємо ромір файлу, будемо використовувати файл довжиною в 1024 байта
-  if(size > 1024) {
+  if(size > 2048) {
     if(printCom) Serial.println("Config file size is too large");
     configFile.close();
     return false;                                                  // Повернення з помилкою
