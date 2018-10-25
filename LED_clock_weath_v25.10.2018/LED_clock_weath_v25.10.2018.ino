@@ -69,7 +69,7 @@ bool mqttOn = true;
 // =====================================================================================
 bool printCom = true;
 #define MAX_DIGITS 16
-#define NUM_MAX 10
+#define NUM_MAX 4
 byte volBrightnessD  = 8;
 byte volBrightnessN  = 2;
 bool volBrightnessAuto = 0;
