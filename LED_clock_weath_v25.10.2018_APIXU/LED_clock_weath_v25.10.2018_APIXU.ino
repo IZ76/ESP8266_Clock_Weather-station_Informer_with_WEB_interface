@@ -1066,7 +1066,7 @@ void getWeatherData() {
   weatherString += "     \213 " + String(current_humidity) + "%";
   weatherString += "     \215 " + String((current_pressure_mb/1.3332239), 0) + tPress;
   weatherString += "     \214 " + windDegString + String((current_wind_kph*0.277778), 1) + tSpeed;
-  weatherString += "     \216 " + String(current_cloud) + "%     " + current_condition_text + "          ";
+  weatherString += "     \216 " + String(current_cloud) + "%     " + current_condition_text + "                ";
   //if(printCom) Serial.println("          Getting weather forecast - is OK.");
   updateForecast = 0;
 }
@@ -1117,69 +1117,22 @@ void getWeatherDataz() {
   }
   JsonObject& location = root["location"];
   JsonObject& current = root["current"];
-  const char* current_last_updated = current["last_updated"]; // "2018-11-04 16:00"
-  float current_temp_c = current["temp_c"]; // 11
   JsonObject& current_condition = current["condition"];
-  const char* current_condition_text = current_condition["text"]; // "Пасмурно"
-  
-  float current_wind_kph = current["wind_kph"]; // 6.8
-  int current_wind_degree = current["wind_degree"]; // 40
-  int current_pressure_mb = current["pressure_mb"]; // 1028
-  float current_pressure_in = current["pressure_in"]; // 30.8
-  int current_precip_mm = current["precip_mm"]; // 0
-  int current_precip_in = current["precip_in"]; // 0
-  int current_humidity = current["humidity"]; // 87
-  int current_cloud = current["cloud"]; // 100
-//float current_feelslike_c = current["feelslike_c"]; // 10.4
-//float current_feelslike_f = current["feelslike_f"]; // 50.8
-//int current_vis_km = current["vis_km"]; // 9
- 
   JsonObject& forecast_forecastday0 = root["forecast"]["forecastday"][0];
   const char* forecast_forecastday0_date = forecast_forecastday0["date"]; // "2018-11-04"
-  
   JsonObject& forecast_forecastday0_day = forecast_forecastday0["day"];
   float forecast_forecastday0_day_maxtemp_c = forecast_forecastday0_day["maxtemp_c"]; // 14.3
   float forecast_forecastday0_day_mintemp_c = forecast_forecastday0_day["mintemp_c"]; // 8.4
-  float forecast_forecastday0_day_avgtemp_c = forecast_forecastday0_day["avgtemp_c"]; // 11.3
-  float forecast_forecastday0_day_maxwind_mph = forecast_forecastday0_day["maxwind_mph"]; // 5.6
-  float forecast_forecastday0_day_maxwind_kph = forecast_forecastday0_day["maxwind_kph"]; // 9
-//int forecast_forecastday0_day_totalprecip_mm = forecast_forecastday0_day["totalprecip_mm"]; // 0
-//int forecast_forecastday0_day_totalprecip_in = forecast_forecastday0_day["totalprecip_in"]; // 0
-  float forecast_forecastday0_day_avgvis_km = forecast_forecastday0_day["avgvis_km"]; // 18.5
-//int forecast_forecastday0_day_avghumidity = forecast_forecastday0_day["avghumidity"]; // 77
-  
   JsonObject& forecast_forecastday0_day_condition = forecast_forecastday0_day["condition"];
   const char* forecast_forecastday0_day_condition_text = forecast_forecastday0_day_condition["text"]; // "Переменная облачность"
-  
-//JsonObject& forecast_forecastday0_astro = forecast_forecastday0["astro"];
-//const char* forecast_forecastday0_astro_sunrise = forecast_forecastday0_astro["sunrise"]; // "06:53 AM"
-//const char* forecast_forecastday0_astro_sunset = forecast_forecastday0_astro["sunset"]; // "04:29 PM"
-//const char* forecast_forecastday0_astro_moonrise = forecast_forecastday0_astro["moonrise"]; // "02:26 AM"
-//const char* forecast_forecastday0_astro_moonset = forecast_forecastday0_astro["moonset"]; // "03:34 PM"
-  
   JsonObject& forecast_forecastday1 = root["forecast"]["forecastday"][1];
-//const char* forecast_forecastday1_date = forecast_forecastday1["date"]; // "2018-11-05"
-  
   JsonObject& forecast_forecastday1_day = forecast_forecastday1["day"];
   float forecast_forecastday1_day_maxtemp_c = forecast_forecastday1_day["maxtemp_c"]; // 12.8
   float forecast_forecastday1_day_mintemp_c = forecast_forecastday1_day["mintemp_c"]; // 7.8
-  float forecast_forecastday1_day_avgtemp_c = forecast_forecastday1_day["avgtemp_c"]; // 9.9
-  float forecast_forecastday1_day_maxwind_mph = forecast_forecastday1_day["maxwind_mph"]; // 8.1
   float forecast_forecastday1_day_maxwind_kph = forecast_forecastday1_day["maxwind_kph"]; // 13
-//int forecast_forecastday1_day_totalprecip_mm = forecast_forecastday1_day["totalprecip_mm"]; // 0
-//int forecast_forecastday1_day_totalprecip_in = forecast_forecastday1_day["totalprecip_in"]; // 0
-//int forecast_forecastday1_day_avgvis_km = forecast_forecastday1_day["avgvis_km"]; // 20
-  int forecast_forecastday1_day_avghumidity = forecast_forecastday1_day["avghumidity"]; // 80
-  
+  int forecast_forecastday1_day_avghumidity = forecast_forecastday1_day["avghumidity"]; // 80 
   JsonObject& forecast_forecastday1_day_condition = forecast_forecastday1_day["condition"];
   const char* forecast_forecastday1_day_condition_text = forecast_forecastday1_day_condition["text"]; // "Переменная облачность"
-//JsonObject& forecast_forecastday1_astro = forecast_forecastday1["astro"];
-//const char* forecast_forecastday1_astro_sunrise = forecast_forecastday1_astro["sunrise"]; // "06:55 AM"
-//const char* forecast_forecastday1_astro_sunset = forecast_forecastday1_astro["sunset"]; // "04:27 PM"
-//const char* forecast_forecastday1_astro_moonrise = forecast_forecastday1_astro["moonrise"]; // "03:43 AM"
-//const char* forecast_forecastday1_astro_moonset = forecast_forecastday1_astro["moonset"]; // "03:57 PM"
-
-
   weatherStringZ = "";
   if(hour<18) weatherStringZ += tCurr + ":";
   if(hour<12) weatherStringZ += "   \212" + String(forecast_forecastday0_day_mintemp_c, 1) + "...." + String(forecast_forecastday0_day_maxtemp_c, 1) + "\202" + "C  ";
@@ -1188,10 +1141,7 @@ void getWeatherDataz() {
   weatherStringZ += "     \213 " + String(forecast_forecastday1_day_avghumidity) + "%";
   weatherStringZ += "     \214 " + String((forecast_forecastday1_day_maxwind_kph*0.277778), 1) + tSpeed;
   weatherStringZ += "     " + String(forecast_forecastday1_day_condition_text);
-//  weatherStringZ += "     Видемость: " + String(forecast_forecastday0_day_avgvis_km, 1) + " км.";
-//  weatherStringZ += "     Восход: " + String(forecast_forecastday0_astro_sunrise);
-//  weatherStringZ += "     Закат: " + String(forecast_forecastday0_astro_sunset);
-  weatherStringZ += "             ";
+  weatherStringZ += "                  ";
   if(printCom) Serial.println("          Getting weather forecast for tomorrow - is OK.");
   updateForecasttomorrow = 0;
 }
@@ -1212,7 +1162,7 @@ void wifiConnect(){
       if(printCom) Serial.print(" IP adress : ");
       if(printCom) Serial.println(WiFi.localIP());
       if(!firstStart){
-        String aaa = WiFi.localIP().toString();
+        String aaa = WiFi.localIP().toString() + "                ";
         clr();
         printStringWithShift((tYour + " IP: ").c_str(), 15);
         printStringWithShift(aaa.c_str(), 25);
