@@ -1073,12 +1073,12 @@ void getWeatherData() {
   weatherString += "     \213 " + String(humidity) + "%";
   weatherString += "     \215 " + String(pressure, 0) + tPress;
   weatherString += "     \214 " + windDegString + String(windSpeed, 1) + tSpeed;
-  weatherString += "     \216 " + String(clouds) + "%     " + weatherDescription + "          ";
+  weatherString += "     \216 " + String(clouds) + "%     " + weatherDescription + "                ";
   if(printCom) Serial.println("          Getting weather forecast - is OK.");
   updateForecast = 0;
 }
 // =======================================================================//
-//               Беремо ПРОГНОЗ!!! погоди з сайту openweathermap.org      // этот прогноз под старые ключи, надо закоментить прогноз под новые
+//               Беремо ПРОГНОЗ!!! погоди з сайту openweathermap.org      // 
 // =======================================================================//
 void getWeatherDataz() {
   if(!WIFI_connected) {
@@ -1115,17 +1115,12 @@ void getWeatherDataz() {
   Serial.println(line);
   DynamicJsonBuffer jsonBuf;
   JsonObject &root = jsonBuf.parseObject(tempz);
-  //DynamicJsonDocument jsonBuf;
-  //DeserializationError error = deserializeJson(jsonBuf, tempz);
   if(!root.success()){
     if(printCom) Serial.println("          Parse weather forecast for tomorrow - failed!!!");
     updateForecasttomorrow++;
     if(updateForecast >= 360) weatherStringZ = "";
     return;
   }
-  //JsonObject root = jsonBuf.as<JsonObject>();
-  //lon = root ["coord"]["lon"];
-  //lat = root ["coord"]["lat"];
   float tempMin=root ["temp"]["min"];
   float tempMax=root ["temp"]["max"];  
   float wSpeed=root ["speed"];
@@ -1143,154 +1138,7 @@ void getWeatherDataz() {
   if(wDeg >= 253 && wDeg <= 298) wDegString = "\231";    //"Західний";
   if(wDeg >= 299 && wDeg <= 344) wDegString = "\233";    //"Північно-західний";
   weatherStringZ = tTom + ":   \212" + String(tempMin, 1) + "...." + String(tempMax, 1) + "\202" + "C";
-  weatherStringZ += "     \214 " + wDegString + String(wSpeed, 1) + tSpeed + "     " + weatherDescription + "             ";
-  if(printCom) Serial.println("          Getting weather forecast for tomorrow - is OK.");
-  updateForecasttomorrow = 0;
-}
-//=================================================================================================================================================================
-//            Этот прогноз под новые ключи - надо закоментить прогноз под старые ключи!!!
-//=============================================================================================================================================================================
-/*
-void get_json_forecast_string(byte cnt) {
-  //Serial.println();
-  //Serial.print("cnt = ");
-  //Serial.println(cnt);
-  jsonLine=line;
-  if(cnt>1){
-    for(int i=1; i<=(cnt-1)*2; i++) jsonLine.remove(0, jsonLine.indexOf("dt") +2);  //рубим голову
-  } 
-  jsonLine.remove(0, jsonLine.indexOf("dt") - 2);  //рубим шею
-  jsonLine.remove(jsonLine.indexOf("dt_txt")+30, jsonLine.length()-jsonLine.indexOf("dt_txt")+30);  //рубим хвост
-
-  //Serial.print("jsonLineExit = ");
-  //Serial.println(jsonLine);
-}
-//=============================================================================================================================================================
-void getWeatherDataz() {
-  if(!WIFI_connected) {
-    updateForecasttomorrow++;
-    if(updateForecast >= 360) weatherStringZ = "";
-   return;
-  }
-  // вычисляем индексы прогноза погоды на следующий день на 9, 15, 18 часов относительно текущего времени
-  byte current_shift = hour % 3;   
-  if (current_shift != 0) {
-    current_shift = 1;   
-  }
-  byte shift_morning, shift_day, shift_evening;
-                                                                //                -1 0 0-1 0 0-1 0 0-1 0
-  if((hour >= 0) && (hour < 11)) {                             //                  0 1 2 3 4 5 6 7 8 9 10 
-    shift_morning =     (12 - hour) / 3 + current_shift - 1; // 12 часов сегодня   3 3 3 2 2 2 1 1 1 0 0
-    shift_day     = 1 + (12 - hour) / 3 + current_shift - 1; // 15 часов сегодня   4 4 4 3 3 3 2 2 2 1 1
-    shift_evening = 3 + (12 - hour) / 3 + current_shift - 1; // 21 час сегодня     6 6 6 5 5 5 4 4 4 3 3
-  } else {                                                                     //  0 -1  0  0 -1  0  0 -1  0  0 -1  0  0
-                                                                               // 11 12 13 14 15 16 17 18 19 20 21 22 23 
-    shift_morning = 3 + (24 - hour) / 3 + current_shift - 1; // 4-9 часов завтра   7  6  6  6  5  5  5  4  4  4  3  3  3
-    shift_day     = 5 + (24 - hour) / 3 + current_shift - 1; // 6-15 часов завтра  9  8  8  8  7  7  7  6  6  6  5  5  5
-    shift_evening = 7 + (24 - hour) / 3 + current_shift - 1; // 8-21 час завтра   11 10 10 10  9  9  9  8  8  8  7  7  7
-  }
-  //------------------------------------------------------------------------------------------------------------------------
-  if(printCom) printTime();
-  if(printCom) Serial.println("Getting weather forecast for tomorrow..." + shift_evening);
-  if(ESPclient.connect(weatherHost.c_str(), 80)) {
-    ESPclient.println(String("GET /data/2.5/forecast?id=") + cityID + "&units=metric&appid=" + weatherKey + "&lang=" + weatherLang + "&cnt="+ shift_evening + "\r\n" + "HTTP/1.0\r\n" +
-                "Host: " + weatherHost + "\r\n" + "Connection: close\r\n\r\n");
-  } else {
-    if(printCom) Serial.println("          No connection server (for tomorrow)!!!");
-    updateForecasttomorrow++;
-    if(updateForecast >= 360) weatherStringZ = "";
-    return;
-  }
-  int  repeatCounter = 0;
-  while(!ESPclient.available() && repeatCounter < 10) {
-    delay(10);
-    if(printCom) Serial.print(".");
-    repeatCounter++;
-  }
-  line = ""; 
-  //line = ESPclient.readString();
-
-
-  while(ESPclient.connected() && ESPclient.available()) {
-    char c = ESPclient.read(); 
-    if(c == '[' || c == ']') c = ' ';
-    line += c;
-  }
-
-  
-//-------------------------------------------------------------------------------------------------------------------------------
-  get_json_forecast_string(shift_morning);
-  String morning_json_line = jsonLine;
-  get_json_forecast_string(shift_day);
-  String day_json_line = jsonLine;
-  get_json_forecast_string(shift_evening);
-  String evening_json_line = jsonLine;
-  //Serial.print("morning_json_line = ");
-  //Serial.println(morning_json_line);
-  //Serial.print("day_json_line = ");
-  //Serial.println(day_json_line);
-  //Serial.print("evening_json_line = ");
-  //Serial.println(evening_json_line);
-
-  DynamicJsonBuffer jsonMorning;
-  JsonObject &rootMorning=jsonMorning.parseObject(morning_json_line);
-  DynamicJsonBuffer jsonDay;
-  JsonObject &rootDay=jsonDay.parseObject(day_json_line);
-  DynamicJsonBuffer jsonEvening;
-  JsonObject &rootEvening=jsonEvening.parseObject(evening_json_line);
-
-  //DynamicJsonDocument jsonMorning;
-  //DynamicJsonDocument jsonDay;
-  //DynamicJsonDocument jsonEvening;
-  //DeserializationError error_morning = deserializeJson(jsonMorning, morning_json_line);
-  //DeserializationError error_day = deserializeJson(jsonDay, day_json_line);
-  //DeserializationError error_evening = deserializeJson(jsonEvening, evening_json_line);
-
-  if(!rootMorning.success() || !rootDay.success() || !rootEvening.success()){
-    if(printCom) Serial.println("          Parse weather forecast for tomorrow - failed!!!");
-    updateForecasttomorrow++;
-    if(updateForecast >= 360) weatherStringZ = "";
-    //return;
-  }
-  
-  //JsonObject rootjsonMorning = jsonMorning.as<JsonObject>();
-  //JsonObject rootjsonDay = jsonDay.as<JsonObject>();
-  //JsonObject rootjsonEvening = jsonEvening.as<JsonObject>();
-    
-  //JsonObject forecast_next_morning = root[shift_morning]; 
-  //JsonObject forecast_next_day = root[shift_day]; 
-  //JsonObject forecast_next_evening = root[shift_evening]; 
-  
-  float tempMorning=rootMorning["main"]["temp"];
-  float tempDay=rootDay["main"]["temp"];  
-  float tempEvening=rootEvening["main"]["temp"];
-    
-  float wSpeed=rootDay["wind"]["speed"];
-  int wDeg=rootDay["wind"]["deg"];
-  String  w = rootDay["weather"][0]["description"];
-  weatherDescription = w;
-  weatherDescription.toLowerCase();
-  if(lang!=5) convertWeatherDes();
-  String wDegString;
-  
-  if(wDeg >= 345 || wDeg <= 22)  wDegString = "\211";    //"Північний";
-  if(wDeg >= 23  && wDeg <= 68)  wDegString = "\234";    //"Північно-східний";
-  if(wDeg >= 69  && wDeg <= 114) wDegString = "\230";    //"Східний";
-  if(wDeg >= 115 && wDeg <= 160) wDegString = "\235";    //"Південно-східний";
-  if(wDeg >= 161 && wDeg <= 206) wDegString = "\210";    //"Південний";
-  if(wDeg >= 207 && wDeg <= 252) wDegString = "\232";    //"Південно-західний";
-  if(wDeg >= 253 && wDeg <= 298) wDegString = "\231";    //"Західний";
-  if(wDeg >= 299 && wDeg <= 344) wDegString = "\233";    //"Північно-західний";
-
-  String save_tTom = tTom;
-  
-  if ((hour >= 0) && (hour < 11)) { tTom = "Ожидается";}
-
-  weatherStringZ = tTom + ":   \212" + String(tempMorning, 1) + ".." + String(tempDay, 1) + ".." + String(tempEvening, 1) + "\202" + "C";
-  weatherStringZ += "     \214 " + wDegString + String(wSpeed, 1) + tSpeed + "     " + weatherDescription + "             ";
-
-  tTom = save_tTom;
-  
+  weatherStringZ += "     \214 " + wDegString + String(wSpeed, 1) + tSpeed + "     " + weatherDescription + "                 ";
   if(printCom) Serial.println("          Getting weather forecast for tomorrow - is OK.");
   updateForecasttomorrow = 0;
 }
@@ -1311,7 +1159,7 @@ void wifiConnect(){
       if(printCom) Serial.print(" IP adress : ");
       if(printCom) Serial.println(WiFi.localIP());
       if(!firstStart){
-        String aaa = WiFi.localIP().toString();
+        String aaa = WiFi.localIP().toString() + "                ";
         clr();
         printStringWithShift((tYour + " IP: ").c_str(), 15);
         printStringWithShift(aaa.c_str(), 25);
