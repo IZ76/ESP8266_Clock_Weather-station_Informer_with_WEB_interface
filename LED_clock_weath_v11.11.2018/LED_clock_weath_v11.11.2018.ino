@@ -608,9 +608,9 @@ void showSimplePre() {
   dx = dy = 0;
   clr();
   showDigit(19, 0, dig5x8rn);     // друкуємо знак тиску
-  showDigit(int(sensorPrAl==3?pressBmp:pressBme / 100), 6, dig5x8rn);
-  showDigit((int(sensorPrAl==3?pressBmp:pressBme /10) - int(sensorPrAl==3?pressBmp:pressBme /100) * 10) , 12, dig5x8rn);
-  showDigit((sensorPrAl==3?pressBmp:pressBme - int(sensorPrAl==3?pressBmp:pressBme / 10) *10) , 18, dig5x8rn);
+  showDigit(int((sensorPrAl==3?pressBmp:pressBme) / 100), 6, dig5x8rn);
+  showDigit((int((sensorPrAl==3?pressBmp:pressBme) /10) - int((sensorPrAl==3?pressBmp:pressBme) /100) * 10) , 12, dig5x8rn);
+  showDigit(((sensorPrAl==3?pressBmp:pressBme) - int((sensorPrAl==3?pressBmp:pressBme) / 10) *10) , 18, dig5x8rn);
   showDigit(20, 24, dig5x8rn);
   showDigit(21, 29, dig5x8rn);
   refreshAll();
