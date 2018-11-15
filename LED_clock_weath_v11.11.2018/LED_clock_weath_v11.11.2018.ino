@@ -154,10 +154,10 @@ bool outForecast = true;
 int updateForecast = 0;
 int updateForecasttomorrow = 0;
 float t0 = 0.0;    // температура в  доме  со знаком и плавающей запятой
-byte t1 = 85;    // температура в  доме  целая беззнаковая часть
-byte t2 = 0;     // температура в  доме  дробная часть
-byte t3 = 85;    // температура на улице целая беззнаковая часть
-byte t4 = 0;     // температура на улице дробная часть
+int t1 = 85;    // температура в  доме  целая беззнаковая часть
+int t2 = 0;     // температура в  доме  дробная часть
+int t3 = 85;    // температура на улице целая беззнаковая часть
+int t4 = 0;     // температура на улице дробная часть
 float t5 = 0.0;    // температура на улице со знаком и плавающей запятой
 byte h1 = 0;
 byte h2 = 0;
@@ -318,6 +318,7 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
   if(String(topic) == mqtt_sub) {
     tMqtt3 = 0;
     tMqtt4 = 0;
+    tMqtt5 = 0.0;
     if((payload[0] >= 48 && payload[0] < 58) || payload[0] == 45) { // в payload[0] - хранится первый полученный символ. 48, 58 и 45 - это коды знаков можете их посмотреть в fontUA_RU_PL_DE[]
       if(payload[0] == 45) {                                        // если первый символ = "-"
         if(payload[1] >= 48 && payload[1] < 58) {                   //  здесь проверяем уже второй символ что он является числом...
@@ -332,9 +333,8 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
         if(payload[2] == 46) {                                      // тоже самое со втрорым знаком...
           if(payload[3] >= 48 && payload[3] < 58) tMqtt4 = payload[3] - 48;
         }
-        tMqtt5 = (tMqtt3 + (tMqtt4 /10)) * -1; 
+        tMqtt5 = (tMqtt3 + ((float)tMqtt4 / 10)) * (-1);
       } else {                                                      // здесь таже самая процедура но уже с положительными числами)))))
-        tMqtt5 = 1;
         tMqtt3 = payload[0] - 48;
         if(payload[1] >= 48 && payload[1] < 58) {
           tMqtt3 = tMqtt3 * 10 + (payload[1] - 48);
@@ -345,7 +345,7 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
         if(payload[1] == 46) {
           if(payload[2] >= 48 && payload[2] < 58) tMqtt4 = payload[2] - 48;
         }
-        tMqtt5 = (tMqtt3 + (tMqtt4 /10)); 
+        tMqtt5 = (tMqtt3 + ((float)tMqtt4 / 10)); 
       }
     }
   }
@@ -567,7 +567,7 @@ void loop() {
 void showSimpleTemp() {
   dx = dy = 0;
   clr();
-  showDigit((t0 < 0 ? 14 : 13), 0, dig5x8rn); // друкуємо D+ альбо D-
+  showDigit((t0 < 0.0 ? 14 : 13), 0, dig5x8rn); // друкуємо D+ альбо D-
   if(t1 <= -10.0 || t1 >= 10) showDigit((t1 < 0 ? (t1 * -1) / 10 : t1 / 10), 4, dig5x8rn);
   showDigit((t1 < 0 ? (t1 * -1) % 10 : t1 % 10), 10, dig5x8rn);
   showDigit(12, 16, dig5x8rn);
@@ -581,7 +581,7 @@ void showSimpleTempU() {
   if(WiFi.status() == WL_CONNECTED) {
     dx = dy = 0;
     clr();
-    showDigit((t5 < 0 ? 16 : 15), 0, dig5x8rn); //друкуємо U+ альбо U-
+    showDigit((t5 < 0.0 ? 16 : 15), 0, dig5x8rn); //друкуємо U+ альбо U-
     if(t3 <= -10.0 || t3 >= 10) showDigit((t3 < 0 ? (t3 * -1) / 10 : t3 / 10), 4, dig5x8rn);
     showDigit((t3 < 0 ? (t3 * -1) % 10 : t3 % 10), 10, dig5x8rn);
     showDigit(12, 16, dig5x8rn);
@@ -609,7 +609,7 @@ void showSimplePre() {
   clr();
   showDigit(19, 0, dig5x8rn);     // друкуємо знак тиску
   showDigit(int((sensorPrAl==3?pressBmp:pressBme) / 100), 6, dig5x8rn);
-  showDigit((int((sensorPrAl==3?pressBmp:pressBme) /10) - int((sensorPrAl==3?pressBmp:pressBme) /100) * 10) , 12, dig5x8rn);
+  showDigit((int((sensorPrAl==3?pressBmp:pressBme) / 10) - int((sensorPrAl==3?pressBmp:pressBme) / 100) * 10) , 12, dig5x8rn);
   showDigit(((sensorPrAl==3?pressBmp:pressBme) - int((sensorPrAl==3?pressBmp:pressBme) / 10) *10) , 18, dig5x8rn);
   showDigit(20, 24, dig5x8rn);
   showDigit(21, 29, dig5x8rn);
@@ -1299,11 +1299,11 @@ void sensors() {
     sensorsBme();
     sensorsDht();
     t0 = (sensorDom==0?0:sensorDom==1?tempDs18b20:sensorDom==2?celsiusSi7021:sensorDom==3?tempBmp:sensorDom==4?tempBme:sensorDom==5?tempDht22:sensorDom==6?tMqtt5:0);
-    t5 = (sensorUl ==0?0:sensorUl ==1?tempDs18b20:sensorUl ==2?celsiusSi7021:sensorUl ==3?tempBmp:sensorUl ==4?tempBme:sensorUl ==5?tempDht22:sensorUl ==6?tMqtt5:0);
     t1 = (sensorDom==0?0:sensorDom==1?(int)tempDs18b20:sensorDom==2?(int)celsiusSi7021:sensorDom==3?(int)tempBmp:sensorDom==4?(int)tempBme:sensorDom==5?(int)tempDht22:sensorDom==6?tMqtt3:0);
-    t3 = (sensorUl ==0?0:sensorUl ==1?(int)tempDs18b20:sensorUl ==2?(int)celsiusSi7021:sensorUl ==3?(int)tempBmp:sensorUl ==4?(int)tempBme:sensorUl ==5?(int)tempDht22:sensorUl ==6?tMqtt3:0);
     t2 = (sensorDom==0?0:sensorDom==1?((int)(tempDs18b20*(tempDs18b20<0?-10:10))%10):sensorDom==2?((int)(celsiusSi7021*(celsiusSi7021<0?-10:10))%10):sensorDom==3?((int)(tempBmp*(tempBmp<0?-10:10))%10):sensorDom==4?((int)(tempBme*(tempBme<0?-10:10))%10):sensorDom==5?((int)(tempDht22*(tempDht22<0?-10:10))%10):sensorDom==6?tMqtt4:0);
+    t3 = (sensorUl ==0?0:sensorUl ==1?(int)tempDs18b20:sensorUl ==2?(int)celsiusSi7021:sensorUl ==3?(int)tempBmp:sensorUl ==4?(int)tempBme:sensorUl ==5?(int)tempDht22:sensorUl ==6?tMqtt3:0);
     t4 = (sensorUl ==0?0:sensorUl ==1?((int)(tempDs18b20*(tempDs18b20<0?-10:10))%10):sensorUl ==2?((int)(celsiusSi7021*(celsiusSi7021<0?-10:10))%10):sensorUl ==3?((int)(tempBmp*(tempBmp<0?-10:10))%10):sensorUl ==4?((int)(tempBme*(tempBme<0?-10:10))%10):sensorUl ==5?((int)(tempDht22*(tempDht22<0?-10:10))%10):sensorUl ==6?tMqtt4:0);
+    t5 = (sensorUl ==0?0:sensorUl ==1?tempDs18b20:sensorUl ==2?celsiusSi7021:sensorUl ==3?tempBmp:sensorUl ==4?tempBme:sensorUl ==5?tempDht22:sensorUl ==6?tMqtt5:0);
   if(sensorHumi == 0) {
     h1 = 0;
     h2 = 0;
@@ -1481,4 +1481,3 @@ String chr_to_str(String str) {
   }
   return chr_to_str;
 }
-
