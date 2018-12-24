@@ -1416,6 +1416,7 @@ void bip(){
   if(!buzzerSet){
     tone(buzzerPin, 2000, 40);
     delay(250);
+    noTone(buzzerPin);
   } else {
     digitalWrite(buzzerPin, HIGH);
     delay(120);
