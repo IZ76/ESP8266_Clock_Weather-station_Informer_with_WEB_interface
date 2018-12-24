@@ -1277,4 +1277,5 @@ void printTime() {
 void bip(){
   tone(buzzerPin, 2000, 40);
   delay(200);
+  noTone(buzzerPin);
 }
