@@ -73,6 +73,8 @@ void handle_ConfigJSON() {
   json += (ds18b20Out==1?"checked":"");
   json += "\",\"rotate\":\"";
   json += rotate;
+  json += "\",\"NUM_MAX\":\"";
+  json += NUM_MAX;  
   json += "\",\"mqttOn\":\"";
   json += (mqttOn==1?"checked":"");
   json += "\",\"mqtt_server\":\"";
@@ -201,6 +203,18 @@ void handle_ConfigJSON() {
   json += memory_hour_start;
   json += "\",\"md_stop\":\"";
   json += memory_hour_end;
+  json += "\",\"fontCLOCK\":\"";
+  json += fontCLOCK;
+  json += "\",\"aliData\":\"";
+  json += aliData;
+  json += "\",\"corrTempD\":\"";
+  json += corrTempD;
+  json += "\",\"corrTempU\":\"";
+  json += corrTempU;
+  json += "\",\"corrHumi\":\"";
+  json += corrHumi;
+  json += "\",\"corrPress\":\"";
+  json += corrPress;
   json += "\"}";
   server.send(200, "text/json", json);
 }
@@ -354,6 +368,7 @@ void handle_led(){
   ds18b20 = server.arg("ds18b20").toInt();
   ds18b20Out = server.arg("ds18b20Out").toInt();
   rotate = server.arg("rotate").toInt();
+  NUM_MAX = server.arg("NUM_MAX").toInt();
   kuOn = server.arg("kuOn").toInt();
   kuOff = server.arg("kuOff").toInt();
   String sD = server.arg("sensorDom");
@@ -381,6 +396,12 @@ void handle_led(){
   if(sP=="NONE") sensorPrAl = 0;
   else if(sP=="BMP280") sensorPrAl = 3;
   else if(sP=="BME280") sensorPrAl = 4;
+  fontCLOCK = server.arg("fontCLOCK").toInt();
+  aliData = server.arg("aliData").toInt();
+  corrTempD = server.arg("corrTempD").toFloat();
+  corrTempU = server.arg("corrTempU").toFloat();
+  corrHumi = server.arg("corrHumi").toFloat();
+  corrPress = server.arg("corrPress").toInt();
   if(printCom) {
     printTime();
     Serial.println("TBD: "+String(timeDay)+", VBD: "+String(volBrightnessD)+", TBN: "+String(timeNight)+", VBN: "+String(volBrightnessN)+",  kuOn: "+String(kuOn)+",  kuOff: "+String(kuOff)+",  ds18b20: "+String(ds18b20)+", ds18b20Out: "+String(ds18b20Out)+", rotate: "+String(rotate)+", clockNight: "+String(clockNight)+", buzzerSet: "+String(buzzerSet));
