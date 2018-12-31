@@ -13,7 +13,7 @@
 #define CMD_SCANLIMIT   11
 #define CMD_SHUTDOWN    12
 #define CMD_DISPLAYTEST 15
-byte scr[NUM_MAX * 8 + 8];
+byte scr[104];
 //======================================================================================================
 void sendCmd(int addr, byte cmd, byte data) {
   digitalWrite(CS_PIN, LOW);
@@ -38,56 +38,34 @@ void refresh(int addr) {
     sendCmd(addr, i + CMD_DIGIT0, scr[addr * 8 + i]);
 }
 //======================================================================================================
-void refreshAllRot270() {
-  byte mask = 0x01;
-  for(int c = 0; c < 8; c++){
-    digitalWrite(CS_PIN, LOW);
-    for(int i = NUM_MAX - 1; i >= 0; i--) {
-      byte bt = 0;
-      for(int b = 0; b < 8; b++){
-        bt <<= 1;
-        if(scr[i * 8 + b] & mask) bt |= 0x01;
-      }
-      shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, CMD_DIGIT0 + c);
-      shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, bt);
-    }
-    digitalWrite(CS_PIN, HIGH);
-    mask <<= 1;
-  }
-}
-//======================================================================================================
-void refreshAllRot90() {
-  byte mask = 0x80;
-  for(int c = 0; c < 8; c++){
-    digitalWrite(CS_PIN, LOW);
-    for(int i = NUM_MAX - 1; i >= 0; i--) {
-      byte bt = 0;
-      for(int b = 0; b < 8; b++){
-        bt >>= 1;
-        if(scr[i * 8 + b] & mask) bt |= 0x80;
-      }
-      shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, CMD_DIGIT0 + c);
-      shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, bt);
-    }
-    digitalWrite(CS_PIN, HIGH);
-    mask >>= 1;
-  }
-}
-//======================================================================================================
 void refreshAll() {
-  if(rotate == 270) {
-    refreshAllRot270();
-  } else if(rotate == 90) {
-    refreshAllRot90();
-  } else {
-    for(int c = 0; c < 8; c++){
-      digitalWrite(CS_PIN, LOW);
-      for(int i = NUM_MAX - 1; i >= 0; i--){
+  byte mask = (rotate == 270? 0x01 : 0x80);
+  for(int c = 0; c < 8; c++){
+    digitalWrite(CS_PIN, LOW);
+    for(int i = NUM_MAX - 1; i >= 0; i--){
+      byte bt = 0;
+      if(rotate == 270) {
+        for(int b = 0; b < 8; b++){
+          bt <<= 1;
+          if(scr[i * 8 + b] & mask) bt |= 0x01;
+        }
+        shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, CMD_DIGIT0 + c);
+        shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, bt);
+      } else if(rotate == 90) {
+        for(int b = 0; b < 8; b++){
+          bt >>= 1;
+          if(scr[i * 8 + b] & mask) bt |= 0x80;
+        }
+        shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, CMD_DIGIT0 + c);
+        shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, bt);
+      } else {
         shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, CMD_DIGIT0 + c);
         shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, scr[i * 8 + c]);
       }
-    digitalWrite(CS_PIN, HIGH);
     }
+    digitalWrite(CS_PIN, HIGH);
+    if(rotate == 270) mask <<= 1;
+    if(rotate == 90) mask >>= 1;
   }
 }
 //======================================================================================================
