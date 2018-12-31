@@ -106,7 +106,14 @@ bool loadConfig() {                                                // Заван
   snprintf(memory_date_mes7, 51, "%s", (root["md_7_2"].as<String>()).c_str());
   snprintf(memory_date_mes8, 51, "%s", (root["md_8_2"].as<String>()).c_str());
   memory_hour_start = root["memory_hour_start"];
-  memory_hour_end = root["memory_hour_end"];  
+  memory_hour_end = root["memory_hour_end"];
+  fontCLOCK = root["fontCLOCK"];
+  aliData = root["aliData"];
+  corrTempD = root["corrTempD"];
+  corrTempU = root["corrTempU"];
+  corrHumi  = root["corrHumi"];
+  corrPress = root["corrPress"];
+  NUM_MAX = root["NUM_MAX"];
   if(printCom) {
     printTime();
     Serial.print("Load Config : ");
@@ -208,7 +215,14 @@ bool saveConfig() {
   json["md_7_2"] = memory_date_mes7;
   json["md_8_2"] = memory_date_mes8;
   json["memory_hour_start"] = memory_hour_start;
-  json["memory_hour_end"] = memory_hour_end;  
+  json["memory_hour_end"] = memory_hour_end;
+  json["fontCLOCK"] = fontCLOCK;
+  json["aliData"] = aliData;
+  json["corrTempD"] = corrTempD;
+  json["corrTempU"] = corrTempU;
+  json["corrHumi"] = corrHumi;
+  json["corrPress"] = corrPress;
+  json["NUM_MAX"] = NUM_MAX;   
   jsonConfig = "";
   json.printTo(jsonConfig);
   File configFile = SPIFFS.open("/config.json", "w");                // Відкриваємо файл для запису
