@@ -27,6 +27,7 @@ ______________________________________________*/
 #include "Adafruit_Si7021.h"
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
+#include <Adafruit_BMP085.h>
 #include "BlueDot_BME280.h"
 #include <SimpleDHT.h>
 ESP8266HTTPUpdateServer httpUpdater;
@@ -74,7 +75,9 @@ bool mqttOn = true;
 // =====================================================================================
 bool printCom = true;
 #define MAX_DIGITS 16
-#define NUM_MAX 4
+byte NUM_MAX = 4;
+byte fontCLOCK = 0;      // 0-крупный, 1-крупный цифровой, 2-полу жирный, 3-полу жирный цифровой, 4-обычный, 5-обычный цифровой, 6-узкий, 7-узкий цифровой. 
+byte aliData = 8;
 byte volBrightnessD  = 8;
 byte volBrightnessN  = 2;
 bool volBrightnessAuto = 0;
@@ -175,10 +178,12 @@ float humBme = 0;
 float pressBme = 0;
 float altBme = 0;
 Adafruit_BMP280 bmp;
+Adafruit_BMP085 bmp180;
 float tempBmp = 0;
 float pressBmp = 0;
 float altBmp = 0;
 bool bmp280 = false;
+bool BMP180 = false;
 bool bme280 = false;
 float tempDht22 = 0;
 float humiDht22 = 0;
@@ -188,6 +193,10 @@ float hum = 0;
 float humSi7021 = 0;
 float celsiusSi7021 = 0;
 bool si7021 = false;
+float corrTempD = -3.3;
+float corrTempU = -1.5;
+float corrHumi  = 0;
+int   corrPress = -21;
 byte sensorDom = 4;          //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT22 = 5, MQTT = 6;
 byte sensorUl = 6;           //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT22 = 5, MQTT = 6;
 byte sensorHumi = 4;         //NONE = 0, NONE    = 1, Si7021 = 2, NONE   = 3, BME280 = 4, DHT22 = 5, NONE = 6;
@@ -232,6 +241,13 @@ void setup() {
     sensorsBmp();
   } else {
     if(printCom) Serial.println("Did not find BMP280 sensor!");
+  }
+  if(bmp180.begin()) {
+    if(printCom) Serial.println("YES!!! find BMP180 sensor!");
+    BMP180 = true;
+    sensorsBmp();
+  } else {
+    if(printCom) Serial.println("Did not find BMP180 sensor!");
   }
   bme.parameter.communication = 0;                            //Подключение сенсора по I2C 
   bme.parameter.I2CAddress = 0x76;                            //I2C Адрес сенсора или 0x77
@@ -565,80 +581,79 @@ void loop() {
 //======================================================================================
 //==========ВИВІД НА ЕКРАН ТЕМПЕРАТУРИ В БУДИНКУ========================================
 void showSimpleTemp() {
+  byte tt=aliData*(NUM_MAX-4);
   dx = dy = 0;
   clr();
-  showDigit((t0 < 0.0 ? 14 : 13), 0, dig5x8rn); // друкуємо D+ альбо D-
-  if(t1 <= -10.0 || t1 >= 10) showDigit((t1 < 0 ? (t1 * -1) / 10 : t1 / 10), 4, dig5x8rn);
-  showDigit((t1 < 0 ? (t1 * -1) % 10 : t1 % 10), 10, dig5x8rn);
-  showDigit(12, 16, dig5x8rn);
-  showDigit(t2, 18, dig5x8rn);
-  showDigit(10, 24, dig5x8rn);
-  showDigit(11, 27, dig5x8rn);
+  showDigit((t0 < 0.0 ? 4 : 3), tt, znaki5x8); // друкуємо D+ альбо D-
+  if(t1 <= -10.0 || t1 >= 10) showDigit((t1 < 0 ? (t1 * -1) / 10 : t1 / 10), 4+tt, dig5x8);
+  showDigit((t1 < 0 ? (t1 * -1) % 10 : t1 % 10), 10+tt, dig5x8);
+  showDigit(2, 16+tt, znaki5x8);
+  showDigit(t2, 18+tt, dig5x8);
+  showDigit(0, 24+tt, znaki5x8);
+  showDigit(1, 27+tt, znaki5x8);
   refreshAll();
 }
 //==========ВИВІД НА ЕКРАН ТЕМПЕРАТУРИ НА ВУЛИЦІ========================================
 void showSimpleTempU() {
   if(WiFi.status() == WL_CONNECTED) {
+    byte tt=aliData*(NUM_MAX-4);
     dx = dy = 0;
     clr();
-    showDigit((t5 < 0.0 ? 16 : 15), 0, dig5x8rn); //друкуємо U+ альбо U-
-    if(t3 <= -10.0 || t3 >= 10) showDigit((t3 < 0 ? (t3 * -1) / 10 : t3 / 10), 4, dig5x8rn);
-    showDigit((t3 < 0 ? (t3 * -1) % 10 : t3 % 10), 10, dig5x8rn);
-    showDigit(12, 16, dig5x8rn);
-    showDigit(t4, 18, dig5x8rn);
-    showDigit(10, 24, dig5x8rn);
-    showDigit(11, 27, dig5x8rn);
+    showDigit((t5 < 0.0 ? 6 : 5), tt, znaki5x8); //друкуємо U+ альбо U-
+    if(t3 <= -10.0 || t3 >= 10) showDigit((t3 < 0 ? (t3 * -1) / 10 : t3 / 10), 4+tt, dig5x8);
+    showDigit((t3 < 0 ? (t3 * -1) % 10 : t3 % 10), 10+tt, dig5x8);
+    showDigit(2, 16+tt, znaki5x8);
+    showDigit(t4, 18+tt, dig5x8);
+    showDigit(0, 24+tt, znaki5x8);
+    showDigit(1, 27+tt, znaki5x8);
     refreshAll();
   }
 }
 //==========ВИВІД НА ЕКРАН ВОЛОГОСТІ В БУДИНКУ========================================
 void showSimpleHum() {
+  byte tt=aliData*(NUM_MAX-4);
   dx = dy = 0;
   clr();
-  showDigit(17, 0, dig5x8rn);     // друкуємо знак вологості
-  if(h1 >= 0) showDigit(h1, 6, dig5x8rn);
-  showDigit(h2, 12, dig5x8rn);
-  showDigit(12, 18, dig5x8rn);
-  showDigit(h3, 20, dig5x8rn);
-  showDigit(18, 26, dig5x8rn);
+  showDigit(7, tt, znaki5x8);     // друкуємо знак вологості
+  if(h1 >= 0) showDigit(h1, 6+tt, dig5x8);
+  showDigit(h2, 12+tt, dig5x8);
+  showDigit(2, 18+tt, znaki5x8);
+  showDigit(h3, 20+tt, dig5x8);
+  showDigit(8, 26+tt, znaki5x8);
   refreshAll();
 }
 //==========ВИВІД НА ЕКРАН ТИСКУ В БУДИНКУ========================================
 void showSimplePre() {
+  byte tt=aliData*(NUM_MAX-4);
   dx = dy = 0;
   clr();
-  showDigit(19, 0, dig5x8rn);     // друкуємо знак тиску
-  showDigit(int((sensorPrAl==3?pressBmp:pressBme) / 100), 6, dig5x8rn);
-  showDigit((int((sensorPrAl==3?pressBmp:pressBme) / 10) - int((sensorPrAl==3?pressBmp:pressBme) / 100) * 10) , 12, dig5x8rn);
-  showDigit(((sensorPrAl==3?pressBmp:pressBme) - int((sensorPrAl==3?pressBmp:pressBme) / 10) *10) , 18, dig5x8rn);
-  showDigit(20, 24, dig5x8rn);
-  showDigit(21, 29, dig5x8rn);
+  showDigit(9, tt, znaki5x8);     // друкуємо знак тиску
+  showDigit(int((sensorPrAl==3?pressBmp:pressBme) / 100), 6+tt, dig5x8);
+  showDigit((int((sensorPrAl==3?pressBmp:pressBme) / 10) - int((sensorPrAl==3?pressBmp:pressBme) / 100) * 10) , 12+tt, dig5x8);
+  showDigit(((sensorPrAl==3?pressBmp:pressBme) - int((sensorPrAl==3?pressBmp:pressBme) / 10) *10) , 18+tt, dig5x8);
+  showDigit(10, 24+tt, znaki5x8);
+  showDigit(11, 29+tt, znaki5x8);
   refreshAll();
 }
 //==========ВИВІД НА ЕКРАН ДАТИ=========================================================
 void showSimpleDate() { 
+  byte tt=aliData*(NUM_MAX-4);
   dx = dy = 0;
   clr();
-  showDigit(day / 10,  0, dig4x8);
-  showDigit(day % 10,  5, dig4x8);
-  showDigit(month / 10, 12, dig4x8);
-  showDigit(month % 10, 17, dig4x8);
-  showDigit((year - 2000) / 10, 23, dig4x8);
-  showDigit((year - 2000) % 10, 28, dig4x8);
+  showDigit(day / 10, tt, dig4x8);
+  showDigit(day % 10,  5+tt, dig4x8);
+  showDigit(month / 10, 12+tt, dig4x8);
+  showDigit(month % 10, 17+tt, dig4x8);
+  showDigit((year - 2000) / 10, 23+tt, dig4x8);
+  showDigit((year - 2000) % 10, 28+tt, dig4x8);
   setCol(10, 0xC0);
   setCol(22, 0xC0);
   refreshAll();
 }
 //==========ВИВІД НА ЕКРАН АНІМАЦІЙНОГО ГОДИННИКА=======================================
 void showAnimClock() {
-  byte digPos[6] = {1, 8, 18, 25, 15, 16};//2, 8, 19, 25, 15, 16,
-  if(hour < 10) {
-    digPos[1] = 5;
-    digPos[2] = 15;
-    digPos[3] = 22;
-    digPos[4] = 12;
-    digPos[5] = 13;
-  }
+  byte tt=hour<10?12:15+4*(NUM_MAX-4);
+  byte digPos[5]={(tt-(fontCLOCK<2?14:fontCLOCK<6?12:10)),(tt-(fontCLOCK<2?7:fontCLOCK<6?6:5)),(tt+3),(tt+(fontCLOCK<2?10:fontCLOCK<6?9:8)),tt};
   int digHt = 16;
   int num = 4;
   int i;
@@ -655,12 +670,33 @@ void showAnimClock() {
   for(i = 0; i < num; i++) {
     if(digtrans[i] == 0) {
       dy = 0;
-      showDigit(dig[i], digPos[i], dig6x8);
+      if(fontCLOCK == 0) showDigit(dig[i], digPos[i], dig6x8);
+        else if(fontCLOCK == 1) showDigit(dig[i], digPos[i], dig6x8dig);
+        else if(fontCLOCK == 2) showDigit(dig[i], digPos[i], dig5x8rn);
+        else if(fontCLOCK == 3) showDigit(dig[i], digPos[i], dig5x8rndig);
+        else if(fontCLOCK == 4) showDigit(dig[i], digPos[i], dig5x8);
+        else if(fontCLOCK == 5) showDigit(dig[i], digPos[i], dig5x8dig);
+        else if(fontCLOCK == 6) showDigit(dig[i], digPos[i], dig4x8);
+        else if(fontCLOCK == 7) showDigit(dig[i], digPos[i], dig4x8dig);
     } else {
       dy = digHt - digtrans[i];
-      showDigit(digold[i], digPos[i], dig6x8);
+      if(fontCLOCK == 0) showDigit(dig[i], digPos[i], dig6x8);
+        else if(fontCLOCK == 1) showDigit(dig[i], digPos[i], dig6x8dig);
+        else if(fontCLOCK == 2) showDigit(dig[i], digPos[i], dig5x8rn);
+        else if(fontCLOCK == 3) showDigit(dig[i], digPos[i], dig5x8rndig);
+        else if(fontCLOCK == 4) showDigit(dig[i], digPos[i], dig5x8);
+        else if(fontCLOCK == 5) showDigit(dig[i], digPos[i], dig5x8dig);
+        else if(fontCLOCK == 6) showDigit(dig[i], digPos[i], dig4x8);
+        else if(fontCLOCK == 7) showDigit(dig[i], digPos[i], dig4x8dig);
       dy =- digtrans[i];
-      showDigit(dig[i], digPos[i], dig6x8);
+      if(fontCLOCK == 0) showDigit(dig[i], digPos[i], dig6x8);
+        else if(fontCLOCK == 1) showDigit(dig[i], digPos[i], dig6x8dig);
+        else if(fontCLOCK == 2) showDigit(dig[i], digPos[i], dig5x8rn);
+        else if(fontCLOCK == 3) showDigit(dig[i], digPos[i], dig5x8rndig);
+        else if(fontCLOCK == 4) showDigit(dig[i], digPos[i], dig5x8);
+        else if(fontCLOCK == 5) showDigit(dig[i], digPos[i], dig5x8dig);
+        else if(fontCLOCK == 6) showDigit(dig[i], digPos[i], dig4x8);
+        else if(fontCLOCK == 7) showDigit(dig[i], digPos[i], dig4x8dig);
       digtrans[i]--;
     }
   }
@@ -669,23 +705,23 @@ void showAnimClock() {
   if(!alarm_stat){
     if((flash >= 180 && flash < 360) || flash >= 540) {                       // мерегтіння двокрапок в годиннику підвязуємо до личильника циклів
       setCol(digPos[4], WIFI_connected ? 0x66 : 0x60);
-      setCol(digPos[5], WIFI_connected ? 0x66 : 0x60);
+      setCol(digPos[4]+1, WIFI_connected ? 0x66 : 0x60);
     }
     if(statusUpdateNtpTime) {                                                 // якщо останнє оновленя часу було вдалим, то двокрапки в годиннику будуть анімовані
       if(flash >= 0 && flash < 180) {
         setCol(digPos[4], WIFI_connected ? 0x24 : 0x20);
-        setCol(digPos[5], WIFI_connected ? 0x42 : 0x40);
+        setCol(digPos[4]+1, WIFI_connected ? 0x42 : 0x40);
       }
       if(flash >= 360 && flash < 540) {
         setCol(digPos[4], WIFI_connected ? 0x42 : 0x40);
-        setCol(digPos[5], WIFI_connected ? 0x24 : 0x20);
+        setCol(digPos[4]+1, WIFI_connected ? 0x24 : 0x20);
       }
     }
     if(updateForecast && WIFI_connected) setCol(00, flash < 500 ? 0x80 : 0x00);
-    if(updateForecasttomorrow && WIFI_connected) setCol(31, flash < 500 ? 0x80 : 0x00);
+    if(updateForecasttomorrow && WIFI_connected) setCol((NUM_MAX*8-1), flash < 500 ? 0x80 : 0x00);
   } else {
     setCol(digPos[4], 0x66);
-    setCol(digPos[5], 0x66);
+    setCol(digPos[4]+1, 0x66);
   }
   refreshAll();
 }
@@ -1299,11 +1335,11 @@ void sensors() {
     sensorsBme();
     sensorsDht();
     t0 = (sensorDom==0?0:sensorDom==1?tempDs18b20:sensorDom==2?celsiusSi7021:sensorDom==3?tempBmp:sensorDom==4?tempBme:sensorDom==5?tempDht22:sensorDom==6?tMqtt5:0);
-    t1 = (sensorDom==0?0:sensorDom==1?(int)tempDs18b20:sensorDom==2?(int)celsiusSi7021:sensorDom==3?(int)tempBmp:sensorDom==4?(int)tempBme:sensorDom==5?(int)tempDht22:sensorDom==6?tMqtt3:0);
-    t2 = (sensorDom==0?0:sensorDom==1?((int)(tempDs18b20*(tempDs18b20<0?-10:10))%10):sensorDom==2?((int)(celsiusSi7021*(celsiusSi7021<0?-10:10))%10):sensorDom==3?((int)(tempBmp*(tempBmp<0?-10:10))%10):sensorDom==4?((int)(tempBme*(tempBme<0?-10:10))%10):sensorDom==5?((int)(tempDht22*(tempDht22<0?-10:10))%10):sensorDom==6?tMqtt4:0);
-    t3 = (sensorUl ==0?0:sensorUl ==1?(int)tempDs18b20:sensorUl ==2?(int)celsiusSi7021:sensorUl ==3?(int)tempBmp:sensorUl ==4?(int)tempBme:sensorUl ==5?(int)tempDht22:sensorUl ==6?tMqtt3:0);
-    t4 = (sensorUl ==0?0:sensorUl ==1?((int)(tempDs18b20*(tempDs18b20<0?-10:10))%10):sensorUl ==2?((int)(celsiusSi7021*(celsiusSi7021<0?-10:10))%10):sensorUl ==3?((int)(tempBmp*(tempBmp<0?-10:10))%10):sensorUl ==4?((int)(tempBme*(tempBme<0?-10:10))%10):sensorUl ==5?((int)(tempDht22*(tempDht22<0?-10:10))%10):sensorUl ==6?tMqtt4:0);
-    t5 = (sensorUl ==0?0:sensorUl ==1?tempDs18b20:sensorUl ==2?celsiusSi7021:sensorUl ==3?tempBmp:sensorUl ==4?tempBme:sensorUl ==5?tempDht22:sensorUl ==6?tMqtt5:0);
+    t1 = (sensorDom==0?0:sensorDom==1?(int)tempDs18b20:sensorDom==2?(int)celsiusSi7021:sensorDom==3?(int)tempBmp:sensorDom==4?(int)tempBme:sensorDom==5?(int)tempDht22:sensorDom==6?(int)tMqtt5:0);
+    t2 = (sensorDom==0?0:sensorDom==1?((int)(tempDs18b20*(tempDs18b20<0?-10:10))%10):sensorDom==2?((int)(celsiusSi7021*(celsiusSi7021<0?-10:10))%10):sensorDom==3?((int)(tempBmp*(tempBmp<0?-10:10))%10):sensorDom==4?((int)(tempBme*(tempBme<0?-10:10))%10):sensorDom==5?((int)(tempDht22*(tempDht22<0?-10:10))%10):sensorDom==6?((int)(tMqtt5*(tMqtt5<0?-10:10))%10):0);
+    t3 = (sensorUl==0?0:sensorUl==1?(int)tempDs18b20:sensorUl==2?(int)celsiusSi7021:sensorUl==3?(int)tempBmp:sensorUl==4?(int)tempBme:sensorUl==5?(int)tempDht22:sensorUl==6?(int)tMqtt5:0);
+    t4 = (sensorUl==0?0:sensorUl==1?((int)(tempDs18b20*(tempDs18b20<0?-10:10))%10):sensorUl==2?((int)(celsiusSi7021*(celsiusSi7021<0?-10:10))%10):sensorUl==3?((int)(tempBmp*(tempBmp<0?-10:10))%10):sensorUl==4?((int)(tempBme*(tempBme<0?-10:10))%10):sensorUl==5?((int)(tempDht22*(tempDht22<0?-10:10))%10):sensorUl ==6?((int)(tMqtt5*(tMqtt5<0?-10:10))%10):0);
+    t5 = (sensorUl==0?0:sensorUl==1?tempDs18b20:sensorUl==2?celsiusSi7021:sensorUl==3?tempBmp:sensorUl==4?tempBme:sensorUl==5?tempDht22:sensorUl==6?tMqtt5:0);
   if(sensorHumi == 0) {
     h1 = 0;
     h2 = 0;
@@ -1360,7 +1396,7 @@ void sensorsDs18b20() {  //1
     else if (cfg == 0x40) raw = raw & ~1;
   }
   tempDs18b20 = (float)raw / 16.00;
-  tempDs18b20 = tempDs18b20 - 1.5;
+  tempDs18b20 = + (sensorDom == 1 ? corrTempD : corrTempU);
   if(printCom) {
     printTime();
     Serial.println("Temperature DS18B20: " + String(tempDs18b20) + " *C");
@@ -1369,8 +1405,8 @@ void sensorsDs18b20() {  //1
 //--------------------------------------------------------------------------
 void sensorsSi7021() {  //2
   if(si7021 == false) return;
-  humSi7021 = sensor.readHumidity();
-  celsiusSi7021 = sensor.readTemperature() - 4.7;
+  humSi7021 = sensor.readHumidity()+ corrHumi;
+  celsiusSi7021 = sensor.readTemperature()  + (sensorDom == 2 ? corrTempD : corrTempU);
   if(printCom) {
     printTime();
     Serial.println("Temperature Si7021: " + String(celsiusSi7021) + " *C,  Humidity: " + String(humSi7021) + " %");
@@ -1378,22 +1414,33 @@ void sensorsSi7021() {  //2
 }
 //--------------------------------------------------------------------------
 void sensorsBmp() {  //3
-  if(bmp280 == false) return;
-  tempBmp = bmp.readTemperature();
-  pressBmp = bmp.readPressure()*0.00750063755419211 + 21;
-  pressBmp = (int) pressBmp;
-  altBmp = bmp.readAltitude(1013.25);
-  if(printCom) {
-    printTime();
-    Serial.println("Temperature BMP280: " + String(tempBmp) + " *C,  Pressure: " + String(pressBmp) + " mmHg,  Approx altitude: " + String(altBmp) + " m");
+  if(bmp280 == true) {
+    tempBmp = bmp.readTemperature() + (sensorDom == 3 ? corrTempD : corrTempU);
+    pressBmp = bmp.readPressure() * 0.00750063755419211 + corrPress;
+    pressBmp = (int) pressBmp;
+    altBmp = bmp.readAltitude(1013.25);
+    if(printCom) {
+      printTime();
+      if(bmp280 == true) Serial.println("Temperature BMP280: " + String(tempBmp) + " *C,  Pressure: " + String(pressBmp) + " mmHg,  Approx altitude: " + String(altBmp) + " m");
+    }
+  }
+  if(BMP180 == true) {
+    tempBmp = bmp180.readTemperature() + (sensorDom == 3 ? corrTempD : corrTempU);
+    pressBmp = bmp180.readPressure() * 0.00750063755419211 + corrPress;
+    pressBmp = (int) pressBmp;
+    altBmp = bmp180.readAltitude(101500);
+    if(printCom) {
+      printTime();
+      if(BMP180 == true) Serial.println("Temperature BMP180: " + String(tempBmp) + " *C,  Pressure: " + String(pressBmp) + " mmHg,  Approx altitude: " + String(altBmp) + " m");
+    }
   }
 }
 //--------------------------------------------------------------------------
 void sensorsBme() {  //4
   if(bme280 == false) return;
-  tempBme = bme.readTempC() - 3.3;          //bme.readTempF()
-  humBme = bme.readHumidity();
-  pressBme = bme.readPressure()/1.333223689017149;
+  tempBme = bme.readTempC() + (sensorDom == 4 ? corrTempD : corrTempU);          //bme.readTempF()
+  humBme = bme.readHumidity() + corrHumi;
+  pressBme = bme.readPressure()/1.333223689017149 + corrPress;
   pressBme = (int) pressBme;
   altBme = bme.readAltitudeFeet();   //bme.readAltitudeMeter()  bme.readAltitudeFeet()
   if(printCom) {
@@ -1408,7 +1455,8 @@ void sensorsDht() {   //5
     Serial.print("Read DHT22 failed, err=");
     Serial.println(err);
   } else if(printCom) {
-    humiDht22 = (int) humiDht22;
+    tempDht22 += (sensorDom == 5 ? corrTempD : corrTempU);
+    humiDht22 = (int) (humiDht22 + corrHumi);
     printTime();
     Serial.println("Temperature DHT22: " + String(tempDht22) + " *C,  Humidity: " + String(humiDht22) + " %");
   }
