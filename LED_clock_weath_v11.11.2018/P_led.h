@@ -11,6 +11,7 @@ const char P_led[] PROGMEM =  R"=====(
             function set_led(submit) {
                 server = "/led?tbd=" + val('tbd') + "&vbd=" + val('vbd') + "&tbn=" + val('tbn') + "&vbn=" + val('vbn') + "&vba=" + val_sw('vba') + "&rotate=" + val('rotate') + "&kuOn=" + val('kuOn') + "&kuOff=" + val('kuOff');
                 server += "&sensorDom=" + val('sensorDom') + "&sensorUl=" + val('sensorUl') + "&sensorHumi=" + val('sensorHumi') + "&sensorPrAl=" + val('sensorPrAl') + "&clockNight=" + val_sw('clockNight') + "&buzzerSet=" + val_sw('buzzerSet');
+                server += "&fontCLOCK=" + val('fontCLOCK') + "&aliData=" + val('aliData') + "&corrTempD=" + val('corrTempD') + "&corrTempU=" + val('corrTempU') + "&corrHumi=" + val('corrHumi') + "&corrPress=" + val('corrPress') + "&NUM_MAX=" + val('NUM_MAX');
                 send_request(submit,server);
             }
         </script>
@@ -221,16 +222,24 @@ const char P_led[] PROGMEM =  R"=====(
                             </select></td>
                         </tr>
                         <tr>
+                            <td align = "right"><span class="opt_cn">Room temp.corr.</span></td>
+                            <td><input type="text" class="field form-control" id="corrTempD" value="{{corrTempD}}" pattern="\- \d+(\.\d{2})?"><br>
+                        </tr>
+                        <tr>
                             <td align = "right"><span class="opt_cn">Outdoor temperature sensor</span></td>
                             <td><select id = "sensorUl">
                                 <option value = "NONE"> NONE </option>
                                 <option value = "DS18B20"> DS18B20 </option>
                                 <option value = "SI7021"> SI7021 </option>
-                                <option value = "BMP280"> BMP280 </option>
+                                <option value = "BMP280"> BMP180/280 </option>
                                 <option value = "BME280"> BME280 </option>
                                 <option value = "DHT22"> DHT22 </option>
                                 <option value = "MQTT"> MQTT </option>
                             </select></td>
+                        </tr>
+                        <tr>
+                            <td align = "right"><span class="opt_cn">Outdoor temp.corr.</span></td>
+                            <td><input type="text" class="field form-control" id="corrTempU" value="{{corrTempU}}" pattern="\- \d+(\.\d{2})?"><br>
                         </tr>
                         <tr>
                             <td align = "right"><span class="opt_cn">Room humidity sensor</span></td>
@@ -241,13 +250,21 @@ const char P_led[] PROGMEM =  R"=====(
                                 <option value = "DHT22"> DHT22 </option>
                             </select></td>
                         </tr>
+                         <tr>
+                            <td align = "right"><span class="opt_cn">Room humi.corr.</span></td>
+                            <td><input type="text" class="field form-control" id="corrHumi" value="{{corrHumi}}" pattern="\- \d+(\.\d{2})?"><br>
+                        </tr>
                         <tr>
                             <td align = "right"><span class="opt_cn">The pressure sensor is of the same height</span></td>
                             <td><select id = "sensorPrAl">
                                 <option value = "NONE"> NONE </option>
-                                <option value = "BMP280"> BMP280 </option>
+                                <option value = "BMP280"> BMP180/280 </option>
                                 <option value = "BME280"> BME280 </option>
                             </select></td>
+                        </tr>
+                        <tr>
+                            <td align = "right"><span class="opt_cn">The press.corr.</span></td>
+                            <td><input type="text" class="field form-control" id="corrPress" value="{{corrPress}}" pattern="\- [0-9]{0,3}"><br>
                         </tr>
                         <tr><td align = "right">______________________</td></tr>
                         <tr>
@@ -256,6 +273,41 @@ const char P_led[] PROGMEM =  R"=====(
                                 <option value = "0"> 0 </option>
                                 <option value = "90"> 90 </option>
                                 <option value = "270"> 270 </option>
+                            </select></td>
+                        </tr>
+                        <tr><td align = "right">______________________</td></tr>
+                        <tr>
+                            <td align = "right"><span class="opt_cn">Amount modules</span></td>
+                            <td><select id = "NUM_MAX">
+                                <option value = "4"> 4 </option>
+                                <option value = "5"> 5 </option>
+                                <option value = "6"> 6 </option>
+                                <option value = "7"> 7 </option>
+                                <option value = "8"> 8 </option>
+                                <option value = "9"> 9 </option>
+                                <option value = "10"> 10 </option>
+                            </select></td>
+                        </tr>
+                        <tr><td align = "right">______________________</td></tr>
+                        <tr>
+                            <td align = "right"><span class="opt_cn">Font of clock</span></td>
+                            <td><select id = "fontCLOCK">
+                                <option value = "0"> Large </option>
+                                <option value = "1"> Large dig </option>
+                                <option value = "2"> Bold </option>
+                                <option value = "3"> Bold dig</option>
+                                <option value = "4"> Normal </option>
+                                <option value = "5"> Normal dig</option>
+                                <option value = "6"> Narrow </option>
+                                <option value = "7"> Narrow dig</option>
+                            </select></td>
+                        </tr>
+                        <tr>
+                            <td align = "right"><span class="opt_cn">Alignments data</span></td>
+                            <td><select id = "aliData">
+                                <option value = "0"> Left </option>
+                                <option value = "4"> Center </option>
+                                <option value = "8"> Right </option>
                             </select></td>
                         </tr>
                     </table>
