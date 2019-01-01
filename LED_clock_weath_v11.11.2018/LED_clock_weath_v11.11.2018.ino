@@ -650,7 +650,7 @@ void showSimpleDate() {
 }
 //==========ВИВІД НА ЕКРАН АНІМАЦІЙНОГО ГОДИННИКА=======================================
 void showAnimClock() {
-  byte tt=hour<10?12:15+4*(NUM_MAX-4);
+  byte tt=(hour<10?12:15)+4*(NUM_MAX-4);
   byte digPos[5]={(tt-(fontCLOCK<2?14:fontCLOCK<6?12:10)),(tt-(fontCLOCK<2?7:fontCLOCK<6?6:5)),(tt+3),(tt+(fontCLOCK<2?10:fontCLOCK<6?9:8)),tt};
   int digHt = 16;
   int num = 4;
