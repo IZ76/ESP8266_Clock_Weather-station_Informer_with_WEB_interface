@@ -423,6 +423,7 @@ void loop() {
     bip();
     bip();
   }
+  if(secFr == 0 && second == 10 && !alarm_stat) sensors();
   //----------- РОБОТА З БУДИЛЬНИКОМ------------------------------------------------------
   if(secFr == 0) {
     if(second > 0 && alarms()) {
@@ -497,19 +498,16 @@ void loop() {
   // --------------------------------------------------------------------------------------------------------
   if(secFr == 0) {
     // ---------- 10 секунда - виводимо дату/погоду----------------------------------------------------------
-    if(second == 10 && !alarm_stat) {
-      sensors();
-      if(hour >= timeScrollStart && hour < timeScrollStop) {        // працує тілки в дозволений час
-        if(minute % 2 == 0 || !outForecast) {                        // по чотним хвилинам виводимо повідомлення дати та курсу валют
-          convertDw();
-          convertMonth();
-          date = "     " + dw + ", " + String(day) + " " + _month + " " + String(year) + "          ";
-          printStringWithShift(date.c_str(), timeScrollSpeed);
-        } else {                                                      // по не чотним хвилинам виводимо погоду
-            printStringWithShift(weatherString.c_str(), timeScrollSpeed);
-            printStringWithShift(weatherStringZ.c_str(), timeScrollSpeed);
-            if(updateForecast > 0 && updateForecast < 360) printStringWithShift(("  (" + tWeatrTN + String(updateForecast) + tMin + ")        ").c_str(), timeScrollSpeed);
-        }
+    if(second == 10 && !alarm_stat && hour >= timeScrollStart && hour < timeScrollStop) {        // працує тілки в дозволений час
+      if(minute % 2 == 0 || !outForecast) {                        // по чотним хвилинам виводимо повідомлення дати та курсу валют
+        convertDw();
+        convertMonth();
+        date = "     " + dw + ", " + String(day) + " " + _month + " " + String(year) + "          ";
+        printStringWithShift(date.c_str(), timeScrollSpeed);
+      } else {                                                      // по не чотним хвилинам виводимо погоду
+          printStringWithShift(weatherString.c_str(), timeScrollSpeed);
+          printStringWithShift(weatherStringZ.c_str(), timeScrollSpeed);
+          if(updateForecast > 0 && updateForecast < 360) printStringWithShift(("  (" + tWeatrTN + String(updateForecast) + tMin + ")        ").c_str(), timeScrollSpeed);
       }
     }
     // ---------- 30 перевірка доступності WiFi мережі ---// повторне підк. до WiFi кожну 1, 6, 11, 16...56 хв.
