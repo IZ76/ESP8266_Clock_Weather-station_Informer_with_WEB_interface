@@ -1395,8 +1395,7 @@ void sensorsDs18b20() {  //1
     else if(cfg == 0x20) raw = raw & ~3;
     else if (cfg == 0x40) raw = raw & ~1;
   }
-  tempDs18b20 = (float)raw / 16.00;
-  tempDs18b20 = + (sensorDom == 1 ? corrTempD : corrTempU);
+  tempDs18b20 = (float)raw / 16.00 + (sensorDom == 1 ? corrTempD : corrTempU);
   if(printCom) {
     printTime();
     Serial.println("Temperature DS18B20: " + String(tempDs18b20) + " *C");
