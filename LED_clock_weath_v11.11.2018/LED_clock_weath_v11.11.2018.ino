@@ -1370,7 +1370,7 @@ void sensorsDs18b20() {  //1
     delay(250);                                         // Пауза
     return;                                             // Виходимо з підпрограми
   }
-  if(OneWire::crc8(addr, 7) != addr[7]) return;           // перевіряємо 7 байт в addr - он содержит crc8 
+  if(OneWire::crc8(addr, 7) != addr[7]) return;           // перевіряємо 7 байт в addr - он содержит crc8
   ds.reset();
   ds.select(addr);
   ds.write(0x44, 1);
