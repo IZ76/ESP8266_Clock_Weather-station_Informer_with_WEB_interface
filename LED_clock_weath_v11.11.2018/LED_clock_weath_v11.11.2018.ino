@@ -75,7 +75,7 @@ bool mqttOn = true;
 // =====================================================================================
 bool printCom = true;
 #define MAX_DIGITS 16
-byte NUM_MAX = 4;
+byte NUM_MAX = 16;
 byte fontCLOCK = 0;      // 0-крупный, 1-крупный цифровой, 2-полу жирный, 3-полу жирный цифровой, 4-обычный, 5-обычный цифровой, 6-узкий, 7-узкий цифровой. 
 byte aliData = 8;
 byte volBrightnessD  = 8;
