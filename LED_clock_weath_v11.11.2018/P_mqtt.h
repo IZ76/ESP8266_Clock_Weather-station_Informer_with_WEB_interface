@@ -58,7 +58,7 @@ const char P_mqtt[] PROGMEM =  R"=====(
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn">MQTT Server Port</span></td>
-                        <td><input type="text" class="field form-control" id="mqtt_port" value="{{mqtt_port}}" pattern="[\d]{5}"><br>
+                        <td><input type="text" class="field form-control" id="mqtt_port" value="{{mqtt_port}}" pattern="[\d]{4,5}"><br>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn">Server user login</span></td>
