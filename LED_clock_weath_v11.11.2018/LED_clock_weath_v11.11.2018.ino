@@ -644,8 +644,8 @@ void showSimpleDate() {
   showDigit(month % 10, 17+tt, dig4x8);
   showDigit((year - 2000) / 10, 23+tt, dig4x8);
   showDigit((year - 2000) % 10, 28+tt, dig4x8);
-  setCol(10, 0xC0);
-  setCol(22, 0xC0);
+  setCol(10+tt, 0xC0);
+  setCol(22+tt, 0xC0);
   refreshAll();
 }
 //==========ВИВІД НА ЕКРАН АНІМАЦІЙНОГО ГОДИННИКА=======================================
