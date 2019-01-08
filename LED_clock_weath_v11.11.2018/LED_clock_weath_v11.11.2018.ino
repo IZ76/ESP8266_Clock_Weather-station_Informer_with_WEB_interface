@@ -224,6 +224,7 @@ char memory_date_mes8[51] = "Отведи ребенка в школу";
 bool firstStart=0;
 byte amountNotStarts=0;
 String jsonLine = "";
+bool save2time = true;
 //======================================================================================
 void setup() {
   Serial.begin(115200);
@@ -235,6 +236,7 @@ void setup() {
   sendCmdAll(CMD_INTENSITY, 1);
   SPIFFS.begin();
   // ------------------
+  sensorsDht();
   if(bmp.begin()) {
     if(printCom) Serial.println("YES!!! find BMP280 sensor!");
     bmp280 = true;
@@ -288,7 +290,7 @@ void setup() {
   else if (lang == 3) czText();
   else if (lang == 4) deText();
   else if (lang == 5) enText();
-
+  bip();
 // ---------- Підключення до WiFi
   wifiConnect();
 // ***********  OTA SETUP
@@ -415,7 +417,7 @@ void loop() {
         dayOfWeek++;
         if(dayOfWeek>7) dayOfWeek=1;
       }
-      saveTimeFFS();
+      if(save2time) saveTimeFFS();
       lastMinute=minute;
     }
   } else secFr++;                                                                       // якщо секунда ще не скінчилась то нарощуємо лічильник циклів secFr
@@ -959,6 +961,7 @@ void timeUpdateNTP() {
     Serial.println((day < 10 ? "0" : "") + String(day) + "." + (month < 10 ? "0" : "") + String(month) + "." + String(year) + " DW = " + String(dayOfWeek));
     Serial.println("          Time update OK.");
   }
+  saveTimeFFS();
 }
 //==========ОТРИМАННЯ ДАТИ ТА ЧАСУ ВІД СЕРВЕРА ТОЧНОГО ЧАСУ =============================================================
 void getNTPtime() {
