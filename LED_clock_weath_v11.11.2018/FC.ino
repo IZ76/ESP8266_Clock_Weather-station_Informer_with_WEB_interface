@@ -114,6 +114,7 @@ bool loadConfig() {                                                // Заван
   corrHumi  = root["corrHumi"];
   corrPress = root["corrPress"];
   NUM_MAX = root["NUM_MAX"];
+  save2time = root["save2time"];
   if(printCom) {
     printTime();
     Serial.print("Load Config : ");
@@ -222,7 +223,8 @@ bool saveConfig() {
   json["corrTempU"] = corrTempU;
   json["corrHumi"] = corrHumi;
   json["corrPress"] = corrPress;
-  json["NUM_MAX"] = NUM_MAX;   
+  json["NUM_MAX"] = NUM_MAX;
+  json["save2time"] = save2time;  
   jsonConfig = "";
   json.printTo(jsonConfig);
   File configFile = SPIFFS.open("/config.json", "w");                // Відкриваємо файл для запису
