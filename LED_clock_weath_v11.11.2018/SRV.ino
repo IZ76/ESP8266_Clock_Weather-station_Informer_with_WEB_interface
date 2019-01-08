@@ -215,6 +215,8 @@ void handle_ConfigJSON() {
   json += corrHumi;
   json += "\",\"corrPress\":\"";
   json += corrPress;
+  json += "\",\"save2time\":\"";
+  json += save2time;
   json += "\"}";
   server.send(200, "text/json", json);
 }
@@ -267,6 +269,7 @@ void handle_ntp() {
   ntpServerName = server.arg("ntpServerName").c_str();
   timeZone = server.arg("timeZone").toFloat();
   isDayLightSaving = server.arg("isDayLightSaving").toInt();
+  save2time = server.arg("save2time").toInt();
   alarme[0][0]=server.arg("al_0_0").toInt();
   alarme[0][1]=server.arg("al_0_1").toInt();
   alarme[0][2]=server.arg("al_0_2").toInt();
@@ -317,6 +320,7 @@ void handle_ntp() {
   }
   alarm_hold=0;
   saveConfig();
+  saveTimeFFS();
   timeUpdateNTP();
   server.send(200, "text/plain", "OK"); 
 }
@@ -416,13 +420,11 @@ void handle_mqtt_ust() {
   snprintf(mqtt_user, 24, "%s", server.arg("mqtt_user").c_str());
   snprintf(mqtt_pass, 24, "%s", server.arg("mqtt_pass").c_str());
   snprintf(mqtt_name, 24, "%s", server.arg("mqtt_name").c_str());
-  snprintf(mqtt_sub, 24, "%s", server.arg("mqtt_sub").c_str());
-  snprintf(mqtt_sub_inform, 24, "%s", server.arg("mqtt_sub_inform").c_str());
   snprintf(mqtt_pub_temp, 24, "%s", server.arg("mqtt_pub_temp").c_str());
   snprintf(mqtt_pub_tempUl, 24, "%s", server.arg("mqtt_pub_tempUl").c_str());
   snprintf(mqtt_pub_hum, 24, "%s", server.arg("mqtt_pub_hum").c_str());
-  snprintf(mqtt_pub_press, 24, "%s", server.arg("mqtt_pub_press").c_str());
-  snprintf(mqtt_pub_alt, 24, "%s", server.arg("mqtt_pub_alt").c_str());
+  snprintf(mqtt_sub, 24, "%s", server.arg("mqtt_sub").c_str());
+  snprintf(mqtt_sub_inform, 24, "%s", server.arg("mqtt_sub_inform").c_str());
   if(printCom) {
     printTime();
     Serial.println("Set mqtt_server: " + String(mqtt_server) + ",  mqtt_port: " + String(mqtt_port) + ",  mqtt_user: " + String(mqtt_user) + ",  mqtt_pass: " + String(mqtt_pass));
