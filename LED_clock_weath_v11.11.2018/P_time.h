@@ -9,7 +9,7 @@ const char P_time[] PROGMEM =  R"=====(
         <script type = "text/javascript" src = "/function.js"></script>
         <script type = "text/javascript">
             function set_ntp(submit) {
-                server = "/ntp?ntpServerName=" + val('ntpServerName') + "&timeZone=" + val('timeZone') + "&isDayLightSaving=" + val_sw('isDayLightSaving');
+                server = "/ntp?ntpServerName=" + val('ntpServerName') + "&timeZone=" + val('timeZone') + "&isDayLightSaving=" + val_sw('isDayLightSaving') + "&save2time=" + val_sw('save2time');
                 server += "&al_0_0=" + val('al_0_0') + "&al_0_1=" + val('al_0_1') + "&al_0_2=" + val('al_0_2');
                 server += "&al_1_0=" + val('al_1_0') + "&al_1_1=" + val('al_1_1') + "&al_1_2=" + val('al_1_2');
                 server += "&al_2_0=" + val('al_2_0') + "&al_2_1=" + val('al_2_1') + "&al_2_2=" + val('al_2_2');
@@ -118,6 +118,11 @@ const char P_time[] PROGMEM =  R"=====(
                 <br>
                 <label class="switch"><span class="opt_cn">Daylight Saving Time</span>
                     <input type="checkbox" id="isDayLightSaving">
+                    <span class="switch-btn"></span>
+                </label>
+                <br>
+                <label class="switch"><span class="opt_cn">Save time in FFS</span>
+                    <input type="checkbox" id="save2time">
                     <span class="switch-btn"></span>
                 </label>
                 <br>
