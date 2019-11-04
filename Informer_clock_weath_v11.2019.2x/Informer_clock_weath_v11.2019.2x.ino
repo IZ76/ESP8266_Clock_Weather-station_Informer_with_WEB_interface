@@ -95,7 +95,7 @@ bool mqttOn = true;
 // --------------------------------------------
 String uuid = "cccccccccccccccccccccccccccccccc";
 String api_key = "ddddddddddddd";
-int sensors_ID0 = 88733;
+int sensors_ID0 = 0;
 int sensors_ID1 = 88459;
 int sensors_ID2 = 0;
 // =====================================================================================
