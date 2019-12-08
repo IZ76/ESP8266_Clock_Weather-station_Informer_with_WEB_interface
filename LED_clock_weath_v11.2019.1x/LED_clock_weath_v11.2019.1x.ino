@@ -265,6 +265,7 @@ void setup(){
   sendCmdAll(CMD_INTENSITY, 1);
   SPIFFS.begin();
   loadConfig();
+  loadTime();
   Wire.beginTransmission(0x67);
   errorRTC = Wire.endTransmission();
   if(errorRTC==0){
@@ -1069,6 +1070,7 @@ void timeUpdateNTP() {
   localEpoc = (hour * 60 * 60 + minute * 60 + second);
   convertDw();
   convertMonth();
+  saveTime();
   if(printCom) {
     printTime();
     Serial.println((day < 10 ? "0" : "") + String(day) + "." + (month < 10 ? "0" : "") + String(month) + "." + String(year) + " DW = " + String(dayOfWeek));
