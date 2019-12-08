@@ -266,3 +266,66 @@ bool saveConfig() {
   bip();
   return true;
 }
+//======================================================
+bool loadTime() {
+  File timeFile = SPIFFS.open("/time.json", "r");
+  if(!timeFile) {
+    if(printCom) Serial.println("Failed to open time file");
+    saveTime();
+    timeFile.close();
+    return false;
+  }
+  size_t size = timeFile.size();
+  if(size > 512) {
+    if(printCom) Serial.println("Time file size is too large");
+    timeFile.close();
+    return false;
+  }
+  jsonTime = timeFile.readString();
+  DynamicJsonDocument doc(512);
+  deserializeJson(doc, jsonTime);
+  timeFile.close();
+  hour = doc["hour"];
+  minute = doc["minute"];
+  second = doc["second"]; 
+  year = doc["year"];
+  month = doc["month"];
+  day = doc["day"]; 
+  if(printCom) {
+    printTime();
+    Serial.print("Load Time : ");
+    Serial.println(jsonTime);
+  }
+  return true;
+}
+//=================================================================
+bool saveTime() {
+  DynamicJsonDocument doc(512);
+  deserializeJson(doc, jsonTime);
+  doc["hour"] = hour;
+  doc["minute"] = minute;
+  doc["second"] = second;
+  doc["year"] = year;
+  doc["month"] = month;
+  doc["day"] = day; 
+  jsonTime = "";
+  if(serializeJson(doc, jsonTime)==0){
+    Serial.println(F("Failed to write to jsonTime"));
+  }  
+  File timeFile = SPIFFS.open("/time.json", "w");
+  if(!timeFile) {
+    timeFile.close();
+    return false;
+  }
+  if(serializeJson(doc, timeFile)==0){
+    Serial.println(F("Failed to write to timeFile "));
+  } 
+  if(printCom) {
+    printTime();
+    Serial.print("Save Time: ");
+    Serial.println(jsonTime);
+  }
+  timeFile.close();
+  bip();
+  return true;
+}
