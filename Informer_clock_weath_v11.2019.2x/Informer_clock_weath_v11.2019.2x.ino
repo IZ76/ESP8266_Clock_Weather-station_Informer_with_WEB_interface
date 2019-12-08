@@ -1083,7 +1083,7 @@ void timeUpdateNTP() {
    // updateTime();
 
     hourTest[timeTest] = g_hour;
-    minuteTest[timeTest] = (g_minute || g_minute+1);
+    minuteTest[timeTest] = (g_minute || (g_minute==59?0:g_minute++));
     if(statusUpdateNtpTime == 0) {
       if(printCom) {
         printTime();
