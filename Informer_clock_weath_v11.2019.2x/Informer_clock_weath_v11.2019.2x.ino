@@ -274,6 +274,7 @@ void setup() {
   sendCmdAll(CMD_INTENSITY, 1);
   SPIFFS.begin();
   loadConfig();
+  loadTime();
   Wire.beginTransmission(0x67);
   errorRTC = Wire.endTransmission();
   if(errorRTC==0){
@@ -548,7 +549,6 @@ void loop() {
     return;
   }
   // ---------- ВИВІД НА ЕКРАН ГОДИННИКА АБО ТЕМПЕРАТУРИ ЧИ ВОЛОГОСТІ------------------------
-
   if(!alarm_stat && secFr == 0) {
     if((clockNight && hour>=timeDay && hour<timeNight) || !clockNight) {   //???????????????????????????????????????????
       if(second == 25 && t1 != 85 && sensorDom) {
@@ -1049,8 +1049,6 @@ unsigned char convert_fonts(unsigned char _c) {
     return c;
   }
 }
-
-
 //==========
 void saveChrMas(String string_t, byte lenght_off, byte number_s) {
   byte lenght = string_t.length();
@@ -1125,6 +1123,7 @@ void timeUpdateNTP() {
   localEpoc = (hour * 60 * 60 + minute * 60 + second);
   convertDw();
   convertMonth();
+  saveTime();
   if(printCom) {
     printTime();
     Serial.println((day < 10 ? "0" : "") + String(day) + "." + (month < 10 ? "0" : "") + String(month) + "." + String(year) + " DW = " + String(dayOfWeek));
