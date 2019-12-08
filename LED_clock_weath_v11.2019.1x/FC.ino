@@ -316,6 +316,5 @@ bool saveTime() {
     Serial.println(jsonTime);
   }
   timeFile.close();
-  bip();
   return true;
 }
