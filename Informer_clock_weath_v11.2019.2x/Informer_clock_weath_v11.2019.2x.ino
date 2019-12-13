@@ -1287,6 +1287,7 @@ void getWeatherData0() {
   location_clouds = data["clouds"]; // 4
   const char*   data_city_name = data["city_name"]; // "Kiev"
   location_name = data_city_name;
+  if(location_name == "Frankfurt am Main") location_name = "Франкфурт на Майні"; 
   location_wind_spd = data["wind_spd"]; // 1
   const char* data_wind_cdir_full = data["wind_cdir_full"]; // "пі́вдень-пі́вдень-схід"
   location_wind_cdir_full = data_wind_cdir_full;
@@ -1336,7 +1337,7 @@ void getWeatherData0() {
   if(data_wind_dir >= 253 && data_wind_dir <= 298) windDegString = "\231";    //"Західний";
   if(data_wind_dir >= 299 && data_wind_dir <= 344) windDegString = "\233";    //"Північно-західний";
 
-  weatherString = "         " + String(data_city_name) + ", " + tNow + ":    \212 " + String(location_temp, 1) + ("\202") + "C";
+  weatherString = "         " + String(location_name) + ", " + tNow + ":    \212 " + String(location_temp, 1) + ("\202") + "C";
   weatherString += "     \213 " + String(location_rh) + "%"; 
   weatherString += "     \215 " + String((location_pres), 0) + tPress;
   weatherString += "     \214 " + windDegString + String(location_wind_spd, 1) + tSpeed;
@@ -1436,6 +1437,7 @@ void getWeatherData1() {
   location_country = data_country_code;
   const char*   data_city_name = doc["name"]; // "Kyiv"
   location_name = data_city_name;
+  if(location_name == "Frankfurt am Main") location_name = "Франкфурт на Майні"; 
 
   String windDegString;
   if(data_wind_dir >= 345 || data_wind_dir <= 22)  windDegString = "\211";    //"Північний";
@@ -1447,7 +1449,7 @@ void getWeatherData1() {
   if(data_wind_dir >= 253 && data_wind_dir <= 298) windDegString = "\231";    //"Західний";
   if(data_wind_dir >= 299 && data_wind_dir <= 344) windDegString = "\233";    //"Північно-західний";
 
-  weatherString = "         "+String(data_city_name)+", "+tNow+":    \212 "+String(location_temp, 1)+" ("+String(location_temp_min,1)+"..."+String(location_temp_max,1)+")"+("\202")+"C";
+  weatherString = "         "+String(location_name)+", "+tNow+":    \212 "+String(location_temp, 1)+" ("+String(location_temp_min,1)+"..."+String(location_temp_max,1)+")"+("\202")+"C";
   weatherString += "     \213 " + String(location_rh) + "%";
   weatherString += "     \215 " + String((location_pres), 0) + tPress;
   weatherString += "     \214 " + windDegString + String(location_wind_spd, 1) + tSpeed;
