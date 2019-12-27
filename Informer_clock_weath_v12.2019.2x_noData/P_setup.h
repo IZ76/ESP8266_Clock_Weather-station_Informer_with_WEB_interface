@@ -213,7 +213,7 @@ const char P_setup[] PROGMEM =  R"=====(
                             </select></td>
                         </tr>
                         <tr>
-                            <td align = "right"><span class="opt_cn">Смещени данных</span></td>
+                            <td align = "right"><span class="opt_cn">Смещение данных</span></td>
                             <td><select id = "dataDown">
                                 <option value = "0"> без смещения </option>
                                 <option value = "1"> смещение вниз </option>

@@ -13,7 +13,7 @@ bool loadConfig() {                                                // Заван
     return false;                                                  // Повернення з помилкою
   }
   jsonConfig = configFile.readString();                            // завантажуємо файл конфігурації в глобальну змінну
-  DynamicJsonDocument doc(4160);                                   // Резервуємо память для json обекту буфер може розти по мірі необхідності переважно для ESP8266 
+  DynamicJsonDocument doc(4224);                                   // Резервуємо память для json обекту буфер може розти по мірі необхідності переважно для ESP8266 
   deserializeJson(doc, jsonConfig);
   configFile.close();
   ssidAP = doc["ssidAP"].as<String>();
@@ -140,7 +140,7 @@ bool loadConfig() {                                                // Заван
 }
 //=================================================================
 bool saveConfig() {
-  DynamicJsonDocument doc(4160);
+  DynamicJsonDocument doc(4224);
   deserializeJson(doc, jsonConfig);
   doc["ssidAP"] = ssidAP;
   doc["passwordAP"] = passwordAP;

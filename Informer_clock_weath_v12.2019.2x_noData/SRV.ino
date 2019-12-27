@@ -492,7 +492,7 @@ void handle_weather() {
     if(!weatherHost) Serial.print(weatherHost0);
     else Serial.print(weatherHost1);
     Serial.println(", Key0: " + weatherKey0 + ", Key1: " + weatherKey1 + ", City ID0: " + cityID0 + ", City ID1: " + cityID1 + ", weatherLang: " + weatherLang);
-    Serial.println("displayForecast: " + String(displayForecast) + "displayCityName: " + String(displayCityName) + "displayForecastNow: " + String(displayForecastNow) + "displayForecastTomorrow: " + String(displayForecastTomorrow));
+    Serial.println("displayForecast: " + String(displayForecast) + ", displayCityName: " + String(displayCityName) + ", displayForecastNow: " + String(displayForecastNow) + ", displayForecastTomorrow: " + String(displayForecastTomorrow));
     Serial.println("outtimeScrollStart: " + String(timeScrollStart) + ", timeScrollStop: " + String(timeScrollStop) + ", timeScrollSpeed: " + String(timeScrollSpeed) + ", uuid: " + String(uuid) + ", api_key: " + String(api_key) + ", sensors_ID0: " + String(sensors_ID0) + ", sensors_ID1: " + String(sensors_ID1) + ", sensors_ID2: " + String(sensors_ID2));
   }
   saveConfig();

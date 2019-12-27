@@ -59,8 +59,8 @@ String weatherHost0 = "api.weatherbit.io";
 String weatherHost1 = "api.openweathermap.org";
 String weatherKey0  = "00000000000000000000000000000000";
 String weatherKey1  = "11111111111111111111111111111111";
-String cityID0      = "Frankfurt";
-String cityID1      = "2925533";
+String cityID0      = "Kryvyy Rih";
+String cityID1      = "703845"; // Kryvyy Rih, "2925533"-Frankfurt
 char personalCityName[51] = "";
 String weatherLang = "uk";
 String location_name = "";
@@ -82,8 +82,8 @@ String location_weather_description = "";
 // ----------змінні для роботи з mqtt сервером
 char mqtt_server[21] = "m13.cloudmqtt.com";
 int  mqtt_port = 13011;
-char mqtt_user[25] = "aaaaaaaaaaaa";
-char mqtt_pass[25] = "bbbbbbbbbbbb";
+char mqtt_user[25] = "333333333333";
+char mqtt_pass[25] = "444444444444";
 char mqtt_name[25] = "Informer";
 char mqtt_sub_inform[25] = "Inform/mess";
 char mqtt_sub[25] = "Ulica/temp";
@@ -94,10 +94,10 @@ char mqtt_pub_press[25] = "Informer/press";
 char mqtt_pub_alt[25] = "Informer/alt";
 bool mqttOn = true;
 // --------------------------------------------
-String uuid = "33333333333333333333333333333333";
-String api_key = "4444444444444";
-int sensors_ID0 = 88733;
-int sensors_ID1 = 88459;
+String uuid = "55555555555555555555555555555555";
+String api_key = "6666666666";
+int sensors_ID0 = 0;    //88733 Frankfurt
+int sensors_ID1 = 3300;   //88459 Frankfurt
 int sensors_ID2 = 0;
 // =====================================================================================
 bool printCom = true;
@@ -626,21 +626,19 @@ void loop() {
     return;
   }
   // ---------- ВИВІД НА ЕКРАН ГОДИННИКА АБО ТЕМПЕРАТУРИ ЧИ ВОЛОГОСТІ------------------------
-  if(!alarm_stat && secFr == 0 && butMode == 0) {
-    if((bigCklock_x2 && hour>=timeDay && hour<timeNight) || !bigCklock_x2) {
-      if(second == 25 && t1 != 85 && sensorDom) {
-        showSimpleTemp();
-      } else if(second == 42 && sensorUl && t4 != 85) {
-        showSimpleTempU();
-      } else if(second == 49 && sensorHome) {
-        showSimpleTempH();
-      } else if(second == 56 && (sensorHumi && h1!=0)) {
-        showSimpleHum();
-      } else if(second == 03 && (sensorPrAl == 3 || sensorPrAl == 4)) {
-        showSimplePre();
-      } else if((hour < timeScrollStart || hour >= timeScrollStop) && second == 10) {
-        showSimpleDate();
-      }
+  if(!alarm_stat && secFr == 0 && butMode == 0 && !bigCklock) {
+    if(second == 25 && t1 != 85 && sensorDom) {
+      showSimpleTemp();
+    } else if(second == 42 && sensorUl && t4 != 85) {
+      showSimpleTempU();
+    } else if(second == 49 && sensorHome) {
+      showSimpleTempH();
+    } else if(second == 56 && (sensorHumi && h1!=0)) {
+      showSimpleHum();
+    } else if(second == 03 && (sensorPrAl == 3 || sensorPrAl == 4)) {
+      showSimplePre();
+    } else if((hour < timeScrollStart || hour >= timeScrollStop) && second == 10) {
+      showSimpleDate();
     }
   } else if(alarm_stat && butMode == 0) {
     if(secFr == 0 && second > 1 && second <= 59) {
@@ -668,7 +666,7 @@ void loop() {
       }
     }
     // ---------- 10 секунда - виводимо дату/погоду----------------------------------------------------------
-    if(second == 10 && !alarm_stat) {
+    if(second == 10 && !alarm_stat && !bigCklock) {
       sensors();
       if(hour >= timeScrollStart && hour < timeScrollStop && !(bigCklock_x2 && (hour<timeDay || hour>=timeNight)) && butMode == 0) {        // працує тілки в дозволений час
         clr(1);
@@ -1407,10 +1405,9 @@ void getWeatherData0() {
   if(data_wind_dir >= 207 && data_wind_dir <= 252) windDegString = "\232";    //"Південно-західний";
   if(data_wind_dir >= 253 && data_wind_dir <= 298) windDegString = "\231";    //"Західний";
   if(data_wind_dir >= 299 && data_wind_dir <= 344) windDegString = "\233";    //"Північно-західний";
-
+  weatherString = "         ";
   if(displayCityName){
     String PCN=personalCityName;
-    weatherString = "         ";
     if(PCN.length() > 0) weatherString += PCN;
     else weatherString += String(location_name);
     weatherString += ", ";
@@ -1527,10 +1524,10 @@ void getWeatherData1() {
   if(data_wind_dir >= 207 && data_wind_dir <= 252) windDegString = "\232";    //"Південно-західний";
   if(data_wind_dir >= 253 && data_wind_dir <= 298) windDegString = "\231";    //"Західний";
   if(data_wind_dir >= 299 && data_wind_dir <= 344) windDegString = "\233";    //"Північно-західний";
-
+  
+  weatherString = "         ";
   if(displayCityName){
     String PCN=personalCityName;
-    weatherString = "         ";
     if(PCN.length() > 0) weatherString += PCN;
     else weatherString += String(location_name);
     weatherString += ", ";
