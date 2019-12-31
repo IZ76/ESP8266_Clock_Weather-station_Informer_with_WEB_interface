@@ -82,8 +82,8 @@ String location_weather_description = "";
 // ----------змінні для роботи з mqtt сервером
 char mqtt_server[21] = "m13.cloudmqtt.com";
 int  mqtt_port = 13011;
-char mqtt_user[25] = "333333333333";
-char mqtt_pass[25] = "444444444444";
+char mqtt_user[25] = "222222222";
+char mqtt_pass[25] = "33333333333";
 char mqtt_name[25] = "Informer";
 char mqtt_sub_inform[25] = "Inform/mess";
 char mqtt_sub[25] = "Ulica/temp";
@@ -94,8 +94,8 @@ char mqtt_pub_press[25] = "Informer/press";
 char mqtt_pub_alt[25] = "Informer/alt";
 bool mqttOn = true;
 // --------------------------------------------
-String uuid = "55555555555555555555555555555555";
-String api_key = "6666666666";
+String uuid = "44444444444444444444444444444444";
+String api_key = "5555555555555";
 int sensors_ID0 = 0;    //88733 Frankfurt
 int sensors_ID1 = 3300;   //88459 Frankfurt
 int sensors_ID2 = 0;
@@ -279,7 +279,8 @@ bool butStat = 1;
 byte butMode = 0; // 0 - не нажата, 1 - нажата один раз, 2 - нажата два раза, 3 - 5 секунд нажата, 4 - 30 секунд нажата.
 byte butFlag = 0; // 1 - кнопка нажата, 0 - не нажата
 int butCount = 0; // счетчик времени нажатия кнопки
-int butMillis = 0; 
+int butMillis = 0;
+bool runningLine = 0;
 //======================================================================================
 void setup(){
   Wire.begin(); 
@@ -411,11 +412,13 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     for(int i = 0; i < 4; i++) {
       bip();
     }
-    printStringWithShift(Text.c_str(), 30, 1);
     if(printCom) {
       printTime();
       Serial.println("MQTT Incoming Message: " + Text);
     }
+    clr(1);
+    refreshAll();
+    printStringWithShift(Text.c_str(), 30, 1);
   }
   if(String(topic) == mqtt_sub) {
     tMqtt4 = 0;
@@ -642,8 +645,6 @@ void loop() {
     }
   } else if(alarm_stat && butMode == 0) {
     if(secFr == 0 && second > 1 && second <= 59) {
-      clr(1);
-      refreshAll();
       bip();
       bip();
     }
@@ -870,7 +871,7 @@ void showSimpleDate() {
 }
 //==========ВИВІД НА ЕКРАН АНІМАЦІЙНОГО ГОДИННИКА=======================================
 void showAnimClock() {
-  byte digPos[6] {5, 10, 18, 23, 15, 47,};
+  byte digPos[6] {5, 10, 18, 23, 15, 47,}; //digPos[0-3] первая-четвертая цифра, digPos[4] - начало точе верняя строка digPos[5] - нижнаяя строка 
   if(hour < 10) {digPos[1]=7; digPos[2]=15; digPos[3]=20; digPos[4]=12; digPos[5]=44;}
   if(fontCLOCK < 2 || bigCklock) {
     if(hour < 10) {digPos[1]=5; digPos[2]=15; digPos[3]=22; digPos[4]=12; digPos[5]=44;}
@@ -961,45 +962,55 @@ void showAnimClock() {
       }
       if(updateForecast && WIFI_connected) setCol(00, flash < 500 ? 0x80 : 0x00);
       if(updateForecasttomorrow && WIFI_connected) setCol(31, flash < 500 ? 0x80 : 0x00);
-    } else {
-      setCol(digPos[4], (fontSizeCLOCK ? 0x36 : 0x66));
-      setCol(digPos[4]+1, (fontSizeCLOCK ? 0x36 : 0x66));
+    } else if(!runningLine){
+      if(flash >= 360 && flash < 540) {
+        clr(1);
+        setCol(digPos[4], (fontSizeCLOCK ? 0x36 : 0x66));
+        setCol(digPos[4]+1, (fontSizeCLOCK ? 0x36 : 0x66));
+        showDigit(12, (NUM_MAX0*4-3), (fontSizeData?znaki5x7:znaki5x8), 1);
+      } else {
+        showDigit(13, (NUM_MAX0*4-3), (fontSizeData?znaki5x7:znaki5x8), 1);
+      }
     }
   } else {
     if(!alarm_stat){
     if((flash >= 180 && flash < 360) || flash >= 540) { // мерегтіння двокрапок в годиннику підвязуємо до личильника циклів
-      setCol(digPos[4], WIFI_connected ? 0x60 : 0x00);
-      setCol(digPos[4]+1, WIFI_connected ? 0x60 : 0x00);
-      setCol(digPos[5], WIFI_connected ? 0x06 : 0x00);
-      setCol(digPos[5]+1, WIFI_connected ? 0x06 : 0x00);
+      setCol(digPos[4], WIFI_connected ? 0x30 : 0x00);
+      setCol(digPos[4]+1, WIFI_connected ? 0x30 : 0x00);
+      setCol(digPos[5], WIFI_connected ? 0x0C : 0x00);
+      setCol(digPos[5]+1, WIFI_connected ? 0x0C : 0x00);
     }
     if(statusUpdateNtpTime) { // якщо останнє оновленя часу було вдалим, то двокрапки в годиннику будуть анімовані
       if(flash >= 0 && flash < 180) {
-        setCol(digPos[4], WIFI_connected ? 0x20 : 0x00);
-        setCol(digPos[4]+1, WIFI_connected ? 0x40 : 0x00);
-        setCol(digPos[5], WIFI_connected ? 0x04 : 0x00);
-        setCol(digPos[5]+1, WIFI_connected ? 0x02 : 0x00);
+        setCol(digPos[4], WIFI_connected ? 0x10 : 0x00);
+        setCol(digPos[4]+1, WIFI_connected ? 0x20 : 0x00);
+        setCol(digPos[5], WIFI_connected ? 0x08 : 0x00);
+        setCol(digPos[5]+1, WIFI_connected ? 0x04 : 0x00);
       }
       if(flash >= 360 && flash < 540) {
-        setCol(digPos[4], WIFI_connected ? 0x40 : 0x00);
-        setCol(digPos[4]+1, WIFI_connected ? 0x20 : 0x00);
-        setCol(digPos[5], WIFI_connected ? 0x02 : 0x00);
-        setCol(digPos[5]+1, WIFI_connected ? 0x04 : 0x00);
+        setCol(digPos[4], WIFI_connected ? 0x20 : 0x00);
+        setCol(digPos[4]+1, WIFI_connected ? 0x10 : 0x00);
+        setCol(digPos[5], WIFI_connected ? 0x04 : 0x00);
+        setCol(digPos[5]+1, WIFI_connected ? 0x08 : 0x00);
       }
     }
     if(updateForecast && WIFI_connected) setCol(00, flash < 500 ? 0x80 : 0x00);
     if(updateForecasttomorrow && WIFI_connected) setCol(31, flash < 500 ? 0x80 : 0x00);
-  } else {
-    setCol(digPos[4], 0x66);
-    setCol(digPos[4]+1, 0x66);
-    setCol(digPos[5], 0x36);
-    setCol(digPos[5]+1, 0x36);
+  } else { // - кода сработал будильник
+    if(flash >= 0 && flash < 500) {
+      setCol(digPos[4], 0x30);
+      setCol(digPos[4]+1, 0x30);
+      setCol(digPos[5], 0x0C);
+      setCol(digPos[5]+1, 0x0C);
+    }
   }
   }
   refreshAll();
 }
 //==========ДРУКУВАННЯ БІГУЧОЇ СТРОКИ *s - текст, shiftDelay - швидкість, zone - зона екрану==================
 void printStringWithShift(const char* s, int shiftDelay, byte zone) {
+  bigCklock = 0;
+  runningLine = 1;
   while(*s) {
     printCharWithShift(*s, shiftDelay, zone);
     s++;
@@ -1009,9 +1020,11 @@ void printStringWithShift(const char* s, int shiftDelay, byte zone) {
     if(butMode != 0) {
       clr(1);
       refreshAll();
+      runningLine = 0;
       return;
     }
   }
+  runningLine = 0;
 }
 //==========ДРУКУВАННЯ БІГУЧОГО СИМВОЛУ с - символ, shiftDelay - швидкість, zone - зона екрану================
 void printCharWithShift(unsigned char c, int shiftDelay, byte zone) {
@@ -2077,7 +2090,7 @@ void lang(){
     tTom = "Завтра";
     tYour = "Ваш";
     tPoint = "Підключіться до";
-    tIp = "та перейдіть по адресу";
+    tIp = "та перейдіть за адресою";
     tPass = "пароль";
     tWeatrNot = "   Немає оновлень погоди більше 6 годин!!!   ";
     tWeatrTN = "немає оновлень погоди - ";
