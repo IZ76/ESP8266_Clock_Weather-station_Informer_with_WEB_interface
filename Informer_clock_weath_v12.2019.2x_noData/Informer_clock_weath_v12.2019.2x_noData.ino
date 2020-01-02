@@ -408,7 +408,9 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     for(int i = 0; i < length; i++) {
       Text += ((char)payload[i]);
     }
-    Text += "        ";
+    for(byte i = 0; i < NUM_MAX1; i++) {
+      Text += "   ";
+    }
     for(int i = 0; i < 4; i++) {
       bip();
     }
