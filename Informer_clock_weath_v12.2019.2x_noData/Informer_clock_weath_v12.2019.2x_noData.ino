@@ -488,7 +488,7 @@ void loop() {
   updateTime();                                                                         // оновлюємо час
   buttonInter();
   bool oldBigCklok = bigCklock;
-  bigCklock = ((bigCklock_x2 == 1 && (hour<timeDay || hour>=timeNight)) || bigCklock_x2 == 2) && butMode == 0;
+  bigCklock = ((bigCklock_x2 == 1 && (timeDay<timeNight?(hour<timeDay || hour>=timeNight):(hour<timeDay && hour>=timeNight)))|| bigCklock_x2 == 2) && butMode == 0;
   if(oldBigCklok != bigCklock){
     clr(0);
     clr(1);
@@ -500,7 +500,7 @@ void loop() {
       levelBridhtness = map(analogRead(brightPin), 1023, 0, 2, 15);
       sendCmdAll(CMD_INTENSITY, levelBridhtness);
     } else {
-      if(hour >= timeDay && hour < timeNight) sendCmdAll(CMD_INTENSITY, volBrightnessD);
+      if(timeDay<timeNight?(hour >= timeDay && hour < timeNight):(hour>=timeDay || hour<timeNight)) sendCmdAll(CMD_INTENSITY, volBrightnessD);
       else sendCmdAll(CMD_INTENSITY, volBrightnessN);
     }
     secFr = 0;
