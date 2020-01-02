@@ -95,7 +95,7 @@ const char P_setup[] PROGMEM =  R"=====(
                                 <option value = "21"> 21 </option>
                                 <option value = "22"> 22 </option>
                                 <option value = "23"> 23 </option>
-                                <option value = "24"> 24 </option>
+                                <option value = "24"> полуночи </option>
                             </select></td>
                         </tr>
                         <tr>
@@ -299,7 +299,7 @@ const char P_setup[] PROGMEM =  R"=====(
                                 <option value = "21"> 21 </option>
                                 <option value = "22"> 22 </option>
                                 <option value = "23"> 23 </option>
-                                <option value = "24"> 24 </option>
+                                <option value = "полуночи"> 24 </option>
                             </select></td>
                         </tr>
                         <tr>
