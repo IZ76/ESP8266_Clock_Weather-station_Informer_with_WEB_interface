@@ -642,7 +642,7 @@ void loop() {
       showSimpleHum();
     } else if(second == 03 && (sensorPrAl == 3 || sensorPrAl == 4)) {
       showSimplePre();
-    } else if((hour < timeScrollStart || hour >= timeScrollStop) && second == 10) {
+    } else if((timeScrollStart<timeScrollStop?(hour < timeScrollStart || hour >= timeScrollStop):(hour >= timeScrollStart || hour < timeScrollStop)) && second == 10) {
       showSimpleDate();
     }
   } else if(alarm_stat && butMode == 0) {
