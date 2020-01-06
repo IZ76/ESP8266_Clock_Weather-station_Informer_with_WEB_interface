@@ -39,6 +39,7 @@ void handle_ConfigJSON() {
   json += WiFi.localIP().toString();
   json += "\",\"printCom\":\"";
   json += (printCom==1?"checked":"");
+  json += "\"}";
   server.send(200, "text/json", json);
 }
 //======================================================================================================
