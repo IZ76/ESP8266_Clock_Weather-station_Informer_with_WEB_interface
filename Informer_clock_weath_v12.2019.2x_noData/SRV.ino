@@ -197,6 +197,43 @@ void handle_ConfigMqttJson() {
 }
 //======================================================================================================  
 void handle_ConfigWeathJson() {
+  int sr = location_sunrise.substring(0, 2).toInt() + (int)hourCorr;
+  if(sr>23) sr -= 24;
+  if(sr<0) sr += 24;
+  String sunrise = String(sr) + location_sunrise.substring(2, 5);
+  int ss = location_sunset.substring(0, 2).toInt() + (int)hourCorr;
+  if(ss>23) ss -= 24;
+  if(ss<0) ss += 24;
+  String sunset = String(ss) + location_sunset.substring(2, 5);
+  int st = location_localtime.substring(11, 13).toInt() + (int)hourCorr;
+  int ly = location_localtime.substring(0, 4).toInt();
+  byte lm = location_localtime.substring(5, 7).toInt();
+  byte ld = location_localtime.substring(8, 10).toInt(); 
+  if(st>23) {
+    st -= 24;
+    ld++;
+    if(ld==32 || (ld==31 && (lm==4 || lm==6 || lm==9 || lm==11)) || (lm==2 && ((ld==29 && ly%4!=0) || (ld==30 && ly%4==0)))) {
+      ld=1;
+      lm++;
+      if(lm>12){
+        lm=1;
+        ly++;
+      }
+    }
+  }
+  if(st<0) {
+    st += 24;
+    ld--;
+    if(ld<1) {
+      ld = 0 + ((lm==5 || lm==7 || lm==10 || lm==12 || (lm==3 && ly%4==0))?30:(lm==3 && ly%4!=0)?29:31);
+      lm--;
+      if(lm<1){
+        lm=12;
+        ly--;
+      }
+    }
+  }
+  String lt = String(ly) + "-" + (lm<10?"0":"") + String(lm) + "-" + (ld<10?"0":"") + String(ld) + " " + (st<10?"0":"") + String(st) + location_localtime.substring(13, 16);
   String json = "{";
   json += "\"time\":\"";
   json += (String(hour) + ":" + (minute < 10 ? "0" : "") + String(minute) + ":" + (second < 10 ? "0" : "") + String(second));
@@ -233,7 +270,7 @@ void handle_ConfigWeathJson() {
   json += "\",\"location_country\":\"";
   json += location_country;
   json += "\",\"location_localtime\":\"";
-  json += location_localtime;
+  json += lt;
   json += "\",\"location_temp\":\"";
   json += location_temp;
   json += "\",\"location_app_temp\":\"";
@@ -247,9 +284,9 @@ void handle_ConfigWeathJson() {
   json += "\",\"location_wind_cdir_full\":\"";
   json += location_wind_cdir_full;
   json += "\",\"location_sunrise\":\"";
-  json += location_sunrise;
+  json += sunrise;
   json += "\",\"location_sunset\":\"";
-  json += location_sunset;
+  json += sunset;
   json += "\",\"location_clouds\":\"";
   json += location_clouds;
   json += "\",\"location_vis\":\"";

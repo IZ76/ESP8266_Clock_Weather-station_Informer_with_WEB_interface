@@ -51,7 +51,7 @@ IPAddress apIP(192, 168, 4, 1);
 
 // ===================================================
 String ssid = "IvanUA";
-String password = "";
+String password = "l";
 String ssidAP      = "ESP-Info";
 String passwordAP  = "11223344";
 boolean weatherHost = 0;
@@ -83,7 +83,7 @@ String location_weather_description = "";
 char mqtt_server[21] = "m13.cloudmqtt.com";
 int  mqtt_port = 13011;
 char mqtt_user[25] = "222222222";
-char mqtt_pass[25] = "33333333333";
+char mqtt_pass[25] = "333333333333";
 char mqtt_name[25] = "Informer";
 char mqtt_sub_inform[25] = "Inform/mess";
 char mqtt_sub[25] = "Ulica/temp";
@@ -95,7 +95,7 @@ char mqtt_pub_alt[25] = "Informer/alt";
 bool mqttOn = true;
 // --------------------------------------------
 String uuid = "44444444444444444444444444444444";
-String api_key = "5555555555555";
+String api_key = "555555555555555";
 int sensors_ID0 = 0;    //88733 Frankfurt
 int sensors_ID1 = 3300;   //88459 Frankfurt
 int sensors_ID2 = 0;
@@ -158,6 +158,7 @@ String jsonConfig = "{}";
 String jsonTime = "{}";
 // ---------- Змінні для роботи локального годинника
 float timeZone = 2.0;                                                                       //  часовий пояс
+float hourCorr;
 bool isDayLightSaving = true;
 long localEpoc = 0;
 long localMillisAtUpdate = 0;
@@ -243,11 +244,11 @@ float corrTempU = -1.5;
 float corrTempH = 0.5;
 float corrHumi  = 0;
 int   corrPress = -21;
-byte sensorDom = 4;          //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6;
-byte sensorUl = 7;           //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6; NMon = 7;
+byte sensorDom = 1;          //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6;
+byte sensorUl = 0;           //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6; NMon = 7;
 byte sensorHome = 0;         //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6; NMon = 7;
-byte sensorHumi = 4;         //NONE = 0, NONE    = 1, Si7021 = 2, NONE   = 3, BME280 = 4, DHT = 5,  NONE = 6;
-byte sensorPrAl = 4;         //NONE = 0, NONE    = 1, NONE   = 2, BMP280 = 3, BME280 = 4, NONE = 5, NONE = 6;
+byte sensorHumi = 0;         //NONE = 0, NONE    = 1, Si7021 = 2, NONE   = 3, BME280 = 4, DHT = 5,  NONE = 6;
+byte sensorPrAl = 0;         //NONE = 0, NONE    = 1, NONE   = 2, BMP280 = 3, BME280 = 4, NONE = 5, NONE = 6;
 String tNow, tCurr, tPress, tPress0, tSpeed, tMin, tTom, tYour, tPoint, tIp, tPass, tWeatrNot, tWeatrTN;
 bool alarm_stat=0;
 bool alarm_hold=0;
@@ -488,6 +489,7 @@ void loop() {
   updateTime();                                                                         // оновлюємо час
   buttonInter();
   bool oldBigCklok = bigCklock;
+  //                                                                                          10 < 8     &&   10 >= 3
   bigCklock = ((bigCklock_x2 == 1 && (timeDay<timeNight?(hour<timeDay || hour>=timeNight):(hour<timeDay && hour>=timeNight)))|| bigCklock_x2 == 2) && butMode == 0;
   if(oldBigCklok != bigCklock){
     clr(0);
@@ -1276,7 +1278,8 @@ void getNTPtime(){
     if(month < 3 || month > 10) summerTime = false;             // не переходимо на літній час в січні, лютому, листопаді і грудню
     if(month > 3 && month < 10) summerTime = true;              // Sommerzeit лічимо в квіні, травні, червені, липні, серпені, вересені
     if(month == 3 && (hour + 24 * day) >= (3 + 24 * (31 - (5 * year / 4 + 4) % 7)) || month == 10 && (hour + 24 * day) < (3 + 24 * (31 - (5 * year / 4 + 1) % 7))) summerTime = true; 
-    epoch = epoch + (int)(timeZone*3600 + (3600*(isDayLightSaving && summerTime)));      
+    epoch = epoch + (int)(timeZone*3600 + (3600*(isDayLightSaving && summerTime)));
+    hourCorr = timeZone + (isDayLightSaving && summerTime);
     g_year = 0;
     int days = 0;
     uint32_t time;
