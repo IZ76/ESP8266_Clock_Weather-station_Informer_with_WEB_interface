@@ -59,7 +59,9 @@ bool loadConfig() {                                                // Заван
   snprintf(mqtt_pub_hum, 24, "%s", (doc["mqtt_pub_hum"].as<String>()).c_str());
   snprintf(mqtt_pub_press, 24, "%s", (doc["mqtt_pub_press"].as<String>()).c_str());
   snprintf(mqtt_pub_alt, 24, "%s", (doc["mqtt_pub_alt"].as<String>()).c_str());
-  snprintf(mqtt_sub, 24, "%s", (doc["mqtt_sub"].as<String>()).c_str());
+  snprintf(mqtt_sub1, 24, "%s", (doc["mqtt_sub1"].as<String>()).c_str());
+  snprintf(mqtt_sub2, 24, "%s", (doc["mqtt_sub2"].as<String>()).c_str());
+  snprintf(mqtt_sub3, 24, "%s", (doc["mqtt_sub3"].as<String>()).c_str());
   snprintf(mqtt_sub_inform, 24, "%s", (doc["mqtt_sub_inform"].as<String>()).c_str());
   printCom = doc["printCom"];
   sensorDom = doc["sensorDom"];
@@ -186,7 +188,9 @@ bool saveConfig() {
   doc["mqtt_pub_hum"] = mqtt_pub_hum;
   doc["mqtt_pub_press"] = mqtt_pub_press;
   doc["mqtt_pub_alt"] = mqtt_pub_alt;
-  doc["mqtt_sub"] = mqtt_sub;
+  doc["mqtt_sub1"] = mqtt_sub1;
+  doc["mqtt_sub2"] = mqtt_sub2;
+  doc["mqtt_sub3"] = mqtt_sub3;
   doc["mqtt_sub_inform"] = mqtt_sub_inform;
   doc["printCom"] = printCom;
   doc["sensorDom"] = sensorDom;

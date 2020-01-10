@@ -329,7 +329,9 @@ const char P_setup[] PROGMEM =  R"=====(
                               <option value = "BMP280"> BMP180/280 </option>
                               <option value = "BME280"> BME280 </option>
                               <option value = "DHT"> DHT11/22 </option>
-                              <option value = "MQTT"> MQTT </option>
+                              <option value = "MQTT1"> MQTT1 </option>
+                              <option value = "MQTT2"> MQTT2 </option>
+                              <option value = "MQTT3"> MQTT3 </option>
                             </select></td>
                             <td><input type="text" class="field form-control" id="corrTempD" value="{{corrTempD}}" pattern="\- \d+(\.\d{2})?"></td>
                             <td><span class="opt_cn"> {{Td}} </span></td>
@@ -343,7 +345,9 @@ const char P_setup[] PROGMEM =  R"=====(
                               <option value = "BMP280"> BMP180/280 </option>
                               <option value = "BME280"> BME280 </option>
                               <option value = "DHT"> DHT11/22 </option>
-                              <option value = "MQTT"> MQTT </option>
+                              <option value = "MQTT1"> MQTT1 </option>
+                              <option value = "MQTT2"> MQTT2 </option>
+                              <option value = "MQTT3"> MQTT3 </option>
                               <option value = "NMon"> NMon </option>
                             </select></td>
                             <td><input type="text" class="field form-control" id="corrTempU" value="{{corrTempU}}" pattern="\- \d+(\.\d{2})?"></td>
@@ -358,7 +362,9 @@ const char P_setup[] PROGMEM =  R"=====(
                               <option value = "BMP280"> BMP180/280 </option>
                               <option value = "BME280"> BME280 </option>
                               <option value = "DHT"> DHT11/22 </option>
-                              <option value = "MQTT"> MQTT </option>
+                              <option value = "MQTT1"> MQTT1 </option>
+                              <option value = "MQTT2"> MQTT2 </option>
+                              <option value = "MQTT3"> MQTT3 </option>
                               <option value = "NMon"> NMon </option>
                             </select></td>
                             <td><input type="text" class="field form-control" id="corrTempH" value="{{corrTempH}}" pattern="\- \d+(\.\d{2})?"></td>

@@ -9,7 +9,8 @@ const char P_mqtt[] PROGMEM =  R"=====(
         <script type = "text/javascript">
             function set_mqtt_ust(submit) {
                 server = "/mqttUst?mqttOn=" + val('mqttOn') + "&mqtt_server=" + val('mqtt_server') + "&mqtt_port=" + (val('mqtt_port')) + "&mqtt_user=" + (val('mqtt_user')) + "&mqtt_pass=" + (val('mqtt_pass'));
-                server += "&mqtt_name=" + val('mqtt_name') + "&mqtt_sub=" + val('mqtt_sub') + "&mqtt_sub_inform=" + val('mqtt_sub_inform') + "&mqtt_pub_temp=" + val('mqtt_pub_temp') + "&mqtt_pub_tempUl=" + val('mqtt_pub_tempUl') + "&mqtt_pub_hum=" + val('mqtt_pub_hum') + "&mqtt_pub_press=" + val('mqtt_pub_press') + "&mqtt_pub_alt=" + val('mqtt_pub_alt');
+                server += "&mqtt_name=" + val('mqtt_name') + "&mqtt_sub1=" + val('mqtt_sub1') + "&mqtt_sub2=" + val('mqtt_sub2') + "&mqtt_sub3=" + val('mqtt_sub3') + "&mqtt_sub_inform=" + val('mqtt_sub_inform');
+                server += "&mqtt_pub_temp=" + val('mqtt_pub_temp') + "&mqtt_pub_tempUl=" + val('mqtt_pub_tempUl') + "&mqtt_pub_hum=" + val('mqtt_pub_hum') + "&mqtt_pub_press=" + val('mqtt_pub_press') + "&mqtt_pub_alt=" + val('mqtt_pub_alt');
                 send_request(submit,server);
             }
             function set_mqtt_on(submit) {
@@ -67,29 +68,42 @@ const char P_mqtt[] PROGMEM =  R"=====(
                         <td align = "right"><span class="opt_cn">Пароль пользователя</span></td>
                         <td><input class="field form-control" id="mqtt_pass" value="{{mqtt_pass}}" pattern="[-\w\s#@/]{0,20}" onfocus="this.type='text'" type="password"></td>
                     </tr>
-                </table>
-                </center>  
-                <paragraph><span class="opt_cn">Топики сообщений</span></paragraph>
-                <center>
-                <table>
                     <tr>
                         <td align = "right"><span class="opt_cn">Имя устройства (ESP)</span></td>
                         <td><input type="text" class="field form-control" id="mqtt_name" value="{{mqtt_name}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
+                </table>
+                </center>  
+                <paragraph><span class="opt_cn">Топики входящих сообщений</span></paragraph>
+                <center>
+                <table>
                     <tr>
-                        <td align = "right"><span class="opt_cn">Внешняя (получаемая) температура</span></td>
-                        <td><input type="text" class="field form-control" id="mqtt_sub" value="{{mqtt_sub}}" pattern="[-\w\s#@/]{1,24}"></td>
+                        <td align = "right"><span class="opt_cn">Внешние данные1 (MQTT1)</span></td>
+                        <td><input type="text" class="field form-control" id="mqtt_sub1" value="{{mqtt_sub1}}" pattern="[-\w\s#@/]{1,24}"></td>
+                    </tr>
+                    <tr>
+                        <td align = "right"><span class="opt_cn">Внешние данные2 (MQTT2)</span></td>
+                        <td><input type="text" class="field form-control" id="mqtt_sub2" value="{{mqtt_sub2}}" pattern="[-\w\s#@/]{1,24}"></td>
+                    </tr>
+                    <tr>
+                        <td align = "right"><span class="opt_cn">Внешние данные3 (MQTT3)</span></td>
+                        <td><input type="text" class="field form-control" id="mqtt_sub3" value="{{mqtt_sub3}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
                         <td align = "right"><span class="opt_cn">Информационные сообщения</span></td>
                         <td><input type="text" class="field form-control" id="mqtt_sub_inform" value="{{mqtt_sub_inform}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
+                </table>
+                </center> 
+                <paragraph><span class="opt_cn">Топики исходящих сообщений</span></paragraph>
+                <center>
+                <table>                    
                     <tr>
-                        <td align = "right"><span class="opt_cn">Публикация температуры внутренней</span></td>
+                        <td align = "right"><span class="opt_cn">Публикация температуры1</span></td>
                         <td><input type="text" class="field form-control" id="mqtt_pub_temp" value="{{mqtt_pub_temp}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>
-                        <td align = "right"><span class="opt_cn">Публикация температуры внешней</span></td>
+                        <td align = "right"><span class="opt_cn">Публикация температуры2</span></td>
                         <td><input type="text" class="field form-control" id="mqtt_pub_tempUl" value="{{mqtt_pub_tempUl}}" pattern="[-\w\s#@/]{1,24}"></td>
                     </tr>
                     <tr>

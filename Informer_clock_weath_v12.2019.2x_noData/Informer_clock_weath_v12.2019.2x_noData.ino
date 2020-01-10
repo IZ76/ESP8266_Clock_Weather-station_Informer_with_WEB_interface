@@ -51,7 +51,7 @@ IPAddress apIP(192, 168, 4, 1);
 
 // ===================================================
 String ssid = "IvanUA";
-String password = "l";
+String password = "";
 String ssidAP      = "ESP-Info";
 String passwordAP  = "11223344";
 boolean weatherHost = 0;
@@ -82,11 +82,13 @@ String location_weather_description = "";
 // ----------змінні для роботи з mqtt сервером
 char mqtt_server[21] = "m13.cloudmqtt.com";
 int  mqtt_port = 13011;
-char mqtt_user[25] = "222222222";
-char mqtt_pass[25] = "333333333333";
+char mqtt_user[25] = "22222222";
+char mqtt_pass[25] = "33333333333333";
 char mqtt_name[25] = "Informer";
 char mqtt_sub_inform[25] = "Inform/mess";
-char mqtt_sub[25] = "Ulica/temp";
+char mqtt_sub1[25] = "Ulica/temp";
+char mqtt_sub2[25] = "Ulica/hum";
+char mqtt_sub3[25] = "Ulica/press";
 char mqtt_pub_temp[25] = "Informer/temp";
 char mqtt_pub_tempUl[25] = "Informer/tempUl";
 char mqtt_pub_hum[25] = "Informer/hum";
@@ -95,7 +97,7 @@ char mqtt_pub_alt[25] = "Informer/alt";
 bool mqttOn = true;
 // --------------------------------------------
 String uuid = "44444444444444444444444444444444";
-String api_key = "555555555555555";
+String api_key = "55555555555";
 int sensors_ID0 = 0;    //88733 Frankfurt
 int sensors_ID1 = 3300;   //88459 Frankfurt
 int sensors_ID2 = 0;
@@ -193,11 +195,11 @@ bool displayForecastNow = true;
 bool displayForecastTomorrow = true;
 int updateForecast = 0;
 int updateForecasttomorrow = 0;
-float t0 = 0.0; // температура в доме со знаком и плавающей запятой
-int t1 = 85;    // температура в доме целая беззнаковая часть
+float t0 = -85.0; // температура в доме со знаком и плавающей запятой
+int t1 = 0;    // температура в доме целая беззнаковая часть
 int t2 = 0;     // температура в доме дробная беззнаковая часть
-float t3 = 0.0; // температура на улице со знаком и плавающей запятой
-int t4 = 85;    // температура на улице целая беззнаковая часть
+float t3 = -85.0; // температура на улице со знаком и плавающей запятой
+int t4 = 0;    // температура на улице целая беззнаковая часть
 int t5 = 0;     // температура на улице дробная беззнаковая часть
 float t6 = 0.0; // температура доп. со знаком и плавающей запятой
 int t7 = 0;     // температура доп. целая беззнаковая часть
@@ -205,9 +207,9 @@ int t8 = 0;     // температура доп. дробная беззнак�
 float h0 = 0.0; // влажность в доме со знаком и плавающей запятой
 byte h1 = 0;    // влажность в доме целая беззнаковая часть
 byte h2 = 0;    // влажность в доме дробная беззнаковая часть
-float tMqtt3 = 0.0; //температура с mqtt со знаком и плавающей запятой
-int tMqtt4 = 85;    //температура с mqtt целая беззнаковая часть
-int tMqtt5 = 0;     //температура с mqtt дробная беззнаковая часть
+float tMqtt1 = 0.0; //температура с mqtt со знаком и плавающей запятой
+float tMqtt2 = 0.0; //влажность с mqtt со знаком и плавающей запятой
+float tMqtt3 = 0.0; //давление с mqtt со знаком и плавающей запятой
 float tempNM = 0.0;
 bool pressSys = 1;
 int p0;
@@ -240,15 +242,15 @@ float humSi7021 = 0;
 float celsiusSi7021 = 0;
 bool si7021 = false;
 float corrTempD = -3.3;
-float corrTempU = -1.5;
-float corrTempH = 0.5;
+float corrTempU = 0;
+float corrTempH = 0;
 float corrHumi  = 0;
 int   corrPress = -21;
-byte sensorDom = 1;          //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6;
-byte sensorUl = 0;           //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6; NMon = 7;
-byte sensorHome = 0;         //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5,  MQTT = 6; NMon = 7;
-byte sensorHumi = 0;         //NONE = 0, NONE    = 1, Si7021 = 2, NONE   = 3, BME280 = 4, DHT = 5,  NONE = 6;
-byte sensorPrAl = 0;         //NONE = 0, NONE    = 1, NONE   = 2, BMP280 = 3, BME280 = 4, NONE = 5, NONE = 6;
+byte sensorDom = 4;          //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5, MQTT1 = 6, MQTT2 = 7, MQTT3 = 8;
+byte sensorUl = 6;           //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5, MQTT1 = 6, MQTT2 = 7, MQTT3 = 8, NMon = 9;
+byte sensorHome = 7;         //NONE = 0, DS18B20 = 1, Si7021 = 2, BMP280 = 3, BME280 = 4, DHT = 5, MQTT1 = 6, MQTT2 = 7, MQTT3 = 8, NMon = 9;
+byte sensorHumi = 4;         //NONE = 0, NONE    = 1, Si7021 = 2, NONE   = 3, BME280 = 4, DHT = 5,  NONE = 6;
+byte sensorPrAl = 4;         //NONE = 0, NONE    = 1, NONE   = 2, BMP280 = 3, BME280 = 4, NONE = 5, NONE = 6;
 String tNow, tCurr, tPress, tPress0, tSpeed, tMin, tTom, tYour, tPoint, tIp, tPass, tWeatrNot, tWeatrTN;
 bool alarm_stat=0;
 bool alarm_hold=0;
@@ -356,7 +358,7 @@ void setup(){
     si7021 = true;
     sensorsSi7021();
   } else if(printCom) Serial.println("Did not find Si7021 sensor!");
-  sensors();
+  sensorsAll();
   serverInit();
 // ----------
   blinker.attach(0.05, showAnimClock);
@@ -397,18 +399,17 @@ void setup(){
   MQTTclient.setCallback(callback);
   MQTTclient.connect(mqtt_name);
   MQTTclient.subscribe(mqtt_sub_inform);
-  MQTTclient.subscribe(mqtt_sub);
-
+  MQTTclient.subscribe(mqtt_sub1);
+  MQTTclient.subscribe(mqtt_sub2);
+  MQTTclient.subscribe(mqtt_sub3);
   if(sensorUl==7)getNarodmon();
 }
 //==========================================
 void callback(char* topic, byte* payload, unsigned int length) { // получаем знаковое число с десятичной плавающей запятой
   if(!mqttOn) return;
+  String Text;
+  for(int i = 0; i < length; i++) Text += ((char)payload[i]);
   if(String(topic) == mqtt_sub_inform) {
-    String Text = "        ";
-    for(int i = 0; i < length; i++) {
-      Text += ((char)payload[i]);
-    }
     for(byte i = 0; i < NUM_MAX1; i++) {
       Text += "   ";
     }
@@ -422,49 +423,49 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     clr(1);
     refreshAll();
     printStringWithShift(Text.c_str(), 30, 1);
+    return;
   }
-  if(String(topic) == mqtt_sub) {
-    tMqtt4 = 0;
-    tMqtt5 = 0;
-    tMqtt3 = 0.0;
-    if((payload[0] >= 48 && payload[0] < 58) || payload[0] == 45) { // в payload[0] - хранится первый полученный символ. 48, 58 и 45 - это коды знаков можете их посмотреть в fonts[]
-      if(payload[0] == 45) {                                        // если первый символ = "-"
-        if(payload[1] >= 48 && payload[1] < 58) {                   //  здесь проверяем уже второй символ что он является числом...
-          tMqtt4 = payload[1] - 48;                                 // если от кода числа отнять 48 то получим число.... К примеру код "0" = 48 если от 48-48 то получим 0
-          if(payload[2] >= 48 && payload[2] < 58) {
-            tMqtt4 = tMqtt4 * 10 + (payload[2] - 48);               // если третий знак тоже число, то второй знак был десятками, умножаем его на 10 (получаем ествественно десятки
-          }
-        }
-        if(payload[3] == 46) {                                      // если третий знак не число, то проверяем его на то что но является точкой...
-          if(payload[4] >= 48 && payload[4] < 58) tMqtt5 = payload[4] - 48; // если третий знак точка и четвертый знак является числом, то это десятые значения
-        }
-        if(payload[2] == 46) {                                      // тоже самое со втрорым знаком...
-          if(payload[3] >= 48 && payload[3] < 58) tMqtt5 = payload[3] - 48;
-        }
-        tMqtt3 = (tMqtt4 + ((float)tMqtt5 / 10)) * (-1);
-      } else {                                                      // здесь таже самая процедура но уже с положительными числами)))))
-        tMqtt4 = payload[0] - 48;
-        if(payload[1] >= 48 && payload[1] < 58) {
-          tMqtt4 = tMqtt4 * 10 + (payload[1] - 48);
-          if(payload[2] == 46) {
-            if(payload[3] >= 48 && payload[3] < 58) tMqtt5 = payload[3] - 48;
-          }
-        }
-        if(payload[1] == 46) {
-          if(payload[2] >= 48 && payload[2] < 58) tMqtt5 = payload[2] - 48;
-        }
-        tMqtt3 = (tMqtt4 + ((float)tMqtt5 / 10)) + (sensorUl == 6 ? corrTempU : 0); 
-      }
-    }
+  if(String(topic) == mqtt_sub1) {
+    tMqtt1 = 0.0;
+    if(payload[0]==45) length = (length>=6?6:length);
+    else length = (length>=5?5:length);
+    tMqtt1 = Text.substring(0, length).toFloat();
     if(printCom) {
       printTime();
-      Serial.println("MQTT Incoming Temperature: " + String(tMqtt3, 1) + " *C");
+      Serial.println("MQTT1 Incoming: " + String(tMqtt1));
     }
+    sensors();
+  }
+  if(String(topic) == mqtt_sub2) {
+    tMqtt2 = 0.0;
+    if(payload[0]==45) length = (length>=6?6:length);
+    else length = (length>=5?5:length);
+    tMqtt2 = Text.substring(0, length).toFloat();
+    if(printCom) {
+      printTime();
+      Serial.println("MQTT2 Incoming: " + String(tMqtt2));
+    }
+    sensors();
+  }
+  if(String(topic) == mqtt_sub3) {
+    tMqtt3 = 0.0;
+    if(payload[0]==45) length = (length>=6?6:length);
+    else length = (length>=5?5:length);
+    tMqtt3 = Text.substring(0, length).toFloat();
+    if(printCom) {
+      printTime();
+      Serial.println("MQTT3 Incoming: " + String(tMqtt3));
+    }
+    sensors();
   }
 }
 //======================================================================================
 void reconnect() {
-  if(WiFi.status() == WL_CONNECTED && !ESPclient.connected()) {
+  if(printCom) {
+    printTime();
+    Serial.println("Start Reconnect void...");
+  }
+  if(WiFi.status() == WL_CONNECTED) {  // && !ESPclient.connected()
     if(printCom) {
       printTime();
       Serial.print("MQTT reconnection...");
@@ -472,7 +473,9 @@ void reconnect() {
     if(MQTTclient.connect(mqtt_name, mqtt_user, mqtt_pass)) {
       if(printCom) Serial.println("connected");
       MQTTclient.subscribe(mqtt_sub_inform);
-      MQTTclient.subscribe(mqtt_sub);
+      MQTTclient.subscribe(mqtt_sub1);
+      MQTTclient.subscribe(mqtt_sub2);
+      MQTTclient.subscribe(mqtt_sub3);
     } else {
       if(printCom){
         Serial.print("failed, rc = ");
@@ -672,7 +675,7 @@ void loop() {
     }
     // ---------- 10 секунда - виводимо дату/погоду----------------------------------------------------------
     if(second == 10 && !alarm_stat && !bigCklock) {
-      sensors();
+      sensorsAll();
       if(hour >= timeScrollStart && hour < timeScrollStop && !(bigCklock_x2 && (hour<timeDay || hour>=timeNight)) && butMode == 0) {        // працує тілки в дозволений час
         clr(1);
         if(minute % 2 == 0 || !displayForecast) {
@@ -729,7 +732,10 @@ void loop() {
           }
         }
         if(sensorUl==7) getNarodmon();
-        if(!MQTTclient.connected() && mqttOn) reconnect();
+        if(mqttOn) {
+          reconnect();
+          reconnect();
+        }
       }
     }
     // ---------- 50 сек. перевірка доступності MQTT та публікація температури ---------
@@ -741,29 +747,27 @@ void loop() {
         reconnect();
       }
       if(MQTTclient.connected() && WIFI_connected) {
-        if(sensorDom && t1 != 85) MQTTclient.publish(mqtt_pub_temp, (String(t1) + "." + String(t2)).c_str());
-        if(sensorUl != 0 && sensorUl != 6 && t4 != 85) MQTTclient.publish(mqtt_pub_tempUl, (String(t4) + "." + String(t5)).c_str());
-        if(sensorHumi == 2 && humSi7021 != 0) MQTTclient.publish(mqtt_pub_hum, (String(humSi7021)).c_str());
-        if(sensorHumi == 4 && humBme != 0) MQTTclient.publish(mqtt_pub_hum, (String(humBme)).c_str());
-        if(sensorHumi == 5 && humiDht != 0) MQTTclient.publish(mqtt_pub_hum, (String(humiDht)).c_str());
-        if(sensorPrAl == 3 && pressBmp != 0) {
-          MQTTclient.publish(mqtt_pub_press, String(pressBmp).c_str());
-          MQTTclient.publish(mqtt_pub_alt, String(altBmp).c_str());
-        }
-        if(sensorPrAl == 4 && pressBme != 0) {
-          MQTTclient.publish(mqtt_pub_press, String(pressBme).c_str());
-          MQTTclient.publish(mqtt_pub_alt, String(altBme).c_str());
-        }
+        if(sensorDom && String(mqtt_pub_temp) != "" && t0 != -85) MQTTclient.publish(mqtt_pub_temp, String(t0).c_str());
+        if(sensorUl  && String(mqtt_pub_tempUl) != "" && t3 != -85) MQTTclient.publish(mqtt_pub_tempUl, String(t3).c_str());
+        if(sensorHumi == 2 && String(mqtt_pub_hum) != "" && humSi7021) MQTTclient.publish(mqtt_pub_hum, (String(humSi7021)).c_str());
+        if(sensorHumi == 4 && String(mqtt_pub_hum) != "" && humBme) MQTTclient.publish(mqtt_pub_hum, (String(humBme)).c_str());
+        if(sensorHumi == 5 && String(mqtt_pub_hum) != "" && humiDht) MQTTclient.publish(mqtt_pub_hum, (String(humiDht)).c_str());
+        if(sensorPrAl == 3 && String(mqtt_pub_press) != "" && pressBmp) MQTTclient.publish(mqtt_pub_press, String(pressBmp).c_str());
+        if(sensorPrAl == 3 && String(mqtt_pub_alt) != "" && pressBmp) MQTTclient.publish(mqtt_pub_alt, String(altBmp).c_str());
+        if(sensorPrAl == 4 && String(mqtt_pub_press) != "" && pressBme) MQTTclient.publish(mqtt_pub_press, String(pressBme).c_str());
+        if(sensorPrAl == 4 && String(mqtt_pub_alt) != "" && pressBme) MQTTclient.publish(mqtt_pub_alt, String(altBme).c_str());
         if(printCom) {
           printTime();
           Serial.print("Publish in topic ");
-          if(sensorDom && t1 != 85) Serial.print("Temperature: " + String(t1) + "." + String(t2) + "*C,   ");
-          if(sensorUl != 0 && sensorUl != 6 && t4 != 85) Serial.print("Na ulice: " + String(t4) + "." + String(t5) + "*C,   ");
-          if(sensorHumi == 2 && humSi7021 != 0) Serial.print("Humidity: " + String(humSi7021) + " %,  ");
-          if(sensorHumi == 4 && humBme != 0) Serial.print("Humidity: " + String(humBme) + " %,  ");
-          if(sensorHumi == 5 && humiDht != 0) Serial.print("Humidity: " + String(humiDht) + " %,  ");
-          if(sensorPrAl == 3 && pressBmp != 0) Serial.print("  Pressure: " + String(pressBmp) + " mmHg,  Altitude: " + String(altBmp) + " m.");
-          if(sensorPrAl == 4 && pressBme != 0) Serial.print("  Pressure: " + String(pressBme) + " mmHg,  Altitude: " + String(altBme) + " m.");
+          if(sensorDom && String(mqtt_pub_temp) != "" && t0 != -85) Serial.print("Temperature: " + String(t0) + "*C,   ");
+          if(sensorUl && String(mqtt_pub_tempUl) != "" && t3 != -85) Serial.print("Na ulice: " + String(t3) + "*C,   ");
+          if(sensorHumi == 2 && String(mqtt_pub_hum) != "" && humSi7021) Serial.print("Humidity: " + String(humSi7021) + " %,  ");
+          if(sensorHumi == 4 && String(mqtt_pub_hum) != "" && humBme) Serial.print("Humidity: " + String(humBme) + " %,  ");
+          if(sensorHumi == 5 && String(mqtt_pub_hum) != "" && humiDht) Serial.print("Humidity: " + String(humiDht) + " %,  ");
+          if(sensorPrAl == 3 && String(mqtt_pub_press) != "" && pressBmp) Serial.print("  Pressure: " + String(pressBmp) + " mmHg,  ");
+          if(sensorPrAl == 3 && String(mqtt_pub_alt) != "" && pressBmp) Serial.print("Altitude: " + String(altBmp) + " m.");
+          if(sensorPrAl == 4 && String(mqtt_pub_press) != "" && pressBme) Serial.print("  Pressure: " + String(pressBme) + " mmHg,  ");
+          if(sensorPrAl == 4 && String(mqtt_pub_alt) != "" && pressBme) Serial.print("Altitude: " + String(altBme) + " m.");
           Serial.println("");
         }
       }
@@ -818,7 +822,7 @@ void showSimpleTempH() {
     dx = dy = 0;
     clr(1);
     showDigit((t6 < 0.0 ? 18 : 17), 0 + indent, (fontSizeData?znaki5x7:znaki5x8), 1); //друкуємо U+ альбо U-
-    if(t7 <= -10.0 || t7 >= 10) showDigit((t7 < 0 ? (74 * -1) / 10 : t7 / 10), 4 + indent, (fontSizeData?dig5x7:dig5x8), 1);
+    if(t7 <= -10.0 || t7 >= 10) showDigit((t7 < 0 ? (t7 * -1) / 10 : t7 / 10), 4 + indent, (fontSizeData?dig5x7:dig5x8), 1);
     showDigit((t7 < 0 ? (t7 * -1) % 10 : t7 % 10), 10 + indent, (fontSizeData?dig5x7:dig5x8), 1);
     showDigit(2, 16 + indent, (fontSizeData?znaki5x7:znaki5x8), 1);
     showDigit(t8, 18 + indent, (fontSizeData?dig5x7:dig5x8), 1);
@@ -1384,7 +1388,6 @@ void getWeatherData0() {
     if(updateForecast >= 360) weatherString = tWeatrNot;
     return;
   }
-
   JsonObject data = doc["data"][0];
   location_rh = data["rh"]; // 69
   location_pres = data["pres"]; // 999.3
@@ -1413,7 +1416,6 @@ void getWeatherData0() {
   location_weather_description = data_weather_description;
   location_temp = data["temp"]; // 10.6
   location_app_temp = data["app_temp"]; // 10.6
-
   String windDegString;
   if(data_wind_dir >= 345 || data_wind_dir <= 22)  windDegString = "\211";    //"Північний";
   if(data_wind_dir >= 23  && data_wind_dir <= 68)  windDegString = "\234";    //"Північно-східний";
@@ -1475,7 +1477,6 @@ void getWeatherData1() {
     if(updateForecast >= 360) weatherString = tWeatrNot;
     return;
   }
-
   HTTPClient http;
   String line="";
   String reqline="http://"+weatherHost1+"/data/2.5/weather?id="+urlencode(cityID1)+"&lang="+weatherLang+"&units=metric&appid="+weatherKey1;
@@ -1485,7 +1486,6 @@ void getWeatherData1() {
     Serial.println("=======================================================");
   }  
   if (http.begin(ESPclient, reqline)) { // HTTP
-  
    int httpCode = http.GET();
    if (httpCode > 0) {
      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
@@ -1532,7 +1532,6 @@ void getWeatherData1() {
   location_country = data_country_code;
   const char*   data_city_name = doc["name"]; // "Kyiv"
   location_name = data_city_name;
-
   String windDegString;
   if(data_wind_dir >= 345 || data_wind_dir <= 22)  windDegString = "\211";    //"Північний";
   if(data_wind_dir >= 23  && data_wind_dir <= 68)  windDegString = "\234";    //"Північно-східний";
@@ -1542,7 +1541,6 @@ void getWeatherData1() {
   if(data_wind_dir >= 207 && data_wind_dir <= 252) windDegString = "\232";    //"Південно-західний";
   if(data_wind_dir >= 253 && data_wind_dir <= 298) windDegString = "\231";    //"Західний";
   if(data_wind_dir >= 299 && data_wind_dir <= 344) windDegString = "\233";    //"Північно-західний";
-  
   weatherString = "         ";
   if(displayCityName){
     String PCN=personalCityName;
@@ -1569,8 +1567,6 @@ void getWeatherDataz0() {
     if(updateForecast >= 360) weatherStringZ = "";
     return;
   }
-    //if(printCom) printTime();
-  //if(printCom) Serial.println("Getting weather forecast for tomorrow...");
   HTTPClient http;
   String line="";
   String reqline="http://"+weatherHost0+"/v2.0/forecast/daily?city="+urlencode(cityID0)+"&lang="+weatherLang+"&days=2&key="+weatherKey0;
@@ -1580,7 +1576,6 @@ void getWeatherDataz0() {
     Serial.println("=======================================================");
   }  
   if (http.begin(ESPclient, reqline)) { // HTTP
-
    int httpCode = http.GET();
    if (httpCode > 0) {
      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
@@ -1598,7 +1593,6 @@ void getWeatherDataz0() {
     Serial.print("line2=");
     Serial.println(line);
   }
-  
   const size_t capacity = JSON_ARRAY_SIZE(2) + 2*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7) + 2*JSON_OBJECT_SIZE(37) + 2321;
   DynamicJsonDocument doc(capacity);
   deserializeJson(doc, line);
@@ -1621,7 +1615,6 @@ void getWeatherDataz0() {
   const char* data_1_weather_description = data_1_weather["description"]; // "Світло душ дощ"
   float data_1_max_temp = data_1["max_temp"]; // 16.3
   float data_1_min_temp = data_1["min_temp"]; // 10
-
   weatherStringZ = "";
   if(hour<18) weatherStringZ += tCurr + ":";
   if(hour<12) weatherStringZ += "   \212" + String(data_0_min_temp, 1) + "...." + String(data_0_max_temp, 1) + "\202" + "C  ";
@@ -1645,8 +1638,6 @@ void getWeatherDataz1(){
     if(updateForecast >= 360) weatherStringZ = "";
     return;
   }
-    //if(printCom) printTime();
-  //if(printCom) Serial.println("Getting weather forecast for tomorrow...");
   HTTPClient http;
   String line="";
   String reqline="http://"+weatherHost1+"/data/2.5/forecast/daily?id="+urlencode(cityID1)+"&units=metric&appid="+weatherKey1+"&lang="+weatherLang+"&cnt=2";
@@ -1656,7 +1647,6 @@ void getWeatherDataz1(){
     Serial.println("=======================================================");
   }  
   if (http.begin(ESPclient, reqline)) { // HTTP
-
    int httpCode = http.GET();
    if (httpCode > 0) {
      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
@@ -1673,8 +1663,7 @@ void getWeatherDataz1(){
   if(printCom) {
     Serial.print("line2=");
     Serial.println(line);
-  }
-  
+  } 
   const size_t capacity = 2*JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(2) + JSON_OBJECT_SIZE(2) + 2*JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3*JSON_OBJECT_SIZE(6) + 2*JSON_OBJECT_SIZE(10) + 1281;
   DynamicJsonDocument doc(capacity);
   deserializeJson(doc, line);
@@ -1684,7 +1673,6 @@ void getWeatherDataz1(){
     if(updateForecast >= 360) weatherStringZ = "";
     return;
   }
-  
   JsonObject city = doc["city"];
   JsonObject list_0 = doc["list"][0];
   JsonObject list_0_temp = list_0["temp"];
@@ -1702,7 +1690,6 @@ void getWeatherDataz1(){
   const char* data_1_weather_description = list_1_weather_0["description"]; // "слегка облачно"
   float data_1_wind_spd = list_1["speed"]; // 0.7
   int data_1_clouds = list_1["clouds"]; // 38
-
   weatherStringZ = "";
   if(hour<18) weatherStringZ += tCurr + ":";
   if(hour<12) weatherStringZ += "   \212" + String(data_0_min_temp, 1) + "...." + String(data_0_max_temp, 1) + "\202" + "C  ";
@@ -1776,7 +1763,6 @@ void getNarodmon(){
   JsonObject sensors_2 = doc["sensors"][2];
   float sensors_2_value = sensors_2["value"];
   long sensors_2_time = sensors_2["time"];
-
   long timestamp = epochNM + (millis()/1000);
   if(printCom){
     printTime();
@@ -1880,34 +1866,45 @@ void wifiConnect(){
   }
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-void sensors() {
+void sensorsAll() {
   sensorsDs18b20();
   sensorsSi7021();
   sensorsBmp();
   sensorsBme();
   sensorsDht();
-  t0 = (sensorDom==0?0:sensorDom==1?tempDs18b20:sensorDom==2?celsiusSi7021:sensorDom==3?tempBmp:sensorDom==4?tempBme:sensorDom==5?tempDht:sensorDom==6?tMqtt3:0);
-  t0 += corrTempD;
+  sensors();
+}
+void sensors() {
+  t0 = (sensorDom==0?0:sensorDom==1?tempDs18b20:sensorDom==2?celsiusSi7021:sensorDom==3?tempBmp:sensorDom==4?tempBme:sensorDom==5?tempDht:sensorDom==6?tMqtt1:sensorDom==7?tMqtt2:sensorDom==8?tMqtt3:0);
+  if(sensorDom) t0 += corrTempD;
   t1 = int(t0);
   t2 = int(t0*10*(t0>0?1:-1))%10;
-  t3 = (sensorUl==0?0:sensorUl==1?tempDs18b20:sensorUl==2?celsiusSi7021:sensorUl==3?tempBmp:sensorUl==4?tempBme:sensorUl==5?tempDht:sensorUl==6?tMqtt3:sensorUl==7?tempNM:0);
-  t3 += corrTempU;
+  t3 = (sensorUl==0?0:sensorUl==1?tempDs18b20:sensorUl==2?celsiusSi7021:sensorUl==3?tempBmp:sensorUl==4?tempBme:sensorUl==5?tempDht:sensorUl==6?tMqtt1:sensorUl==7?tMqtt2:sensorUl==8?tMqtt3:sensorUl==9?tempNM:0);
+  if(sensorUl) t3 += corrTempU;
   t4 = int(t3*-1);
   t5 = int(t3*10*(t3>0?1:-1))%10;
-  t6 = (sensorHome==0?0:sensorHome==1?tempDs18b20:sensorHome==2?celsiusSi7021:sensorHome==3?tempBmp:sensorHome==4?tempBme:sensorHome==5?tempDht:sensorHome==6?tMqtt3:sensorHome==7?tempNM:0);
-  t6 += corrTempH;
+  t6 = (sensorHome==0?0:sensorHome==1?tempDs18b20:sensorHome==2?celsiusSi7021:sensorHome==3?tempBmp:sensorHome==4?tempBme:sensorHome==5?tempDht:sensorHome==6?tMqtt1:sensorHome==7?tMqtt2:sensorHome==8?tMqtt3:sensorHome==9?tempNM:0);
+  if(sensorHome) t6 += corrTempH;
   t7 = int(t6);
   t8 = int(t6*10*(t6>0?1:-1))%10;
   h0 = (sensorHumi==2?humSi7021:sensorHumi==4?humBme:sensorHumi==5?humiDht:0);
-  h0 += corrHumi;
+  if(sensorHumi) h0 += corrHumi;
   h1 = int(h0);
   h2 = int(h0*10*(h0>0?1:-1))%10;
   p0 = int(sensorPrAl==3?pressBmp:pressBme);
-  p0 += corrPress;
+  if(sensorPrAl) p0 += corrPress;
   p1 = p0 / 1000;
   p2 = (p0 - p1*1000) / 100;
   p3 = (p0 - p1*1000 - p2*100) / 10;
   p4 = p0%10;
+  if(printCom) {
+    printTime();
+    if(sensorDom) Serial.println("sensorDom  = " + String(t0));
+    if(sensorUl) Serial.println("          sensorUl   = " + String(t3));
+    if(sensorHome) Serial.println("          sensorHome = " + String(t6));
+    if(sensorHumi) Serial.println("          sensorHumi = " + String(h0));
+    if(sensorPrAl) Serial.println("          sensorPrAl = " + String(p0));
+  }
 }
 //--------------------------------------------------------------------------
 void sensorsDs18b20() {  //1

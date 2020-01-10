@@ -179,8 +179,12 @@ void handle_ConfigMqttJson() {
   json += mqtt_pass;
   json += "\",\"mqtt_name\":\"";
   json += mqtt_name;
-  json += "\",\"mqtt_sub\":\"";
-  json += mqtt_sub;
+  json += "\",\"mqtt_sub1\":\"";
+  json += mqtt_sub1;
+  json += "\",\"mqtt_sub2\":\"";
+  json += mqtt_sub2;
+  json += "\",\"mqtt_sub3\":\"";
+  json += mqtt_sub3;
   json += "\",\"mqtt_sub_inform\":\"";
   json += mqtt_sub_inform;
   json += "\",\"mqtt_pub_temp\":\"";
@@ -337,19 +341,19 @@ void handle_ConfigSetupJson() {
   json += "\",\"buzzerSet\":\"";
   json += (buzzerSet==1?"checked":"");
   json += "\",\"sensorDom\":\"";
-  json += (sensorDom==0?"NONE":sensorDom==1?"DS18B20":sensorDom==2?"SI7021":sensorDom==3?"BMP280":sensorDom==4?"BME280":sensorDom==5?"DHT":sensorDom==6?"MQTT":"NONE");
+  json += (sensorDom==0?"NONE":sensorDom==1?"DS18B20":sensorDom==2?"SI7021":sensorDom==3?"BMP280":sensorDom==4?"BME280":sensorDom==5?"DHT":sensorDom==6?"MQTT1":sensorDom==7?"MQTT2":sensorDom==8?"MQTT3":"NONE");
   json += "\",\"corrTempD\":\"";
   json += corrTempD;
   json += "\",\"Td\":\"";
   json += t0;
   json += "\",\"sensorUl\":\"";
-  json += (sensorUl==0?"NONE":sensorUl==1?"DS18B20":sensorUl==2?"SI7021":sensorUl==3?"BMP280":sensorUl==4?"BME280":sensorUl==5?"DHT":sensorUl==6?"MQTT":sensorUl==7?"NMon":"NONE");
+  json += (sensorUl==0?"NONE":sensorUl==1?"DS18B20":sensorUl==2?"SI7021":sensorUl==3?"BMP280":sensorUl==4?"BME280":sensorUl==5?"DHT":sensorUl==6?"MQTT1":sensorUl==7?"MQTT2":sensorUl==8?"MQTT3":sensorUl==9?"NMon":"NONE");
   json += "\",\"corrTempU\":\"";
   json += corrTempU;
   json += "\",\"Tu\":\"";
   json += t3;
   json += "\",\"sensorHome\":\"";
-  json += (sensorHome==0?"NONE":sensorHome==1?"DS18B20":sensorHome==2?"SI7021":sensorHome==3?"BMP280":sensorHome==4?"BME280":sensorHome==5?"DHT":sensorHome==6?"MQTT":sensorHome==7?"NMon":"NONE");
+  json += (sensorHome==0?"NONE":sensorHome==1?"DS18B20":sensorHome==2?"SI7021":sensorHome==3?"BMP280":sensorHome==4?"BME280":sensorHome==5?"DHT":sensorHome==6?"MQTT1":sensorHome==7?"MQTT2":sensorHome==8?"MQTT3":sensorHome==9?"NMon":"NONE");
   json += "\",\"corrTempH\":\"";
   json += corrTempH;
   json += "\",\"Th\":\"";
@@ -577,23 +581,29 @@ void handle_setup(){
   else if(sD=="BMP280") sensorDom = 3;
   else if(sD=="BME280") sensorDom = 4;
   else if(sD=="DHT") sensorDom = 5;
-  else if(sD=="MQTT") sensorDom = 6;
+  else if(sD=="MQTT1") sensorDom = 6;
+  else if(sD=="MQTT2") sensorDom = 7;
+  else if(sD=="MQTT3") sensorDom = 8;
   if(sU=="NONE") sensorUl = 0;
   else if(sU=="DS18B20") sensorUl = 1;
   else if(sU=="SI7021") sensorUl = 2;
   else if(sU=="BMP280") sensorUl = 3;
   else if(sU=="BME280") sensorUl = 4;
   else if(sU=="DHT") sensorUl = 5;
-  else if(sU=="MQTT") sensorUl = 6;
-  else if(sU=="NMon") sensorUl = 7;
+  else if(sU=="MQTT1") sensorUl = 6;
+  else if(sU=="MQTT2") sensorUl = 7;
+  else if(sU=="MQTT3") sensorUl = 8;
+  else if(sU=="NMon") sensorUl = 9;
   if(sHo=="NONE") sensorHome = 0;
   else if(sHo=="DS18B20") sensorHome = 1;
   else if(sHo=="SI7021") sensorHome = 2;
   else if(sHo=="BMP280") sensorHome = 3;
   else if(sHo=="BME280") sensorHome = 4;
   else if(sHo=="DHT") sensorHome = 5;
-  else if(sHo=="MQTT") sensorHome = 6;
-  else if(sHo=="NMon") sensorHome = 7;
+  else if(sHo=="MQTT1") sensorHome = 6;
+  else if(sHo=="MQTT2") sensorHome = 7;
+  else if(sHo=="MQTT3") sensorHome = 8;
+  else if(sHo=="NMon") sensorHome = 9;
   if(sH=="NONE") sensorHumi = 0;
   else if(sH=="SI7021") sensorHumi = 2;
   else if(sH=="BME280") sensorHumi = 4;
@@ -616,9 +626,10 @@ void handle_setup(){
   if(printCom) {
     printTime();
     Serial.println("TBD: "+String(timeDay)+", VBD: "+String(volBrightnessD)+", TBN: "+String(timeNight)+", VBN: "+String(volBrightnessN)+",  kuOn: "+String(kuOn)+",  kuOff: "+String(kuOff)+",  rotate0: "+String(rotate0)+", rotate1: "+String(rotate1)+", bigCklock_x2: "+String(bigCklock_x2)+", buzzerSet: "+String(buzzerSet));
+    Serial.println("sensorDom: "+String(sensorDom)+", sensorUl: "+String(sensorUl)+", sensorHome: "+String(sensorHome)+", sensorHumi: "+String(sensorHumi)+",  sensorPrAl: "+String(sensorPrAl));
   }
   saveConfig();
-  sensors();
+  sensorsAll();
   server.send(200, "text/plain", "OK");
 }
 //======================================================================================================
@@ -628,7 +639,9 @@ void handle_mqtt_ust() {
   snprintf(mqtt_user, 24, "%s", server.arg("mqtt_user").c_str());
   snprintf(mqtt_pass, 24, "%s", server.arg("mqtt_pass").c_str());
   snprintf(mqtt_name, 24, "%s", server.arg("mqtt_name").c_str());
-  snprintf(mqtt_sub, 24, "%s", server.arg("mqtt_sub").c_str());
+  snprintf(mqtt_sub1, 24, "%s", server.arg("mqtt_sub1").c_str());
+  snprintf(mqtt_sub2, 24, "%s", server.arg("mqtt_sub2").c_str());
+  snprintf(mqtt_sub3, 24, "%s", server.arg("mqtt_sub3").c_str());
   snprintf(mqtt_sub_inform, 24, "%s", server.arg("mqtt_sub_inform").c_str());
   snprintf(mqtt_pub_temp, 24, "%s", server.arg("mqtt_pub_temp").c_str());
   snprintf(mqtt_pub_tempUl, 24, "%s", server.arg("mqtt_pub_tempUl").c_str());
@@ -637,12 +650,12 @@ void handle_mqtt_ust() {
   snprintf(mqtt_pub_alt, 24, "%s", server.arg("mqtt_pub_alt").c_str());
   if(printCom) {
     printTime();
-    Serial.println("Set mqtt_server: " + String(mqtt_server) + ",  mqtt_port: " + String(mqtt_port) + ",  mqtt_user: " + String(mqtt_user) + ",  mqtt_pass: " + String(mqtt_pass));
-    Serial.println("Set mqtt_name: " + String(mqtt_name) + ",  mqtt_sub: " + String(mqtt_sub) + ",  mqtt_sub_inform: " + String(mqtt_sub_inform) + ",  mqtt_pub_temp: " + String(mqtt_pub_temp) + ",  mqtt_pub_tempUl: " + String(mqtt_pub_tempUl) + ",  mqtt_pub_hum: " + String(mqtt_pub_hum));
+    Serial.println("Set mqtt_server: " + String(mqtt_server) + ",  mqtt_port: " + String(mqtt_port) + ",  mqtt_user: " + String(mqtt_user) + ",  mqtt_pass: " + String(mqtt_pass) + ", mqtt_name: " + String(mqtt_name));
+    Serial.println("          Set mqtt_sub1: " + String(mqtt_sub1) + ",  mqtt_sub2: " + String(mqtt_sub2) + ",  mqtt_sub3: " + String(mqtt_sub3)+ ",  mqtt_sub_inform: " + String(mqtt_sub_inform) + ",  mqtt_pub_temp: " + String(mqtt_pub_temp) + ",  mqtt_pub_tempUl: " + String(mqtt_pub_tempUl) + ",  mqtt_pub_hum: " + String(mqtt_pub_hum));
   }
-  if(mqttOn) reconnect();
   saveConfig(); 
   server.send(200, "text/plain", "OK");
+  if(mqttOn) reconnect();
 }
 //======================================================================================================
 void handle_mqtt_on() {
