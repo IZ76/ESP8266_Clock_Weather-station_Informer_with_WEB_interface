@@ -435,6 +435,7 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
   }
   if(String(topic) == mqtt_sub2) {
     tMqtt2 = Text.substring(0, length+1).toFloat();
+    if(tMqtt2 > 99999.99) tMqtt2 = 99999.99;
     if(printCom) {
       printTime();
       Serial.println("MQTT2 Incoming: " + String(tMqtt2));
