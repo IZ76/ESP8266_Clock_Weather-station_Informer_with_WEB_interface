@@ -83,7 +83,7 @@ String location_weather_description = "";
 char mqtt_server[21] = "m13.cloudmqtt.com";
 int  mqtt_port = 13011;
 char mqtt_user[25] = "22222222";
-char mqtt_pass[25] = "33333333333333";
+char mqtt_pass[25] = "333333333333";
 char mqtt_name[25] = "Informer";
 char mqtt_sub_inform[25] = "Inform/mess";
 char mqtt_sub1[25] = "Ulica/temp";
@@ -97,7 +97,7 @@ char mqtt_pub_alt[25] = "Informer/alt";
 bool mqttOn = true;
 // --------------------------------------------
 String uuid = "44444444444444444444444444444444";
-String api_key = "55555555555";
+String api_key = "5555555555555";
 int sensors_ID0 = 0;    //88733 Frankfurt
 int sensors_ID1 = 3300;   //88459 Frankfurt
 int sensors_ID2 = 0;
@@ -426,10 +426,7 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     return;
   }
   if(String(topic) == mqtt_sub1) {
-    tMqtt1 = 0.0;
-    if(payload[0]==45) length = (length>=6?6:length);
-    else length = (length>=5?5:length);
-    tMqtt1 = Text.substring(0, length).toFloat();
+    tMqtt1 = Text.substring(0, length+1).toFloat();
     if(printCom) {
       printTime();
       Serial.println("MQTT1 Incoming: " + String(tMqtt1));
@@ -437,10 +434,7 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     sensors();
   }
   if(String(topic) == mqtt_sub2) {
-    tMqtt2 = 0.0;
-    if(payload[0]==45) length = (length>=6?6:length);
-    else length = (length>=5?5:length);
-    tMqtt2 = Text.substring(0, length).toFloat();
+    tMqtt2 = Text.substring(0, length+1).toFloat();
     if(printCom) {
       printTime();
       Serial.println("MQTT2 Incoming: " + String(tMqtt2));
@@ -448,10 +442,7 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     sensors();
   }
   if(String(topic) == mqtt_sub3) {
-    tMqtt3 = 0.0;
-    if(payload[0]==45) length = (length>=6?6:length);
-    else length = (length>=5?5:length);
-    tMqtt3 = Text.substring(0, length).toFloat();
+    tMqtt3 = Text.substring(0, length+1).toFloat();
     if(printCom) {
       printTime();
       Serial.println("MQTT3 Incoming: " + String(tMqtt3));
@@ -815,19 +806,35 @@ void showSimpleTempU() {
     refreshAll();
   }
 }
-//==========ВИВІД НА ЕКРАН ТЕМПЕРАТУРИ НА ДОП========================================
+//==========ВИВІД НА ЕКРАН ДОДАТКОВИХ ДАННИХ========================================
 void showSimpleTempH() {
   if(WiFi.status() == WL_CONNECTED) {
     byte indent = (NUM_MAX1 * 8) - 32;
     dx = dy = 0;
     clr(1);
     showDigit((t6 < 0.0 ? 18 : 17), 0 + indent, (fontSizeData?znaki5x7:znaki5x8), 1); //друкуємо U+ альбо U-
-    if(t7 <= -10.0 || t7 >= 10) showDigit((t7 < 0 ? (t7 * -1) / 10 : t7 / 10), 4 + indent, (fontSizeData?dig5x7:dig5x8), 1);
-    showDigit((t7 < 0 ? (t7 * -1) % 10 : t7 % 10), 10 + indent, (fontSizeData?dig5x7:dig5x8), 1);
-    showDigit(2, 16 + indent, (fontSizeData?znaki5x7:znaki5x8), 1);
-    showDigit(t8, 18 + indent, (fontSizeData?dig5x7:dig5x8), 1);
-    showDigit(0, 24 + indent, (fontSizeData?znaki5x7:znaki5x8), 1);
-    showDigit(1, 27 + indent, (fontSizeData?znaki5x7:znaki5x8), 1);
+    float t6t = t6*(t6>=0?1:-1);
+    if(t6t>=10000){
+      showDigit((int)t6t%10, 28 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t/10)%10, 23 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t/100)%10, 18 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t/1000)%10, 13 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t/10000)%10, 8 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+    } else if(t6t>=1000){
+      showDigit((int)(t6t*10)%10, 28 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit(2, 26 + indent, (fontSizeData?znaki5x7:znaki5x8), 1);
+      showDigit((int)t6t%10, 21 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t/10)%10, 16 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t/100)%10, 11 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t/1000)%10, 6 + indent, (fontSizeData?dig4x7:dig4x8), 1);      
+    } else {
+      showDigit((int)(t6t*100)%10, 28 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit((int)(t6t*10)%10, 23 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      showDigit(2, 21 + indent, (fontSizeData?znaki5x7:znaki5x8), 1);
+      showDigit((int)t6t%10, 16 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      if(t6t >=10) showDigit((int)(t6t/10)%10, 11 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+      if(t6t>=100) showDigit((int)(t6t/100)%10, 6 + indent, (fontSizeData?dig4x7:dig4x8), 1);
+    }
     if(dataDown) scrollDown(1);
     refreshAll();
   }
