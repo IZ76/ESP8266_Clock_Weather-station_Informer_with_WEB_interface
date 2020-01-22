@@ -554,9 +554,11 @@ void loop() {
         showSimpleTemp();
       } else if (second >= 42 && second < 44 && sensorUl) {
         showSimpleTempU();
-      } else if (second >= 44 && second < 46 && (sensorHumi == 2 || sensorHumi == 4 || sensorHumi == 5)) {
+      } else if (second >= 44 && second < 46 && sensorHome) {
+        showSimpleTempH();
+      } else if (second >= 46 && second < 48 && (sensorHumi == 2 || sensorHumi == 4 || sensorHumi == 5)) {
         showSimpleHum();
-      } else if (second >= 46 && second < 48 && (sensorPrAl == 3 || sensorPrAl == 4)) {
+      } else if (second >= 48 && second < 50 && (sensorPrAl == 3 || sensorPrAl == 4)) {
         showSimplePre();
       } else if (second >= 10 && second < 15) {
         showSimpleDate();
