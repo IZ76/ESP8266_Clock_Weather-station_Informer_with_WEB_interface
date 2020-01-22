@@ -492,7 +492,7 @@ void handle_weather_update() {
         getWeatherDataz1();
       }
     }
-    if(sensorUl==7)getNarodmon();
+    if(sensorUl==9)getNarodmon();
     bip();
     server.send(200, "text/plain", "OK");
   }
@@ -542,7 +542,7 @@ void handle_weather() {
       Serial.println("Update weather!");
     }
   }
-  if(sensorUl==7) getNarodmon();
+  if(sensorUl==9) getNarodmon();
   server.send(200, "text/plain", "OK");
 }
 //======================================================================================================
