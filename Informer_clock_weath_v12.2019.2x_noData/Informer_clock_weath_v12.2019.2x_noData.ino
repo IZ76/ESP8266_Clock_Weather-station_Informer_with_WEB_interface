@@ -402,7 +402,7 @@ void setup(){
   MQTTclient.subscribe(mqtt_sub1);
   MQTTclient.subscribe(mqtt_sub2);
   MQTTclient.subscribe(mqtt_sub3);
-  if(sensorUl==7)getNarodmon();
+  if(sensorUl==9)getNarodmon();
 }
 //==========================================
 void callback(char* topic, byte* payload, unsigned int length) { // получаем знаковое число с десятичной плавающей запятой
@@ -723,7 +723,7 @@ void loop() {
             }
           }
         }
-        if(sensorUl==7) getNarodmon();
+        if(sensorUl==9) getNarodmon();
         if(mqttOn) {
           reconnect();
           reconnect();
