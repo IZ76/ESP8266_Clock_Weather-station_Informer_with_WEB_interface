@@ -550,18 +550,18 @@ void loop() {
   // ---------- ВИВІД НА ЕКРАН ГОДИННИКА АБО ТЕМПЕРАТУРИ ЧИ ВОЛОГОСТІ------------------------
   if (!alarm_stat && millis() % 50 == 0) {
     if ((clockNight && (timeDay<=timeNight?(hour>=timeDay && hour<=timeNight):(hour>=timeDay || hour<timeNight))) || !clockNight) {
-      if (second >= 40 && second < 42 && sensorDom) {
+      if (second >= 10 && second < 15) {
+        showSimpleDate();
+      } else if (second >= 40 && second < 42 && sensorDom ) {
         showSimpleTemp();
-      } else if (second >= 42 && second < 44 && sensorUl) {
+      } else if (second >= 42 && second < 44 && sensorUl  ) {
         showSimpleTempU();
       } else if (second >= 44 && second < 46 && sensorHome) {
         showSimpleTempH();
-      } else if (second >= 46 && second < 48 && (sensorHumi == 2 || sensorHumi == 4 || sensorHumi == 5)) {
+      } else if (second >= 46 && second < 48 && sensorHumi) {
         showSimpleHum();
-      } else if (second >= 48 && second < 50 && (sensorPrAl == 3 || sensorPrAl == 4)) {
+      } else if (second >= 48 && second < 50 && sensorPrAl) {
         showSimplePre();
-      } else if (second >= 10 && second < 15) {
-        showSimpleDate();
       } else showAnimClock();
     } else showAnimClock();
   } else if (alarm_stat) {
