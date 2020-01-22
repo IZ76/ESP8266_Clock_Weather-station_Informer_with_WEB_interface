@@ -66,6 +66,7 @@ bool loadConfig() {                                                // Заван
   printCom = doc["printCom"];
   sensorDom = doc["sensorDom"];
   sensorUl = doc["sensorUl"];
+  sensorHome = doc["sensorHome"];
   sensorHumi = doc["sensorHumi"];
   sensorPrAl = doc["sensorPrAl"];
   pressSys = doc["pressSys"];
@@ -187,6 +188,7 @@ bool saveConfig() {
   doc["printCom"] = printCom;
   doc["sensorDom"] = sensorDom;
   doc["sensorUl"] = sensorUl;
+  doc["sensorHome"] = sensorHome;
   doc["sensorHumi"] = sensorHumi;
   doc["sensorPrAl"] = sensorPrAl;
   doc["pressSys"] = pressSys;
