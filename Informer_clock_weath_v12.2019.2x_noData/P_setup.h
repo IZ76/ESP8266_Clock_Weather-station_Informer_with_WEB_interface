@@ -238,7 +238,7 @@ const char P_setup[] PROGMEM =  R"=====(
                     <br>
                     <paragraph><span class="opt_cn">Настройки датчиков</span></paragraph>
                     <div class="informer">
-                        <span class="opt_cn">Урояень ярскости фоторезистора (0-15): </span>{{lba}}
+                        <span class="opt_cn">Уровень яркости фоторезистора (0-15): </span>{{lba}}
                     </div>
                     <label class="switch"><span class="opt_cn">Использовать активный базер</span>
                         <input type="checkbox" id="buzzerSet">
