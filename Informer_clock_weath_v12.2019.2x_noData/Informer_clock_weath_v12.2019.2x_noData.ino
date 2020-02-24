@@ -57,8 +57,8 @@ String passwordAP  = "11223344";
 boolean weatherHost = 0;
 String weatherHost0 = "api.weatherbit.io";
 String weatherHost1 = "api.openweathermap.org";
-String weatherKey0  = "00000000000000000000000000000000";
-String weatherKey1  = "11111111111111111111111111111111";
+String weatherKey0  = "";
+String weatherKey1  = "";
 String cityID0      = "Kryvyy Rih";
 String cityID1      = "703845"; // Kryvyy Rih, "2925533"-Frankfurt
 char personalCityName[51] = "";
@@ -82,8 +82,8 @@ String location_weather_description = "";
 // ----------змінні для роботи з mqtt сервером
 char mqtt_server[21] = "m13.cloudmqtt.com";
 int  mqtt_port = 13011;
-char mqtt_user[25] = "22222222";
-char mqtt_pass[25] = "333333333333";
+char mqtt_user[25] = "";
+char mqtt_pass[25] = "";
 char mqtt_name[25] = "Informer";
 char mqtt_sub_inform[25] = "Inform/mess";
 char mqtt_sub1[25] = "Ulica/temp";
@@ -96,8 +96,8 @@ char mqtt_pub_press[25] = "Informer/press";
 char mqtt_pub_alt[25] = "Informer/alt";
 bool mqttOn = true;
 // --------------------------------------------
-String uuid = "44444444444444444444444444444444";
-String api_key = "5555555555555";
+String uuid = "";
+String api_key = "";
 int sensors_ID0 = 0;    //88733 Frankfurt
 int sensors_ID1 = 3300;   //88459 Frankfurt
 int sensors_ID2 = 0;
@@ -173,7 +173,7 @@ int secFr, lastSecond, lastMinute;
 String date;
 byte kuOn = 7;
 byte kuOff = 23;
-byte bigCklock_x2 = 1;
+byte clockNight = 1;
 bool bigCklock = 0;
 bool bigCklocDay = 0;
 // ----------
@@ -202,8 +202,6 @@ float t3 = -85.0; // температура на улице со знаком и
 int t4 = 0;    // температура на улице целая беззнаковая часть
 int t5 = 0;     // температура на улице дробная беззнаковая часть
 float t6 = 0.0; // температура доп. со знаком и плавающей запятой
-int t7 = 0;     // температура доп. целая беззнаковая часть
-int t8 = 0;     // температура доп. дробная беззнаковая часть
 float h0 = 0.0; // влажность в доме со знаком и плавающей запятой
 byte h1 = 0;    // влажность в доме целая беззнаковая часть
 byte h2 = 0;    // влажность в доме дробная беззнаковая часть
@@ -402,7 +400,7 @@ void setup(){
   MQTTclient.subscribe(mqtt_sub1);
   MQTTclient.subscribe(mqtt_sub2);
   MQTTclient.subscribe(mqtt_sub3);
-  if(sensorUl==9)getNarodmon();
+  if(sensorUl==7)getNarodmon();
 }
 //==========================================
 void callback(char* topic, byte* payload, unsigned int length) { // получаем знаковое число с десятичной плавающей запятой
@@ -426,7 +424,10 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     return;
   }
   if(String(topic) == mqtt_sub1) {
-    tMqtt1 = Text.substring(0, length+1).toFloat();
+    tMqtt1 = 0.0;
+    if(payload[0]==45) length = (length>=6?8:length);
+    else length = (length>=5?7:length);
+    tMqtt1 = Text.substring(0, length).toFloat();
     if(printCom) {
       printTime();
       Serial.println("MQTT1 Incoming: " + String(tMqtt1));
@@ -443,7 +444,10 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
     sensors();
   }
   if(String(topic) == mqtt_sub3) {
-    tMqtt3 = Text.substring(0, length+1).toFloat();
+    tMqtt3 = 0.0;
+    if(payload[0]==45) length = (length>=6?8:length);
+    else length = (length>=5?7:length);
+    tMqtt3 = Text.substring(0, length).toFloat();
     if(printCom) {
       printTime();
       Serial.println("MQTT3 Incoming: " + String(tMqtt3));
@@ -485,7 +489,7 @@ void loop() {
   buttonInter();
   bool oldBigCklok = bigCklock;
   //                                                                                          10 < 8     &&   10 >= 3
-  bigCklock = ((bigCklock_x2 == 1 && (timeDay<timeNight?(hour<timeDay || hour>=timeNight):(hour<timeDay && hour>=timeNight)))|| bigCklock_x2 == 2) && butMode == 0;
+  bigCklock = ((clockNight == 1 && (timeDay<timeNight?(hour<timeDay || hour>=timeNight):(hour<timeDay && hour>=timeNight)))|| clockNight == 2) && butMode == 0;
   if(oldBigCklok != bigCklock){
     clr(0);
     clr(1);
@@ -668,7 +672,7 @@ void loop() {
     // ---------- 10 секунда - виводимо дату/погоду----------------------------------------------------------
     if(second == 10 && !alarm_stat && !bigCklock) {
       sensorsAll();
-      if(hour >= timeScrollStart && hour < timeScrollStop && !(bigCklock_x2 && (hour<timeDay || hour>=timeNight)) && butMode == 0) {        // працує тілки в дозволений час
+      if(hour >= timeScrollStart && hour < timeScrollStop && !(clockNight && (hour<timeDay || hour>=timeNight)) && butMode == 0) {        // працує тілки в дозволений час
         clr(1);
         if(minute % 2 == 0 || !displayForecast) {
           showSimpleDate();
@@ -723,7 +727,7 @@ void loop() {
             }
           }
         }
-        if(sensorUl==9) getNarodmon();
+        if(sensorUl==7) getNarodmon();
         if(mqttOn) {
           reconnect();
           reconnect();
@@ -1882,6 +1886,7 @@ void sensorsAll() {
   sensorsDht();
   sensors();
 }
+//-------------------------------------------------------------------------
 void sensors() {
   t0 = (sensorDom==0?0:sensorDom==1?tempDs18b20:sensorDom==2?celsiusSi7021:sensorDom==3?tempBmp:sensorDom==4?tempBme:sensorDom==5?tempDht:sensorDom==6?tMqtt1:sensorDom==7?tMqtt2:sensorDom==8?tMqtt3:0);
   if(sensorDom) t0 += corrTempD;
@@ -1893,8 +1898,6 @@ void sensors() {
   t5 = int(t3*10*(t3>0?1:-1))%10;
   t6 = (sensorHome==0?0:sensorHome==1?tempDs18b20:sensorHome==2?celsiusSi7021:sensorHome==3?tempBmp:sensorHome==4?tempBme:sensorHome==5?tempDht:sensorHome==6?tMqtt1:sensorHome==7?tMqtt2:sensorHome==8?tMqtt3:sensorHome==9?tempNM:0);
   if(sensorHome) t6 += corrTempH;
-  t7 = int(t6);
-  t8 = int(t6*10*(t6>0?1:-1))%10;
   h0 = (sensorHumi==2?humSi7021:sensorHumi==4?humBme:sensorHumi==5?humiDht:0);
   if(sensorHumi) h0 += corrHumi;
   h1 = int(h0);
