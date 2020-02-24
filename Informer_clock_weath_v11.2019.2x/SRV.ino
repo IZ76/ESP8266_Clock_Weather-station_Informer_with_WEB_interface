@@ -27,7 +27,6 @@ void serverInit(void) {
   server.on("/restart", handle_Restart);            // перезавантаження можуля по запиту типу http://192.168.1.11/restart?device=ok
   server.on("/resetConfig", handle_resetConfig);
   server.on("/printCom", handle_set_printCom);
-  server.on("/lang", handle_set_lang);
   httpUpdater.setup(&server);
   server.begin();
 }
@@ -40,10 +39,6 @@ void handle_ConfigJSON() {
   json += WiFi.localIP().toString();
   json += "\",\"printCom\":\"";
   json += (printCom==1?"checked":"");
-  json += "\",\"mowa\":\"";
-  json += (lang==0?"UA":lang==1?"RU":lang==2?"PL":lang==3?"CZ":lang==4?"DE":"EN");
-  json += "\",\"lang\":\"";
-  json += (lang==0?"UA":lang==1?"RU":lang==2?"PL":lang==3?"CZ":lang==4?"DE":"EN");
   json += "\"}";
   server.send(200, "text/json", json);
 }
@@ -184,8 +179,12 @@ void handle_ConfigMqttJson() {
   json += mqtt_pass;
   json += "\",\"mqtt_name\":\"";
   json += mqtt_name;
-  json += "\",\"mqtt_sub\":\"";
-  json += mqtt_sub;
+  json += "\",\"mqtt_sub1\":\"";
+  json += mqtt_sub1;
+  json += "\",\"mqtt_sub2\":\"";
+  json += mqtt_sub2;
+  json += "\",\"mqtt_sub3\":\"";
+  json += mqtt_sub3;
   json += "\",\"mqtt_sub_inform\":\"";
   json += mqtt_sub_inform;
   json += "\",\"mqtt_pub_temp\":\"";
@@ -203,6 +202,43 @@ void handle_ConfigMqttJson() {
 }
 //======================================================================================================  
 void handle_ConfigWeathJson() {
+  int sr = location_sunrise.substring(0, 2).toInt() + (int)hourCorr;
+  if(sr>23) sr -= 24;
+  if(sr<0) sr += 24;
+  String sunrise = String(sr) + location_sunrise.substring(2, 5);
+  int ss = location_sunset.substring(0, 2).toInt() + (int)hourCorr;
+  if(ss>23) ss -= 24;
+  if(ss<0) ss += 24;
+  String sunset = String(ss) + location_sunset.substring(2, 5);
+  int st = location_localtime.substring(11, 13).toInt() + (int)hourCorr;
+  int ly = location_localtime.substring(0, 4).toInt();
+  byte lm = location_localtime.substring(5, 7).toInt();
+  byte ld = location_localtime.substring(8, 10).toInt(); 
+  if(st>23) {
+    st -= 24;
+    ld++;
+    if(ld==32 || (ld==31 && (lm==4 || lm==6 || lm==9 || lm==11)) || (lm==2 && ((ld==29 && ly%4!=0) || (ld==30 && ly%4==0)))) {
+      ld=1;
+      lm++;
+      if(lm>12){
+        lm=1;
+        ly++;
+      }
+    }
+  }
+  if(st<0) {
+    st += 24;
+    ld--;
+    if(ld<1) {
+      ld = 0 + ((lm==5 || lm==7 || lm==10 || lm==12 || (lm==3 && ly%4==0))?30:(lm==3 && ly%4!=0)?29:31);
+      lm--;
+      if(lm<1){
+        lm=12;
+        ly--;
+      }
+    }
+  }
+  String lt = String(ly) + "-" + (lm<10?"0":"") + String(lm) + "-" + (ld<10?"0":"") + String(ld) + " " + (st<10?"0":"") + String(st) + location_localtime.substring(13, 16);
   String json = "{";
   json += "\"time\":\"";
   json += (String(hour) + ":" + (minute < 10 ? "0" : "") + String(minute) + ":" + (second < 10 ? "0" : "") + String(second));
@@ -216,8 +252,16 @@ void handle_ConfigWeathJson() {
   json += cityID0;
   json += "\",\"cityID1\":\"";
   json += cityID1;
-  json += "\",\"outForecast\":\"";
-  json += (outForecast==1?"checked":"");
+  json += "\",\"weatherLang\":\"";
+  json += weatherLang;
+  json += "\",\"displayForecast\":\"";
+  json += (displayForecast==1?"checked":"");
+  json += "\",\"displayCityName\":\"";
+  json += (displayCityName==1?"checked":"");
+  json += "\",\"displayForecastNow\":\"";
+  json += (displayForecastNow==1?"checked":"");
+  json += "\",\"displayForecastTomorrow\":\"";
+  json += (displayForecastTomorrow==1?"checked":"");
   json += "\",\"timeScrollStart\":\"";
   json += timeScrollStart;
   json += "\",\"timeScrollStop\":\"";
@@ -231,8 +275,7 @@ void handle_ConfigWeathJson() {
   json += "\",\"location_country\":\"";
   json += location_country;
   json += "\",\"location_localtime\":\"";
-  json += location_localtime;
-
+  json += lt;
   json += "\",\"location_temp\":\"";
   json += location_temp;
   json += "\",\"location_app_temp\":\"";
@@ -246,9 +289,9 @@ void handle_ConfigWeathJson() {
   json += "\",\"location_wind_cdir_full\":\"";
   json += location_wind_cdir_full;
   json += "\",\"location_sunrise\":\"";
-  json += location_sunrise;
+  json += sunrise;
   json += "\",\"location_sunset\":\"";
-  json += location_sunset;
+  json += sunset;
   json += "\",\"location_clouds\":\"";
   json += location_clouds;
   json += "\",\"location_vis\":\"";
@@ -267,6 +310,8 @@ void handle_ConfigWeathJson() {
   json += sensors_ID1;
   json += "\",\"sensors_ID2\":\"";
   json += sensors_ID2;
+  json += "\",\"personalCityName\":\"";
+  json += personalCityName;
   json += "\"}";
   server.send(200, "text/json", json);
 }
@@ -287,8 +332,8 @@ void handle_ConfigSetupJson() {
   json += volBrightnessD;
   json += "\",\"vbn\":\"";
   json += volBrightnessN;
-  json += "\",\"clockNight\":\"";
-  json += (clockNight==1?"checked":"");
+  json += "\",\"bigCklock_x2\":\"";
+  json += bigCklock_x2;
   json += "\",\"vba\":\"";
   json += (volBrightnessAuto==1?"checked":"");
   json += "\",\"lba\":\"";
@@ -296,21 +341,37 @@ void handle_ConfigSetupJson() {
   json += "\",\"buzzerSet\":\"";
   json += (buzzerSet==1?"checked":"");
   json += "\",\"sensorDom\":\"";
-  json += (sensorDom==0?"NONE":sensorDom==1?"DS18B20":sensorDom==2?"SI7021":sensorDom==3?"BMP280":sensorDom==4?"BME280":sensorDom==5?"DHT":sensorDom==6?"MQTT":"NONE");
+  json += (sensorDom==0?"NONE":sensorDom==1?"DS18B20":sensorDom==2?"SI7021":sensorDom==3?"BMP280":sensorDom==4?"BME280":sensorDom==5?"DHT":sensorDom==6?"MQTT1":sensorDom==7?"MQTT2":sensorDom==8?"MQTT3":"NONE");
   json += "\",\"corrTempD\":\"";
   json += corrTempD;
+  json += "\",\"Td\":\"";
+  json += t0;
   json += "\",\"sensorUl\":\"";
-  json += (sensorUl==0?"NONE":sensorUl==1?"DS18B20":sensorUl==2?"SI7021":sensorUl==3?"BMP280":sensorUl==4?"BME280":sensorUl==5?"DHT":sensorUl==6?"MQTT":sensorUl==7?"NMon":"NONE");
+  json += (sensorUl==0?"NONE":sensorUl==1?"DS18B20":sensorUl==2?"SI7021":sensorUl==3?"BMP280":sensorUl==4?"BME280":sensorUl==5?"DHT":sensorUl==6?"MQTT1":sensorUl==7?"MQTT2":sensorUl==8?"MQTT3":sensorUl==9?"NMon":"NONE");
   json += "\",\"corrTempU\":\"";
   json += corrTempU;
+  json += "\",\"Tu\":\"";
+  json += t3;
+  json += "\",\"sensorHome\":\"";
+  json += (sensorHome==0?"NONE":sensorHome==1?"DS18B20":sensorHome==2?"SI7021":sensorHome==3?"BMP280":sensorHome==4?"BME280":sensorHome==5?"DHT":sensorHome==6?"MQTT1":sensorHome==7?"MQTT2":sensorHome==8?"MQTT3":sensorHome==9?"NMon":"NONE");
+  json += "\",\"corrTempH\":\"";
+  json += corrTempH;
+  json += "\",\"Th\":\"";
+  json += t6;
   json += "\",\"sensorHumi\":\"";
   json += (sensorHumi==0?"NONE":sensorHumi==2?"SI7021":sensorHumi==4?"BME280":sensorHumi==5?"DHT":"NONE");
   json += "\",\"corrHumi\":\"";
   json += corrHumi;
+  json += "\",\"Hd\":\"";
+  json += h0;
   json += "\",\"sensorPrAl\":\"";
   json += (sensorPrAl==0?"NONE":sensorPrAl==3?"BMP280":sensorPrAl==4?"BME280":"NONE");
   json += "\",\"corrPress\":\"";
   json += corrPress;
+  json += "\",\"Pu\":\"";
+  json += p0;
+  json += "\",\"pressSys\":\"";
+  json += pressSys;
   json += "\",\"rotate0\":\"";
   json += rotate0;
   json += "\",\"rotate1\":\"";
@@ -329,16 +390,17 @@ void handle_ConfigSetupJson() {
   json += dataDown;
   json += "\",\"textDown\":\"";
   json += textDown;
+  json += "\",\"butStat\":\"";
+  json += butStat;
   json += "\"}";
   server.send(200, "text/json", json);
 }
 //======================================================================================================
-
 void handle_Set_Ssid() {
-  ssid = server.arg("ssid").c_str();
-  password = server.arg("password").c_str();
-  ssidAP = server.arg("ssidAP").c_str();
-  passwordAP = server.arg("passwordAP").c_str();
+  if(server.arg("ssid")!="") ssid = server.arg("ssid").c_str();
+  if(server.arg("password")!="") password = server.arg("password").c_str();
+  if(server.arg("ssidAP")!="") ssidAP = server.arg("ssidAP").c_str();
+  if(server.arg("passwordAP")!="") passwordAP = server.arg("passwordAP").c_str();
   if(printCom) {
     printTime();
     Serial.println("Set SSID: " + ssid + ",  Set password: " + password + ",  Set SSID AP: " + ssidAP + ",  Set AP password: " + passwordAP);
@@ -349,54 +411,54 @@ void handle_Set_Ssid() {
 }
 //======================================================================================================
 void handle_ntp() {
-  ntpServerName = server.arg("ntpServerName").c_str();
-  timeZone = server.arg("timeZone").toFloat();
-  isDayLightSaving = server.arg("isDayLightSaving").toInt();
-  rtcStat = server.arg("rtcStat").toInt();
-  alarme[0][0]=server.arg("al_0_0").toInt();
-  alarme[0][1]=server.arg("al_0_1").toInt();
-  alarme[0][2]=server.arg("al_0_2").toInt();
-  alarme[1][0]=server.arg("al_1_0").toInt();
-  alarme[1][1]=server.arg("al_1_1").toInt();
-  alarme[1][2]=server.arg("al_1_2").toInt();
-  alarme[2][0]=server.arg("al_2_0").toInt();
-  alarme[2][1]=server.arg("al_2_1").toInt();
-  alarme[2][2]=server.arg("al_2_2").toInt();
-  alarme[3][0]=server.arg("al_3_0").toInt();
-  alarme[3][1]=server.arg("al_3_1").toInt();
-  alarme[3][2]=server.arg("al_3_2").toInt();
-  alarme[4][0]=server.arg("al_4_0").toInt();
-  alarme[4][1]=server.arg("al_4_1").toInt();
-  alarme[4][2]=server.arg("al_4_2").toInt();
-  memory_date[0][0]=server.arg("md_0_0").toInt();
-  memory_date[0][1]=server.arg("md_0_1").toInt();
-  memory_date[1][0]=server.arg("md_1_0").toInt();
-  memory_date[1][1]=server.arg("md_1_1").toInt();
-  memory_date[2][0]=server.arg("md_2_0").toInt();
-  memory_date[2][1]=server.arg("md_2_1").toInt();
-  memory_date[3][0]=server.arg("md_3_0").toInt();
-  memory_date[3][1]=server.arg("md_3_1").toInt();
-  memory_date[4][0]=server.arg("md_4_0").toInt();
-  memory_date[4][1]=server.arg("md_4_1").toInt();
-  memory_date[5][0]=server.arg("md_5_0").toInt();
-  memory_date[5][1]=server.arg("md_5_1").toInt();
-  memory_date[6][0]=server.arg("md_6_0").toInt();
-  memory_date[6][1]=server.arg("md_6_1").toInt();
-  memory_date[7][0]=server.arg("md_7_0").toInt();
-  memory_date[7][1]=server.arg("md_7_1").toInt();
-  memory_date[8][0]=server.arg("md_8_0").toInt();
-  memory_date[8][1]=server.arg("md_8_1").toInt();
-  snprintf(memory_date_mes0, 51, "%s", server.arg("md_0_2").c_str());
-  snprintf(memory_date_mes1, 51, "%s", server.arg("md_1_2").c_str());
-  snprintf(memory_date_mes2, 51, "%s", server.arg("md_2_2").c_str());
-  snprintf(memory_date_mes3, 51, "%s", server.arg("md_3_2").c_str());
-  snprintf(memory_date_mes4, 51, "%s", server.arg("md_4_2").c_str());
-  snprintf(memory_date_mes5, 51, "%s", server.arg("md_5_2").c_str());
-  snprintf(memory_date_mes6, 51, "%s", server.arg("md_6_2").c_str());
-  snprintf(memory_date_mes7, 51, "%s", server.arg("md_7_2").c_str());
-  snprintf(memory_date_mes8, 51, "%s", server.arg("md_8_2").c_str());
-  memory_hour_start = server.arg("md_start").toInt();
-  memory_hour_end = server.arg("md_stop").toInt();
+  if(server.arg("ntpServerName")!="") ntpServerName = server.arg("ntpServerName").c_str();
+  if(server.arg("timeZone")!="") timeZone = server.arg("timeZone").toFloat();
+  if(server.arg("isDayLightSaving")!="") isDayLightSaving = server.arg("isDayLightSaving").toInt();
+  if(server.arg("rtcStat")!="") rtcStat = server.arg("rtcStat").toInt();
+  if(server.arg("al_0_0")!="") alarme[0][0]=server.arg("al_0_0").toInt();
+  if(server.arg("al_0_1")!="") alarme[0][1]=server.arg("al_0_1").toInt();
+  if(server.arg("al_0_2")!="") alarme[0][2]=server.arg("al_0_2").toInt();
+  if(server.arg("al_1_0")!="") alarme[1][0]=server.arg("al_1_0").toInt();
+  if(server.arg("al_1_1")!="") alarme[1][1]=server.arg("al_1_1").toInt();
+  if(server.arg("al_1_2")!="") alarme[1][2]=server.arg("al_1_2").toInt();
+  if(server.arg("al_2_0")!="") alarme[2][0]=server.arg("al_2_0").toInt();
+  if(server.arg("al_2_1")!="") alarme[2][1]=server.arg("al_2_1").toInt();
+  if(server.arg("al_2_2")!="") alarme[2][2]=server.arg("al_2_2").toInt();
+  if(server.arg("al_3_0")!="") alarme[3][0]=server.arg("al_3_0").toInt();
+  if(server.arg("al_3_1")!="") alarme[3][1]=server.arg("al_3_1").toInt();
+  if(server.arg("al_3_2")!="") alarme[3][2]=server.arg("al_3_2").toInt();
+  if(server.arg("al_4_0")!="") alarme[4][0]=server.arg("al_4_0").toInt();
+  if(server.arg("al_4_1")!="") alarme[4][1]=server.arg("al_4_1").toInt();
+  if(server.arg("al_4_2")!="") alarme[4][2]=server.arg("al_4_2").toInt();
+  if(server.arg("md_0_0")!="") memory_date[0][0]=server.arg("md_0_0").toInt();
+  if(server.arg("md_0_1")!="") memory_date[0][1]=server.arg("md_0_1").toInt();
+  if(server.arg("md_1_0")!="") memory_date[1][0]=server.arg("md_1_0").toInt();
+  if(server.arg("md_1_1")!="") memory_date[1][1]=server.arg("md_1_1").toInt();
+  if(server.arg("md_2_0")!="") memory_date[2][0]=server.arg("md_2_0").toInt();
+  if(server.arg("md_2_1")!="") memory_date[2][1]=server.arg("md_2_1").toInt();
+  if(server.arg("md_3_0")!="") memory_date[3][0]=server.arg("md_3_0").toInt();
+  if(server.arg("md_3_1")!="") memory_date[3][1]=server.arg("md_3_1").toInt();
+  if(server.arg("md_4_0")!="") memory_date[4][0]=server.arg("md_4_0").toInt();
+  if(server.arg("md_4_1")!="") memory_date[4][1]=server.arg("md_4_1").toInt();
+  if(server.arg("md_5_0")!="") memory_date[5][0]=server.arg("md_5_0").toInt();
+  if(server.arg("md_5_1")!="") memory_date[5][1]=server.arg("md_5_1").toInt();
+  if(server.arg("md_6_0")!="") memory_date[6][0]=server.arg("md_6_0").toInt();
+  if(server.arg("md_6_1")!="") memory_date[6][1]=server.arg("md_6_1").toInt();
+  if(server.arg("md_7_0")!="") memory_date[7][0]=server.arg("md_7_0").toInt();
+  if(server.arg("md_7_1")!="") memory_date[7][1]=server.arg("md_7_1").toInt();
+  if(server.arg("md_8_0")!="") memory_date[8][0]=server.arg("md_8_0").toInt();
+  if(server.arg("md_8_1")!="") memory_date[8][1]=server.arg("md_8_1").toInt();
+  if(server.arg("md_0_2")!="") snprintf(memory_date_mes0, 51, "%s", server.arg("md_0_2").c_str());
+  if(server.arg("md_1_2")!="") snprintf(memory_date_mes1, 51, "%s", server.arg("md_1_2").c_str());
+  if(server.arg("md_2_2")!="") snprintf(memory_date_mes2, 51, "%s", server.arg("md_2_2").c_str());
+  if(server.arg("md_3_2")!="") snprintf(memory_date_mes3, 51, "%s", server.arg("md_3_2").c_str());
+  if(server.arg("md_4_2")!="") snprintf(memory_date_mes4, 51, "%s", server.arg("md_4_2").c_str());
+  if(server.arg("md_5_2")!="") snprintf(memory_date_mes5, 51, "%s", server.arg("md_5_2").c_str());
+  if(server.arg("md_6_2")!="") snprintf(memory_date_mes6, 51, "%s", server.arg("md_6_2").c_str());
+  if(server.arg("md_7_2")!="") snprintf(memory_date_mes7, 51, "%s", server.arg("md_7_2").c_str());
+  if(server.arg("md_8_2")!="") snprintf(memory_date_mes8, 51, "%s", server.arg("md_8_2").c_str());
+  if(server.arg("md_start")!="") memory_hour_start = server.arg("md_start").toInt();
+  if(server.arg("md_stop")!="") memory_hour_end = server.arg("md_stop").toInt();
   if(printCom) {
     printTime();
     Serial.println("Set NTP Server Name: " + ntpServerName + ",  NTP Time Zone: " + String(timeZone) + ",  isDayLightSaving: " + String(isDayLightSaving));
@@ -408,13 +470,13 @@ void handle_ntp() {
 }
 //======================================================================================================
 void handle_timepc() {
-  hour = server.arg("hours").toInt();
-  minute = server.arg("minute").toInt();
-  second = server.arg("sec").toInt();
-  timeZone = server.arg("tz").toFloat();
-  day = server.arg("day").toInt();
-  month = server.arg("month").toInt();
-  year = server.arg("year").toInt();
+  if(server.arg("hours")!="") hour = server.arg("hours").toInt();
+  if(server.arg("minute")!="") minute = server.arg("minute").toInt();
+  if(server.arg("sec")!="") second = server.arg("sec").toInt();
+  if(server.arg("tz")!="") timeZone = server.arg("tz").toFloat();
+  if(server.arg("day")!="") day = server.arg("day").toInt();
+  if(server.arg("month")!="") month = server.arg("month").toInt();
+  if(server.arg("year")!="") year = server.arg("year").toInt();
   if(printCom) {
     printTime();
     Serial.println("Set Date/Time from PC - "+String(day)+"."+String(month)+"."+String(year)+"     "+String(hour)+":"+String(minute)+":"+String(second)+"    timeZone="+String(timeZone));
@@ -431,7 +493,7 @@ void handle_weather_update() {
       printTime();
       Serial.println("Update weather!");
     }
-    if(outForecast) {
+    if(displayForecast) {
       if(!weatherHost){
         getWeatherData0();
         getWeatherDataz0();
@@ -447,36 +509,37 @@ void handle_weather_update() {
 }
 //======================================================================================================
 void handle_weather() {
-  weatherHost = server.arg("weatherHost").toInt();
-  weatherKey0 = server.arg("weatherKey0").c_str();
-  weatherKey1 = server.arg("weatherKey1").c_str();
-  cityID0 = server.arg("cityID0").c_str();
-  cityID1 = server.arg("cityID1").c_str();
-  outForecast = server.arg("outForecast").toInt();
-  timeScrollStart = server.arg("timeScrollStart").toInt();
-  timeScrollStop = server.arg("timeScrollStop").toInt();
-  timeScrollSpeed = 100 - server.arg("timeScrollSpeed").toInt();
-  
-  uuid = server.arg("uuid").c_str();
-  api_key = server.arg("api_key").c_str();
-  sensors_ID0 = server.arg("sensors_ID0").toInt();
-  sensors_ID1 = server.arg("sensors_ID1").toInt();
-  sensors_ID2 = server.arg("sensors_ID2").toInt();
+  if(server.arg("weatherHost")!="") weatherHost = server.arg("weatherHost").toInt();
+  if(server.arg("weatherKey0")!="") weatherKey0 = server.arg("weatherKey0").c_str();
+  if(server.arg("weatherKey1")!="") weatherKey1 = server.arg("weatherKey1").c_str();
+  if(server.arg("cityID0")!="") cityID0 = server.arg("cityID0").c_str();
+  if(server.arg("cityID1")!="") cityID1 = server.arg("cityID1").c_str();
+  if(server.arg("weatherLang")!="") weatherLang = server.arg("weatherLang").c_str();
+  if(server.arg("displayForecast")!="") displayForecast = server.arg("displayForecast").toInt();
+  if(server.arg("displayCityName")!="") displayCityName = server.arg("displayCityName").toInt();
+  if(server.arg("displayForecastNow")!="") displayForecastNow = server.arg("displayForecastNow").toInt();
+  if(server.arg("displayForecastTomorrow")!="") displayForecastTomorrow = server.arg("displayForecastTomorrow").toInt();
+  if(server.arg("timeScrollStart")!="") timeScrollStart = server.arg("timeScrollStart").toInt();
+  if(server.arg("timeScrollStop")!="") timeScrollStop = server.arg("timeScrollStop").toInt();
+  if(server.arg("timeScrollSpeed")!="") timeScrollSpeed = 100 - server.arg("timeScrollSpeed").toInt();
+  if(server.arg("uuid")!="") uuid = server.arg("uuid").c_str();
+  if(server.arg("api_key")!="") api_key = server.arg("api_key").c_str();
+  if(server.arg("sensors_ID0")!="") sensors_ID0 = server.arg("sensors_ID0").toInt();
+  if(server.arg("sensors_ID1")!="") sensors_ID1 = server.arg("sensors_ID1").toInt();
+  if(server.arg("sensors_ID2")!="") sensors_ID2 = server.arg("sensors_ID2").toInt();
+  if(server.arg("personalCityName")!="") snprintf(personalCityName, 51, "%s", server.arg("personalCityName").c_str());
   if(printCom) {
     printTime();
     Serial.print("Set Weather Server: ");
     if(!weatherHost) Serial.print(weatherHost0);
     else Serial.print(weatherHost1);
-    Serial.println(",   Key0: " + weatherKey0 + ",   Key1: " + weatherKey1 + ",   City ID0: " + cityID0+ ",   City ID1: " + cityID1);
-    Serial.println("outForecast: " + String(outForecast) + ", outtimeScrollStart: " + String(timeScrollStart) + ", timeScrollStop: " + String(timeScrollStop) + ", timeScrollSpeed: " + String(timeScrollSpeed));
-    Serial.println("uuid: " + String(uuid) + ", api_key: " + String(api_key) + ", sensors_ID0: " + String(sensors_ID0) + ", sensors_ID1: " + String(sensors_ID1) + ", sensors_ID2: " + String(sensors_ID2));
+    Serial.println(", Key0: " + weatherKey0 + ", Key1: " + weatherKey1 + ", City ID0: " + cityID0 + ", City ID1: " + cityID1 + ", weatherLang: " + weatherLang);
+    Serial.println("displayForecast: " + String(displayForecast) + ", displayCityName: " + String(displayCityName) + ", displayForecastNow: " + String(displayForecastNow) + ", displayForecastTomorrow: " + String(displayForecastTomorrow));
+    Serial.println("outtimeScrollStart: " + String(timeScrollStart) + ", timeScrollStop: " + String(timeScrollStop) + ", timeScrollSpeed: " + String(timeScrollSpeed) + ", uuid: " + String(uuid) + ", api_key: " + String(api_key) + ", sensors_ID0: " + String(sensors_ID0) + ", sensors_ID1: " + String(sensors_ID1) + ", sensors_ID2: " + String(sensors_ID2));
   }
   saveConfig();
-  if(printCom) {
-    printTime();
-    Serial.println("Update weather!");
-  }
-  if(outForecast){ 
+  lang();
+  if(displayForecast && WiFi.status() == WL_CONNECTED){ 
     if(!weatherHost){
       getWeatherData0();
       getWeatherDataz0();
@@ -484,95 +547,129 @@ void handle_weather() {
       getWeatherData1();
       getWeatherDataz1();
     }
+    if(printCom) {
+      printTime();
+      Serial.println("Update weather!");
+    }
   }
   if(sensorUl==7) getNarodmon();
   server.send(200, "text/plain", "OK");
 }
 //======================================================================================================
 void handle_setup(){
-  timeDay = server.arg("tbd").toInt();
-  volBrightnessD = server.arg("vbd").toInt();
-  timeNight = server.arg("tbn").toInt();
-  volBrightnessN = server.arg("vbn").toInt();
-  volBrightnessAuto = server.arg("vba").toInt();
-  clockNight = server.arg("clockNight").toInt();
-  buzzerSet = server.arg("buzzerSet").toInt();
-  rotate0 = server.arg("rotate0").toInt();
-  rotate1 = server.arg("rotate1").toInt();
-  NUM_MAX0 = server.arg("NUM_MAX0").toInt();
-  NUM_MAX1 = server.arg("NUM_MAX1").toInt();
-  kuOn = server.arg("kuOn").toInt();
-  kuOff = server.arg("kuOff").toInt();
+  if(server.arg("tbd")!="") timeDay = server.arg("tbd").toInt();
+  if(server.arg("vbd")!="") volBrightnessD = server.arg("vbd").toInt();
+  if(server.arg("tbn")!="") timeNight = server.arg("tbn").toInt();
+  if(server.arg("vbn")!="") volBrightnessN = server.arg("vbn").toInt();
+  if(server.arg("vba")!="") volBrightnessAuto = server.arg("vba").toInt();
+  if(server.arg("bigCklock_x2")!="") bigCklock_x2 = server.arg("bigCklock_x2").toInt();
+  if(server.arg("buzzerSet")!="") buzzerSet = server.arg("buzzerSet").toInt();
+  if(server.arg("rotate0")!="") rotate0 = server.arg("rotate0").toInt();
+  if(server.arg("rotate1")!="") rotate1 = server.arg("rotate1").toInt();
+  if(server.arg("NUM_MAX0")!="") NUM_MAX0 = server.arg("NUM_MAX0").toInt();
+  if(server.arg("NUM_MAX1")!="") NUM_MAX1 = server.arg("NUM_MAX1").toInt();
+  if(server.arg("kuOn")!="") kuOn = server.arg("kuOn").toInt();
+  if(server.arg("kuOff")!="") kuOff = server.arg("kuOff").toInt();
   String sD = server.arg("sensorDom");
   String sU = server.arg("sensorUl");
+  String sHo = server.arg("sensorHome");
   String sH = server.arg("sensorHumi");
   String sP = server.arg("sensorPrAl");
-  if(sD=="NONE") sensorDom = 0;
-  else if(sD=="DS18B20") sensorDom = 1;
-  else if(sD=="SI7021") sensorDom = 2;
-  else if(sD=="BMP280") sensorDom = 3;
-  else if(sD=="BME280") sensorDom = 4;
-  else if(sD=="DHT") sensorDom = 5;
-  else if(sD=="MQTT") sensorDom = 6;
-  if(sU=="NONE") sensorUl = 0;
-  else if(sU=="DS18B20") sensorUl = 1;
-  else if(sU=="SI7021") sensorUl = 2;
-  else if(sU=="BMP280") sensorUl = 3;
-  else if(sU=="BME280") sensorUl = 4;
-  else if(sU=="DHT") sensorUl = 5;
-  else if(sU=="MQTT") sensorUl = 6;
-  else if(sU=="NMon") sensorUl = 7;
-  if(sH=="NONE") sensorHumi = 0;
-  else if(sH=="SI7021") sensorHumi = 2;
-  else if(sH=="BME280") sensorHumi = 4;
-  else if(sH=="DHT") sensorHumi = 5;
-  if(sP=="NONE") sensorPrAl = 0;
-  else if(sP=="BMP280") sensorPrAl = 3;
-  else if(sP=="BME280") sensorPrAl = 4;
-
-  fontCLOCK = server.arg("fontCLOCK").toInt();
-  fontSizeCLOCK = server.arg("fontSizeCLOCK").toInt();
-  fontSizeData = server.arg("fontSizeData").toInt();
-  dataDown = server.arg("dataDown").toInt();
-  textDown = server.arg("textDown").toInt();
-  corrTempD = server.arg("corrTempD").toFloat();
-  corrTempU = server.arg("corrTempU").toFloat();
-  corrHumi = server.arg("corrHumi").toFloat();
-  corrPress = server.arg("corrPress").toInt();
-  
+  if(sD!=""){
+    if(sD=="NONE") sensorDom = 0;
+    else if(sD=="DS18B20") sensorDom = 1;
+    else if(sD=="SI7021") sensorDom = 2;
+    else if(sD=="BMP280") sensorDom = 3;
+    else if(sD=="BME280") sensorDom = 4;
+    else if(sD=="DHT") sensorDom = 5;
+    else if(sD=="MQTT1") sensorDom = 6;
+    else if(sD=="MQTT2") sensorDom = 7;
+    else if(sD=="MQTT3") sensorDom = 8;
+  }
+  if(sU!=""){
+    if(sU=="NONE") sensorUl = 0;
+    else if(sU=="DS18B20") sensorUl = 1;
+    else if(sU=="SI7021") sensorUl = 2;
+    else if(sU=="BMP280") sensorUl = 3;
+    else if(sU=="BME280") sensorUl = 4;
+    else if(sU=="DHT") sensorUl = 5;
+    else if(sU=="MQTT1") sensorUl = 6;
+    else if(sU=="MQTT2") sensorUl = 7;
+    else if(sU=="MQTT3") sensorUl = 8;
+    else if(sU=="NMon") sensorUl = 9;
+  }
+  if(sHo!=""){
+    if(sHo=="NONE") sensorHome = 0;
+    else if(sHo=="DS18B20") sensorHome = 1;
+    else if(sHo=="SI7021") sensorHome = 2;
+    else if(sHo=="BMP280") sensorHome = 3;
+    else if(sHo=="BME280") sensorHome = 4;
+    else if(sHo=="DHT") sensorHome = 5;
+    else if(sHo=="MQTT1") sensorHome = 6;
+    else if(sHo=="MQTT2") sensorHome = 7;
+    else if(sHo=="MQTT3") sensorHome = 8;
+    else if(sHo=="NMon") sensorHome = 9;
+  }
+  if(sH!=""){
+    if(sH=="NONE") sensorHumi = 0;
+    else if(sH=="SI7021") sensorHumi = 2;
+    else if(sH=="BME280") sensorHumi = 4;
+    else if(sH=="DHT") sensorHumi = 5;
+  }
+  if(sP!=""){
+    if(sP=="NONE") sensorPrAl = 0;
+    else if(sP=="BMP280") sensorPrAl = 3;
+    else if(sP=="BME280") sensorPrAl = 4;
+  }
+  if(server.arg("pressSys")!="") pressSys = server.arg("pressSys").toInt();
+  if(server.arg("fontCLOCK")!="") fontCLOCK = server.arg("fontCLOCK").toInt();
+  if(server.arg("fontSizeCLOCK")!="") fontSizeCLOCK = server.arg("fontSizeCLOCK").toInt();
+  if(server.arg("fontSizeData")!="") fontSizeData = server.arg("fontSizeData").toInt();
+  if(server.arg("dataDown")!="") dataDown = server.arg("dataDown").toInt();
+  if(server.arg("textDown")!="") textDown = server.arg("textDown").toInt();
+  if(server.arg("corrTempD")!="") corrTempD = server.arg("corrTempD").toFloat();
+  if(server.arg("corrTempU")!="") corrTempU = server.arg("corrTempU").toFloat();
+  if(server.arg("corrTempH")!="") corrTempH = server.arg("corrTempH").toFloat();
+  if(server.arg("corrHumi")!="") corrHumi = server.arg("corrHumi").toFloat();
+  if(server.arg("corrPress")!="") corrPress = server.arg("corrPress").toInt();
+  if(server.arg("butStat")!="") butStat = server.arg("butStat").toInt();
   if(printCom) {
     printTime();
-    Serial.println("TBD: "+String(timeDay)+", VBD: "+String(volBrightnessD)+", TBN: "+String(timeNight)+", VBN: "+String(volBrightnessN)+",  kuOn: "+String(kuOn)+",  kuOff: "+String(kuOff)+",  rotate0: "+String(rotate0)+", rotate1: "+String(rotate1)+", clockNight: "+String(clockNight)+", buzzerSet: "+String(buzzerSet));
+    Serial.println("TBD: "+String(timeDay)+", VBD: "+String(volBrightnessD)+", TBN: "+String(timeNight)+", VBN: "+String(volBrightnessN)+",  kuOn: "+String(kuOn)+",  kuOff: "+String(kuOff)+",  rotate0: "+String(rotate0)+", rotate1: "+String(rotate1)+", bigCklock_x2: "+String(bigCklock_x2)+", buzzerSet: "+String(buzzerSet));
+    Serial.println("sensorDom: "+String(sensorDom)+", sensorUl: "+String(sensorUl)+", sensorHome: "+String(sensorHome)+", sensorHumi: "+String(sensorHumi)+",  sensorPrAl: "+String(sensorPrAl));
   }
-  saveConfig(); 
+  saveConfig();
+  sensorsAll();
   server.send(200, "text/plain", "OK");
 }
 //======================================================================================================
 void handle_mqtt_ust() {
-  snprintf(mqtt_server, 24, "%s", server.arg("mqtt_server").c_str());
-  mqtt_port = server.arg("mqtt_port").toInt();
-  snprintf(mqtt_user, 24, "%s", server.arg("mqtt_user").c_str());
-  snprintf(mqtt_pass, 24, "%s", server.arg("mqtt_pass").c_str());
-  snprintf(mqtt_name, 24, "%s", server.arg("mqtt_name").c_str());
-  snprintf(mqtt_sub, 24, "%s", server.arg("mqtt_sub").c_str());
-  snprintf(mqtt_sub_inform, 24, "%s", server.arg("mqtt_sub_inform").c_str());
-  snprintf(mqtt_pub_temp, 24, "%s", server.arg("mqtt_pub_temp").c_str());
-  snprintf(mqtt_pub_tempUl, 24, "%s", server.arg("mqtt_pub_tempUl").c_str());
-  snprintf(mqtt_pub_hum, 24, "%s", server.arg("mqtt_pub_hum").c_str());
-  snprintf(mqtt_pub_press, 24, "%s", server.arg("mqtt_pub_press").c_str());
-  snprintf(mqtt_pub_alt, 24, "%s", server.arg("mqtt_pub_alt").c_str());
+  if(server.arg("mqtt_server")!="") snprintf(mqtt_server, 24, "%s", server.arg("mqtt_server").c_str());
+  if(server.arg("mqtt_port")!="") mqtt_port = server.arg("mqtt_port").toInt();
+  if(server.arg("mqtt_user")!="") snprintf(mqtt_user, 24, "%s", server.arg("mqtt_user").c_str());
+  if(server.arg("mqtt_pass")!="") snprintf(mqtt_pass, 24, "%s", server.arg("mqtt_pass").c_str());
+  if(server.arg("mqtt_name")!="") snprintf(mqtt_name, 24, "%s", server.arg("mqtt_name").c_str());
+  if(server.arg("mqtt_sub1")!="") snprintf(mqtt_sub1, 24, "%s", server.arg("mqtt_sub1").c_str());
+  if(server.arg("mqtt_sub2")!="") snprintf(mqtt_sub2, 24, "%s", server.arg("mqtt_sub2").c_str());
+  if(server.arg("mqtt_sub3")!="") snprintf(mqtt_sub3, 24, "%s", server.arg("mqtt_sub3").c_str());
+  if(server.arg("mqtt_sub_inform")!="") snprintf(mqtt_sub_inform, 24, "%s", server.arg("mqtt_sub_inform").c_str());
+  if(server.arg("mqtt_pub_temp")!="") snprintf(mqtt_pub_temp, 24, "%s", server.arg("mqtt_pub_temp").c_str());
+  if(server.arg("mqtt_pub_tempUl")!="") snprintf(mqtt_pub_tempUl, 24, "%s", server.arg("mqtt_pub_tempUl").c_str());
+  if(server.arg("mqtt_pub_hum")!="") snprintf(mqtt_pub_hum, 24, "%s", server.arg("mqtt_pub_hum").c_str());
+  if(server.arg("mqtt_pub_press")!="") snprintf(mqtt_pub_press, 24, "%s", server.arg("mqtt_pub_press").c_str());
+  if(server.arg("mqtt_pub_alt")!="") snprintf(mqtt_pub_alt, 24, "%s", server.arg("mqtt_pub_alt").c_str());
   if(printCom) {
     printTime();
-    Serial.println("Set mqtt_server: " + String(mqtt_server) + ",  mqtt_port: " + String(mqtt_port) + ",  mqtt_user: " + String(mqtt_user) + ",  mqtt_pass: " + String(mqtt_pass));
-    Serial.println("Set mqtt_name: " + String(mqtt_name) + ",  mqtt_sub: " + String(mqtt_sub) + ",  mqtt_sub_inform: " + String(mqtt_sub_inform) + ",  mqtt_pub_temp: " + String(mqtt_pub_temp) + ",  mqtt_pub_tempUl: " + String(mqtt_pub_tempUl) + ",  mqtt_pub_hum: " + String(mqtt_pub_hum));
+    Serial.println("Set mqtt_server: " + String(mqtt_server) + ",  mqtt_port: " + String(mqtt_port) + ",  mqtt_user: " + String(mqtt_user) + ",  mqtt_pass: " + String(mqtt_pass) + ", mqtt_name: " + String(mqtt_name));
+    Serial.println("          Set mqtt_sub1: " + String(mqtt_sub1) + ",  mqtt_sub2: " + String(mqtt_sub2) + ",  mqtt_sub3: " + String(mqtt_sub3)+ ",  mqtt_sub_inform: " + String(mqtt_sub_inform) + ",  mqtt_pub_temp: " + String(mqtt_pub_temp) + ",  mqtt_pub_tempUl: " + String(mqtt_pub_tempUl) + ",  mqtt_pub_hum: " + String(mqtt_pub_hum));
   }
-  if(mqttOn) reconnect();
   saveConfig(); 
   server.send(200, "text/plain", "OK");
+  if(mqttOn) reconnect();
 }
 //======================================================================================================
 void handle_mqtt_on() {
-  mqttOn = server.arg("mqttOn").toInt(); 
+  if(server.arg("mqttOn")!="") mqttOn = server.arg("mqttOn").toInt(); 
   if(printCom) {
     printTime();
     Serial.println(server.arg("mqttOn"));
@@ -583,8 +680,7 @@ void handle_mqtt_on() {
 }
 //======================================================================================================
 void handle_resetConfig() {
-  String restart = server.arg("device");
-  if(restart == "ok"){
+  if(server.arg("device") == "ok"){
     //SPIFFS.format();
     SPIFFS.remove("/config.json");
     if(printCom) {
@@ -610,65 +706,12 @@ void handle_set_printCom() {
   server.send(200, "text/plain", "OK"); 
 }
 //======================================================================================================
-void handle_set_lang() {
-  if(server.arg("mowa") == "UA" && lang !=0) {
-    lang = 0;
-    ukrText();
-  }
-  else if(server.arg("mowa") == "RU" && lang !=1) {
-    lang = 1;
-    rusText();
-  }
-  else if(server.arg("mowa") == "PL" && lang !=2) {
-    lang = 2;
-    polText();
-  }
-  else if(server.arg("mowa") == "CZ" && lang !=3) {
-    lang = 3;
-    czText();
-  }
-  else if(server.arg("mowa") == "DE" && lang !=4) {
-    lang = 4;
-    deText();
-  }
-  else if(server.arg("mowa") == "EN" && lang !=5) {
-    lang = 5;
-    enText();
-  }
-  else {
-    return;
-  }
-  if(printCom) {
-    printTime();
-    Serial.print("Set lang: ");
-    Serial.println(server.arg("mowa").c_str());
-  }
-  saveConfig();
-  if(printCom) {
-    printTime();
-    Serial.println("Update weather!");
-  }
-  if(outForecast) {
-    if(!weatherHost){
-      getWeatherData0();
-      getWeatherDataz0();
-    } else {
-      getWeatherData1();
-      getWeatherDataz1();
-    }
-  }
-  server.send(200, "text/plain", "OK"); 
-}
-//======================================================================================================
 void handle_Restart() {
-  String restart = server.arg("device");
-  if(restart == "ok"){
+  if(server.arg("device") == "ok"){
     server.send(200, "text/plain", "OK"); 
     ESP.reset();
   }
 }
-
-
 //====================================== Тут функції для роботи з файловою системою
 String getContentType(String filename){
   if (server.hasArg("download")) return "application/octet-stream";
@@ -687,7 +730,6 @@ String getContentType(String filename){
   else if (filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
 }
-
 //======================================= Читання файлу
 bool handleFileRead(String path){
   if (path.endsWith("/")) path += "index.htm";
@@ -703,7 +745,6 @@ bool handleFileRead(String path){
   }
   return false;
 }
-
 //======================================== Завантаження файлу
 void handleFileUpload(){
   if (server.uri() != "/edit") return;
@@ -721,7 +762,6 @@ void handleFileUpload(){
       fsUploadFile.close();
   }
 }
-
 //======================================== Видалення файлу
 void handleFileDelete(){
   if (server.args() == 0) return server.send(500, "text/plain", "BAD ARGS");
@@ -734,7 +774,6 @@ void handleFileDelete(){
   server.send(200, "text/plain", "");
   path = String();
 }
-
 //========================================= Створення файлу
 void handleFileCreate(){
   if (server.args() == 0)
@@ -751,9 +790,7 @@ void handleFileCreate(){
     return server.send(500, "text/plain", "CREATE FAILED");
   server.send(200, "text/plain", "");
   path = String();
-
 }
-
 //========================================== Список файлів 
 void handleFileList(){
   if (!server.hasArg("dir")){
