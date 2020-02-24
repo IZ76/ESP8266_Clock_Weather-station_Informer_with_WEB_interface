@@ -50,15 +50,15 @@ IPAddress apIP(192, 168, 4, 1);
 String ssid = "IvanUA";                                                         // Назва локального WiFi
 String password = "";                                               // Пароль локального WiFi
 String ssidAP      = "WiFi-Clock";                                                      // Назва точки доступу
-String passwordAP  = "";                                                                // Пароль точки доступу
+String passwordAP  = "11223344";                                                                // Пароль точки доступу
 boolean weatherHost = 0;
 String weatherHost0 = "api.weatherbit.io";
 String weatherHost1 = "api.openweathermap.org";
-String weatherKey0  = "00000000000000000000000000000000";
-String weatherKey1  = "11111111111111111111111111111111";
+String weatherKey0  = "";
+String weatherKey1  = "";
 String cityID0      = "Kryvyy Rih";
 String cityID1      = "703845"; // Kryvyy Rih, "2925533"-Frankfurt
-char personalCityName[51] = "Кривой Рог";
+char personalCityName[51] = "";
 String weatherLang = "uk";                                                             // Мова отримання прогнозу погоди
 String location_name = "";
 String location_region = "";
@@ -79,8 +79,8 @@ String location_weather_description = "";
 // ----------змінні для роботи з mqtt сервером
 char mqtt_server[21] = "m13.cloudmqtt.com";                                             // Имя сервера MQTT
 int  mqtt_port = 13011;                                                                 // Порт для подключения к серверу MQTT
-char mqtt_user[25] = "222222222";
-char mqtt_pass[25] = "3333333333333";                                               // Пароль от сервера MQTT
+char mqtt_user[25] = "";
+char mqtt_pass[25] = "";                                               // Пароль от сервера MQTT
 char mqtt_name[25] = "ESP-chasy";
 char mqtt_sub_inform[25] = "Inform/mess";
 char mqtt_sub1[25] = "Ulica/temp";
@@ -93,15 +93,15 @@ char mqtt_pub_press[25] = "ESPzimmer/press";
 char mqtt_pub_alt[25] = "ESPzimmer/alt";
 bool mqttOn = true;
 // --------------------------------------------
-String uuid = "44444444444444444444444444444444";
-String api_key = "55555555555555";
+String uuid = "";
+String api_key = "";
 int sensors_ID0 = 0;    //88733 Frankfurt
 int sensors_ID1 = 3300;   //88459 Frankfurt
 int sensors_ID2 = 0;
 // =====================================================================================
 bool printCom = true;
 #define MAX_DIGITS 16
-byte NUM_MAX = 4;
+byte NUM_MAX0 = 4;
 byte fontCLOCK = 0;      // 0-крупный, 1-крупный цифровой, 2-полу жирный, 3-полу жирный цифровой, 4-обычный, 5-обычный цифровой, 6-узкий, 7-узкий цифровой.
 byte aliData = 8;
 byte volBrightnessD  = 8;
@@ -110,7 +110,7 @@ bool volBrightnessAuto = 0;
 byte levelBridhtness = 0;
 byte timeDay = 5;
 byte timeNight = 24;
-int rotate = 90;
+int rotate0 = 90;
 byte timeScrollStart = 6;
 byte timeScrollStop = 23;
 byte timeScrollSpeed = 20;
@@ -168,7 +168,6 @@ byte kuOff = 23;
 bool clockNight = 0;
 // ----------
 String cityName;
-//int cityId;
 String weatherString;
 String weatherStringZ;
 // ----------
@@ -399,7 +398,7 @@ void callback(char* topic, byte* payload, unsigned int length) { // получа
   String Text;
   for (int i = 0; i < length; i++) Text += ((char)payload[i]);
   if (String(topic) == mqtt_sub_inform) {
-    for (byte i = 0; i < NUM_MAX; i++) {
+    for (byte i = 0; i < NUM_MAX0; i++) {
       Text += "   ";
     }
     for (int i = 0; i < 4; i++) {
@@ -690,7 +689,7 @@ void loop() {
 //======================================================================================
 //==========ВИВІД НА ЕКРАН ТЕМПЕРАТУРИ В БУДИНКУ========================================
 void showSimpleTemp() {
-  byte indent = aliData * (NUM_MAX - 4);
+  byte indent = aliData * (NUM_MAX0 - 4);
   dx = dy = 0;
   clr();
   showDigit((t0 < 0.0 ? 4 : 3), indent, znaki5x8); // друкуємо D+ альбо D-
@@ -705,7 +704,7 @@ void showSimpleTemp() {
 //==========ВИВІД НА ЕКРАН ТЕМПЕРАТУРИ НА ВУЛИЦІ========================================
 void showSimpleTempU() {
   if (WiFi.status() == WL_CONNECTED) {
-    byte indent = aliData * (NUM_MAX - 4);
+    byte indent = aliData * (NUM_MAX0 - 4);
     dx = dy = 0;
     clr();
     showDigit((t3 < 0.0 ? 6 : 5), indent, znaki5x8); //друкуємо U+ альбо U-
@@ -721,7 +720,7 @@ void showSimpleTempU() {
 //==========ВИВІД НА ЕКРАН ДОДАТКОВИХ ДАННИХ========================================
 void showSimpleTempH() {
   if (WiFi.status() == WL_CONNECTED) {
-    byte indent = (NUM_MAX * 8) - 32;
+    byte indent = (NUM_MAX0 * 8) - 32;
     dx = dy = 0;
     clr();
     showDigit((t6 < 0.0 ? 18 : 17), 0 + indent, znaki5x8); //друкуємо U+ альбо U-
@@ -752,7 +751,7 @@ void showSimpleTempH() {
 }
 //==========ВИВІД НА ЕКРАН ВОЛОГОСТІ В БУДИНКУ========================================
 void showSimpleHum() {
-  byte indent = aliData * (NUM_MAX - 4);
+  byte indent = aliData * (NUM_MAX0 - 4);
   dx = dy = 0;
   clr();
   showDigit(7, indent, znaki5x8);     // друкуємо знак вологості
@@ -765,7 +764,7 @@ void showSimpleHum() {
 }
 //==========ВИВІД НА ЕКРАН ТИСКУ В БУДИНКУ========================================
 void showSimplePre() {
-  byte indent = aliData * (NUM_MAX - 4);
+  byte indent = aliData * (NUM_MAX0 - 4);
   dx = dy = 0;
   clr();
   showDigit(9, 0 + indent, znaki5x8);     // друкуємо знак тиску
@@ -779,7 +778,7 @@ void showSimplePre() {
 }
 //==========ВИВІД НА ЕКРАН ДАТИ=========================================================
 void showSimpleDate() {
-  byte indent = aliData * (NUM_MAX - 4);
+  byte indent = aliData * (NUM_MAX0 - 4);
   dx = dy = 0;
   clr();
   showDigit(day / 10, indent, dig4x8);
@@ -794,7 +793,7 @@ void showSimpleDate() {
 }
 //==========ВИВІД НА ЕКРАН АНІМАЦІЙНОГО ГОДИННИКА=======================================
 void showAnimClock() {
-  byte indent = (hour < 10 ? 12 : 15) + 4 * (NUM_MAX - 4);
+  byte indent = (hour < 10 ? 12 : 15) + 4 * (NUM_MAX0 - 4);
   byte digPos[5] = {(indent - (fontCLOCK < 2 ? 14 : fontCLOCK < 6 ? 12 : 10)), (indent - (fontCLOCK < 2 ? 7 : fontCLOCK < 6 ? 6 : 5)), (indent + 3), (indent + (fontCLOCK < 2 ? 10 : fontCLOCK < 6 ? 9 : 8)), indent};
   int digHt = 16;
   int num = hour < 10 ? 1 : 0;;
@@ -860,7 +859,7 @@ void showAnimClock() {
       }
     }
     if (updateForecast && WIFI_connected) setCol(00, flash < 500 ? 0x80 : 0x00);
-    if (updateForecasttomorrow && WIFI_connected) setCol((NUM_MAX * 8 - 1), flash < 500 ? 0x80 : 0x00);
+    if (updateForecasttomorrow && WIFI_connected) setCol((NUM_MAX0 * 8 - 1), flash < 500 ? 0x80 : 0x00);
   } else {
     setCol(digPos[4], 0x66);
     setCol(digPos[4] + 1, 0x66);
@@ -930,8 +929,8 @@ int showChar(char ch, const uint8_t *data) {
   int len = pgm_read_byte(data);
   int i, w = pgm_read_byte(data + 1 + ch * len);
   for (i = 0; i < w; i++)
-    scr[NUM_MAX * 8 + i] = pgm_read_byte(data + 1 + ch * len + 1 + i);
-  scr[NUM_MAX * 8 + i] = 0;
+    scr[NUM_MAX0 * 8 + i] = pgm_read_byte(data + 1 + ch * len + 1 + i);
+  scr[NUM_MAX0 * 8 + i] = 0;
   return w;
 }
 //======================================================================================
@@ -941,7 +940,7 @@ void showDigit(char ch, int col, const uint8_t *data) {
   int w = pgm_read_byte(data + 1 + ch * len);
   col += dx;
   for (int i = 0; i < w; i++) {
-    if (col + i >= 0 && col + i < 8 * NUM_MAX) {
+    if (col + i >= 0 && col + i < 8 * NUM_MAX0) {
       byte v = pgm_read_byte(data + 1 + ch * len + 1 + i);
       if (!dy) scr[col + i] = v; else scr[col + i] |= dy > 0 ? v >> dy : v << -dy;
     }
@@ -951,7 +950,7 @@ void showDigit(char ch, int col, const uint8_t *data) {
 void setCol(int col, byte v) {
   if (dy < -8 | dy > 8) return;
   col += dx;
-  if (col >= 0 && col < 8 * NUM_MAX) {
+  if (col >= 0 && col < 8 * NUM_MAX0) {
     if (!dy) scr[col] = v; else scr[col] |= dy > 0 ? v >> dy : v << -dy;
   }
 }
@@ -1699,8 +1698,8 @@ void wifiConnect() {
       if (printCom) Serial.println(WiFi.localIP());
       if (!firstStart) {
         String aaa = WiFi.localIP().toString() + "                ";
-        if (NUM_MAX > 4) {
-          for (int j = 0; j < NUM_MAX - 4; j++) aaa += "  ";
+        if (NUM_MAX0 > 4) {
+          for (int j = 0; j < NUM_MAX0 - 4; j++) aaa += "  ";
         }
         clr();
         printStringWithShift(" IP: ", 15);

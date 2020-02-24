@@ -39,7 +39,7 @@ bool loadConfig() {                                                // Заван
   timeScrollStart = doc["timeScrollStart"];
   timeScrollStop = doc["timeScrollStop"];
   timeScrollSpeed = doc["timeScrollSpeed"];
-  rotate = doc["rotate"];
+  rotate0 = doc["rotate0"];
   updateOTA = doc["updateOTA"];
   volBrightnessD = doc["volBrightnessD"];
   volBrightnessN = doc["volBrightnessN"];
@@ -120,7 +120,7 @@ bool loadConfig() {                                                // Заван
   corrTempU = doc["corrTempU"];
   corrHumi  = doc["corrHumi"];
   corrPress = doc["corrPress"];
-  NUM_MAX = doc["NUM_MAX"];
+  NUM_MAX0 = doc["NUM_MAX0"];
   rtcStat = doc["rtcStat"];
   uuid  = doc["uuid"].as<String>();
   api_key = doc["api_key"].as<String>();
@@ -161,7 +161,7 @@ bool saveConfig() {
   doc["timeScrollStart"] = timeScrollStart;
   doc["timeScrollStop"] = timeScrollStop;
   doc["timeScrollSpeed"] = timeScrollSpeed;
-  doc["rotate"] = rotate;
+  doc["rotate0"] = rotate0;
   doc["updateOTA"] = updateOTA;
   doc["volBrightnessD"] = volBrightnessD;
   doc["volBrightnessN"] = volBrightnessN;
@@ -242,7 +242,7 @@ bool saveConfig() {
   doc["corrTempU"] = corrTempU;
   doc["corrHumi"] = corrHumi;
   doc["corrPress"] = corrPress;
-  doc["NUM_MAX"] = NUM_MAX;
+  doc["NUM_MAX0"] = NUM_MAX0;
   doc["rtcStat"] = rtcStat;
   doc["uuid"] = uuid;
   doc["api_key"] = api_key;

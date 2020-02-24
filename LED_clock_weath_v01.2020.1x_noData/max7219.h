@@ -17,7 +17,7 @@ byte scr[136];
 //======================================================================================================
 void sendCmdAll(byte cmd, byte data) {
   digitalWrite(CS_PIN, LOW);
-  for(int i = NUM_MAX - 1; i >= 0; i--) {
+  for(int i = NUM_MAX0 - 1; i >= 0; i--) {
     shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, cmd);
     shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, data);
   }
@@ -25,19 +25,19 @@ void sendCmdAll(byte cmd, byte data) {
 }
 //======================================================================================================
 void refreshAll() {
-  byte mask = (rotate == 270? 0x01 : 0x80);
+  byte mask = (rotate0 == 270? 0x01 : 0x80);
   for(int c = 0; c < 8; c++){
     digitalWrite(CS_PIN, LOW);
-    for(int i = NUM_MAX - 1; i >= 0; i--){
+    for(int i = NUM_MAX0 - 1; i >= 0; i--){
       byte bt = 0;
-      if(rotate == 270) {
+      if(rotate0 == 270) {
         for(int b = 0; b < 8; b++){
           bt <<= 1;
           if(scr[i * 8 + b] & mask) bt |= 0x01;
         }
         shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, CMD_DIGIT0 + c);
         shiftOut(DIN_PIN, CLK_PIN, MSBFIRST, bt);
-      } else if(rotate == 90) {
+      } else if(rotate0 == 90) {
         for(int b = 0; b < 8; b++){
           bt >>= 1;
           if(scr[i * 8 + b] & mask) bt |= 0x80;
@@ -50,21 +50,21 @@ void refreshAll() {
       }
     }
     digitalWrite(CS_PIN, HIGH);
-    if(rotate == 270) mask <<= 1;
-    if(rotate == 90) mask >>= 1;
+    if(rotate0 == 270) mask <<= 1;
+    if(rotate0 == 90) mask >>= 1;
   }
 }
 //======================================================================================================
 void clr() {
-  for(int i = 0; i < NUM_MAX * 8; i++) scr[i] = 0;
+  for(int i = 0; i < NUM_MAX0 * 8; i++) scr[i] = 0;
 }
 //======================================================================================================
 void scrollLeft() {
-  for(int i = 0; i < NUM_MAX * 8 + 7; i++) scr[i] = scr[i + 1];
+  for(int i = 0; i < NUM_MAX0 * 8 + 7; i++) scr[i] = scr[i + 1];
 }
 //======================================================================================================
 void invert() {
-  for(int i = 0; i < NUM_MAX * 8; i++) scr[i] =~ scr[i];
+  for(int i = 0; i < NUM_MAX0 * 8; i++) scr[i] =~ scr[i];
 }
 //======================================================================================================
 void initMAX7219() {

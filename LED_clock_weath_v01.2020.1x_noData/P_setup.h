@@ -9,9 +9,9 @@ const char P_setup[] PROGMEM =  R"=====(
         <script type = "text/javascript" src = "/function.js"></script>
         <script type = "text/javascript">
             function set_setup(submit) {
-                server = "/setup?tbd=" + val('tbd') + "&vbd=" + val('vbd') + "&tbn=" + val('tbn') + "&vbn=" + val('vbn') + "&vba=" + val_sw('vba') + "&rotate=" + val('rotate') + "&kuOn=" + val('kuOn') + "&kuOff=" + val('kuOff');
+                server = "/setup?tbd=" + val('tbd') + "&vbd=" + val('vbd') + "&tbn=" + val('tbn') + "&vbn=" + val('vbn') + "&vba=" + val_sw('vba') + "&rotate0=" + val('rotate0') + "&kuOn=" + val('kuOn') + "&kuOff=" + val('kuOff');
                 server += "&sensorDom=" + val('sensorDom') + "&sensorUl=" + val('sensorUl') + "&sensorHome=" + val('sensorHome') + "&sensorHumi=" + val('sensorHumi') + "&sensorPrAl=" + val('sensorPrAl') + "&pressSys=" + val('pressSys') + "&clockNight=" + val_sw('clockNight') + "&buzzerSet=" + val_sw('buzzerSet');
-                server += "&fontCLOCK=" + val('fontCLOCK') + "&aliData=" + val('aliData') + "&corrTempD=" + val('corrTempD') + "&corrTempU=" + val('corrTempU') + "&corrTempH=" + val('corrTempH') + "&corrHumi=" + val('corrHumi') + "&corrPress=" + val('corrPress') + "&NUM_MAX=" + val('NUM_MAX') + "&butStat=" + val('butStat');
+                server += "&fontCLOCK=" + val('fontCLOCK') + "&aliData=" + val('aliData') + "&corrTempD=" + val('corrTempD') + "&corrTempU=" + val('corrTempU') + "&corrTempH=" + val('corrTempH') + "&corrHumi=" + val('corrHumi') + "&corrPress=" + val('corrPress') + "&NUM_MAX0=" + val('NUM_MAX0') + "&butStat=" + val('butStat');
                 send_request(submit,server);
             }
         </script>
@@ -147,7 +147,7 @@ const char P_setup[] PROGMEM =  R"=====(
                     <table id="table__font" class = "table">
                         <tr>
                             <td align = "right"><span class="opt_cn">Кол-во модулей</span></td>
-                            <td><select id = "NUM_MAX">
+                            <td><select id = "NUM_MAX0">
                                 <option value = "3"> 3 </option>
                                 <option value = "4"> 4 </option>
                                 <option value = "5"> 5 </option>
@@ -160,7 +160,7 @@ const char P_setup[] PROGMEM =  R"=====(
                         </tr>
                         <tr>
                             <td align = "right"><span class="opt_cn">Вращение</span></td>
-                            <td><select id = "rotate">
+                            <td><select id = "rotate0">
                                 <option value = "0"> 0 </option>
                                 <option value = "90"> 90 </option>
                                 <option value = "270"> 270 </option>
