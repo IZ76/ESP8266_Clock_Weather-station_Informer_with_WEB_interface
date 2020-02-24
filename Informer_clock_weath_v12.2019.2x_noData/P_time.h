@@ -15,16 +15,20 @@ const char P_time[] PROGMEM =  R"=====(
                 server += "&al_2_0=" + val('al_2_0') + "&al_2_1=" + val('al_2_1') + "&al_2_2=" + val('al_2_2');
                 server += "&al_3_0=" + val('al_3_0') + "&al_3_1=" + val('al_3_1') + "&al_3_2=" + val('al_3_2');
                 server += "&al_4_0=" + val('al_4_0') + "&al_4_1=" + val('al_4_1') + "&al_4_2=" + val('al_4_2');
-                server += "&md_0_0=" + val('md_0_0') + "&md_0_1=" + val('md_0_1') + "&md_0_2=" + val('md_0_2');
-                server += "&md_1_0=" + val('md_1_0') + "&md_1_1=" + val('md_1_1') + "&md_1_2=" + val('md_1_2');
-                server += "&md_2_0=" + val('md_2_0') + "&md_2_1=" + val('md_2_1') + "&md_2_2=" + val('md_2_2');
-                server += "&md_3_0=" + val('md_3_0') + "&md_3_1=" + val('md_3_1') + "&md_3_2=" + val('md_3_2');
-                server += "&md_4_0=" + val('md_4_0') + "&md_4_1=" + val('md_4_1') + "&md_4_2=" + val('md_4_2');
-                server += "&md_5_0=" + val('md_5_0') + "&md_5_1=" + val('md_5_1') + "&md_5_2=" + val('md_5_2');
-                server += "&md_6_0=" + val('md_6_0') + "&md_6_1=" + val('md_6_1') + "&md_6_2=" + val('md_6_2');
-                server += "&md_7_0=" + val('md_7_0') + "&md_7_1=" + val('md_7_1') + "&md_7_2=" + val('md_7_2');
-                server += "&md_8_0=" + val('md_8_0') + "&md_8_1=" + val('md_8_1') + "&md_8_2=" + val('md_8_2');
                 server += "&md_start=" + val('md_start') + "&md_stop=" + val('md_stop');
+                server += "&md_0_0=" + val('md_0_0') + "&md_0_1=" + val('md_0_1');
+                server += "&md_1_0=" + val('md_1_0') + "&md_1_1=" + val('md_1_1');
+                server += "&md_2_0=" + val('md_2_0') + "&md_2_1=" + val('md_2_1');
+                server += "&md_3_0=" + val('md_3_0') + "&md_3_1=" + val('md_3_1');
+                server += "&md_4_0=" + val('md_4_0') + "&md_4_1=" + val('md_4_1');
+                server += "&md_5_0=" + val('md_5_0') + "&md_5_1=" + val('md_5_1');
+                server += "&md_6_0=" + val('md_6_0') + "&md_6_1=" + val('md_6_1');
+                server += "&md_7_0=" + val('md_7_0') + "&md_7_1=" + val('md_7_1');
+                server += "&md_8_0=" + val('md_8_0') + "&md_8_1=" + val('md_8_1');
+                server += "&md_0_2=" + val('md_0_2') + "&md_1_2=" + val('md_1_2') + "&md_2_2=" + val('md_2_2');
+                server += "&md_3_2=" + val('md_3_2') + "&md_4_2=" + val('md_4_2') + "&md_5_2=" + val('md_5_2');
+                server += "&md_6_2=" + val('md_6_2') + "&md_7_2=" + val('md_7_2') + "&md_8_2=" + val('md_8_2');
+                
                 send_request(submit,server);
             }
             function set_ntp_auto(submit) {

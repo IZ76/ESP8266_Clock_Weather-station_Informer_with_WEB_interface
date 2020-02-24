@@ -47,7 +47,7 @@ bool loadConfig() {                                                // Заван
   timeDay = doc["timeDay"];
   timeNight = doc["timeNight"];
   volBrightnessAuto = doc["volBrightnessAuto"];
-  bigCklock_x2 = doc["bigCklock_x2"];
+  clockNight = doc["clockNight"];
   mqttOn = doc["mqttOn"];
   snprintf(mqtt_server, 24, "%s", (doc["mqtt_server"].as<String>()).c_str());
   mqtt_port = doc["mqtt_port"];
@@ -175,7 +175,7 @@ bool saveConfig() {
   doc["timeDay"] = timeDay;
   doc["timeNight"] = timeNight;
   doc["volBrightnessAuto"] = volBrightnessAuto;
-  doc["bigCklock_x2"] = bigCklock_x2;
+  doc["clockNight"] = clockNight;
   doc["buzzerSet"] = buzzerSet;
   doc["mqttOn"] = mqttOn;
   doc["mqtt_server"] = mqtt_server;

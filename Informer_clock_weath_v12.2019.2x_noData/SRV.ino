@@ -332,8 +332,8 @@ void handle_ConfigSetupJson() {
   json += volBrightnessD;
   json += "\",\"vbn\":\"";
   json += volBrightnessN;
-  json += "\",\"bigCklock_x2\":\"";
-  json += bigCklock_x2;
+  json += "\",\"clockNight\":\"";
+  json += clockNight;
   json += "\",\"vba\":\"";
   json += (volBrightnessAuto==1?"checked":"");
   json += "\",\"lba\":\"";
@@ -562,7 +562,7 @@ void handle_setup(){
   if(server.arg("tbn")!="") timeNight = server.arg("tbn").toInt();
   if(server.arg("vbn")!="") volBrightnessN = server.arg("vbn").toInt();
   if(server.arg("vba")!="") volBrightnessAuto = server.arg("vba").toInt();
-  if(server.arg("bigCklock_x2")!="") bigCklock_x2 = server.arg("bigCklock_x2").toInt();
+  if(server.arg("clockNight")!="") clockNight = server.arg("clockNight").toInt();
   if(server.arg("buzzerSet")!="") buzzerSet = server.arg("buzzerSet").toInt();
   if(server.arg("rotate0")!="") rotate0 = server.arg("rotate0").toInt();
   if(server.arg("rotate1")!="") rotate1 = server.arg("rotate1").toInt();
@@ -635,7 +635,7 @@ void handle_setup(){
   if(server.arg("butStat")!="") butStat = server.arg("butStat").toInt();
   if(printCom) {
     printTime();
-    Serial.println("TBD: "+String(timeDay)+", VBD: "+String(volBrightnessD)+", TBN: "+String(timeNight)+", VBN: "+String(volBrightnessN)+",  kuOn: "+String(kuOn)+",  kuOff: "+String(kuOff)+",  rotate0: "+String(rotate0)+", rotate1: "+String(rotate1)+", bigCklock_x2: "+String(bigCklock_x2)+", buzzerSet: "+String(buzzerSet));
+    Serial.println("TBD: "+String(timeDay)+", VBD: "+String(volBrightnessD)+", TBN: "+String(timeNight)+", VBN: "+String(volBrightnessN)+",  kuOn: "+String(kuOn)+",  kuOff: "+String(kuOff)+",  rotate0: "+String(rotate0)+", rotate1: "+String(rotate1)+", clockNight: "+String(clockNight)+", buzzerSet: "+String(buzzerSet));
     Serial.println("sensorDom: "+String(sensorDom)+", sensorUl: "+String(sensorUl)+", sensorHome: "+String(sensorHome)+", sensorHumi: "+String(sensorHumi)+",  sensorPrAl: "+String(sensorPrAl));
   }
   saveConfig();

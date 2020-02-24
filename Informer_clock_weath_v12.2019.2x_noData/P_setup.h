@@ -10,7 +10,7 @@ const char P_setup[] PROGMEM =  R"=====(
         <script type = "text/javascript">
             function set_setup(submit) {
                 server = "/setup?tbd=" + val('tbd') + "&vbd=" + val('vbd') + "&tbn=" + val('tbn') + "&vbn=" + val('vbn') + "&vba=" + val_sw('vba') + "&rotate0=" + val('rotate0') + "&rotate1=" + val('rotate1') + "&kuOn=" + val('kuOn') + "&kuOff=" + val('kuOff');
-                server += "&sensorDom=" + val('sensorDom') + "&sensorUl=" + val('sensorUl') + "&sensorHome=" + val('sensorHome') + "&sensorHumi=" + val('sensorHumi') + "&sensorPrAl=" + val('sensorPrAl') + "&pressSys=" + val('pressSys') + "&bigCklock_x2=" + val('bigCklock_x2') + "&buzzerSet=" + val_sw('buzzerSet');
+                server += "&sensorDom=" + val('sensorDom') + "&sensorUl=" + val('sensorUl') + "&sensorHome=" + val('sensorHome') + "&sensorHumi=" + val('sensorHumi') + "&sensorPrAl=" + val('sensorPrAl') + "&pressSys=" + val('pressSys') + "&clockNight=" + val('clockNight') + "&buzzerSet=" + val_sw('buzzerSet');
                 server += "&fontCLOCK=" + val('fontCLOCK') + "&fontSizeCLOCK=" + val('fontSizeCLOCK') + "&fontSizeData=" + val('fontSizeData') + "&dataDown=" + val('dataDown') + "&textDown=" + val('textDown');
                 server += "&corrTempD=" + val('corrTempD') + "&corrTempU=" + val('corrTempU') + "&corrTempH=" + val('corrTempH') + "&corrHumi=" + val('corrHumi') + "&corrPress=" + val('corrPress') + "&NUM_MAX0=" + val('NUM_MAX0') + "&NUM_MAX1=" + val('NUM_MAX1') + "&butStat=" + val('butStat');
                 send_request(submit,server);
@@ -228,7 +228,7 @@ const char P_setup[] PROGMEM =  R"=====(
                         </tr>
                         <tr>
                             <td align = "right"><span class="opt_cn">Часы в две строки</span></td>
-                            <td><select id = "bigCklock_x2">
+                            <td><select id = "clockNight">
                                 <option value = "0"> никогда </option>
                                 <option value = "1"> только ночью </option>
                                 <option value = "2"> всегда </option>
