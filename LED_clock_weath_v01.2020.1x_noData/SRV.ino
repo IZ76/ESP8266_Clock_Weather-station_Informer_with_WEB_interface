@@ -556,8 +556,8 @@ void handle_setup(){
   if(server.arg("clockNight")!="") clockNight = server.arg("clockNight").toInt();
   if(server.arg("rotate0")!="") rotate0 = server.arg("rotate0").toInt();
   if(server.arg("NUM_MAX0")!="") NUM_MAX0 = server.arg("NUM_MAX0").toInt();
-  kuOn = server.arg("kuOn").toInt();
-  kuOff = server.arg("kuOff").toInt();
+  if(server.arg("kuOn")!="") kuOn = server.arg("kuOn").toInt();
+  if(server.arg("kuOff")!="") kuOff = server.arg("kuOff").toInt();
   String sD = server.arg("sensorDom");
   String sU = server.arg("sensorUl");
   String sHo = server.arg("sensorHome");
